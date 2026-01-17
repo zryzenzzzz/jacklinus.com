@@ -24,7 +24,6 @@
         body { background: radial-gradient(circle at 50% 0%, #f1f5f9 0%, #ffffff 50%, #ffffff 100%); min-height: 100vh; }
         .corporate-header { font-family: 'Inter', sans-serif; letter-spacing: -0.02em; }
 
-        /* Play button overlay */
         .play-overlay {
             position: absolute;
             top: 50%;
@@ -79,44 +78,46 @@
             From content leasing to automated payment processing and account enforcement. We provide 24/7 security and high-level analytics for your digital presence.
         </p>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-16">
-            <div class="bg-white p-6 rounded-xl border border-slate-200 text-left shadow-sm">
-                <i class="ph-bold ph-calendar-check text-2xl text-black mb-3"></i>
-                <h3 class="font-bold text-slate-900 mb-2">Leasing & Reservations</h3>
-                <p class="text-sm text-slate-500">Manage monthly content contracts and secure premium placement for your brand assets.</p>
-            </div>
-            <div class="bg-white p-6 rounded-xl border border-slate-200 text-left shadow-sm">
-                <i class="ph-bold ph-shield-check text-2xl text-black mb-3"></i>
-                <h3 class="font-bold text-slate-900 mb-2">Access & Security</h3>
-                <p class="text-sm text-slate-500">Managed gate-keeping and 24/7 surveillance monitoring to protect your social accounts.</p>
-            </div>
-            <div class="bg-white p-6 rounded-xl border border-slate-200 text-left shadow-sm">
-                <i class="ph-bold ph-chart-bar text-2xl text-black mb-3"></i>
-                <h3 class="font-bold text-slate-900 mb-2">Reports & Analytics</h3>
-                <p class="text-sm text-slate-500">Detailed monthly usage reports and data-driven insights to maximize your engagement.</p>
-            </div>
-        </div>
+        <div class="flex flex-col w-full">
+            
+            <div class="w-full max-w-4xl mx-auto rounded-xl shadow-2xl overflow-hidden border border-slate-200 bg-black text-left relative order-1 md:order-2 mb-10 md:mb-0">
+                <video id="mainVideo" class="w-full h-auto block rounded-xl" controls>
+                    <source src="https://www.dropbox.com/scl/fi/62rzf4iml5aftg4aptjmd/user-x3KbrgNjIwawGDujg8vfZ72g_gen_01kf4vrgsae5c9g0jr2pcw2pss_md-1-1.webm?rlkey=zlgihvbsoet144ue5rx0a0fwl&st=9gxcmj9i&raw=1" type="video/webm">
+                    Your browser does not support the video tag.
+                </video>
 
-        <!-- Video Section with Play Button -->
-        <div class="w-full max-w-4xl mx-auto rounded-xl shadow-2xl overflow-hidden border border-slate-200 bg-black text-left relative">
-            <video id="mainVideo" class="w-full h-auto block rounded-xl" controls>
-                <source src="https://www.dropbox.com/scl/fi/62rzf4iml5aftg4aptjmd/user-x3KbrgNjIwawGDujg8vfZ72g_gen_01kf4vrgsae5c9g0jr2pcw2pss_md-1-1.webm?rlkey=zlgihvbsoet144ue5rx0a0fwl&st=9gxcmj9i&raw=1" type="video/webm">
-                Your browser does not support the video tag.
-            </video>
-
-            <!-- Play Button Overlay -->
-            <div class="play-overlay" id="playButton">
-                <i class="ph-fill ph-play text-white text-4xl ml-1"></i>
-            </div>
-
-            <div class="w-full bg-black py-5 px-8 flex justify-between items-center border-t border-slate-800">
-                <div class="text-white text-sm md:text-base">
-                    Email us: <a href="mailto:service@jacklinus.com" class="font-bold hover:text-slate-300 transition">service@jacklinus.com</a>
+                <div class="play-overlay" id="playButton">
+                    <i class="ph-fill ph-play text-white text-4xl ml-1"></i>
                 </div>
-                <img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20white.png?raw=true" 
-                     alt="Jack Linus White Logo" 
-                     class="h-10 md:h-12 w-auto">
+
+                <div class="w-full bg-black py-5 px-8 flex justify-between items-center border-t border-slate-800">
+                    <div class="text-white text-sm md:text-base">
+                        Email us: <a href="mailto:service@jacklinus.com" class="font-bold hover:text-slate-300 transition">service@jacklinus.com</a>
+                    </div>
+                    <img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20white.png?raw=true" 
+                         alt="Jack Linus White Logo" 
+                         class="h-10 md:h-12 w-auto">
+                </div>
             </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full order-2 md:order-1 md:mb-16 mt-6 md:mt-0">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 text-left shadow-sm">
+                    <i class="ph-bold ph-calendar-check text-2xl text-black mb-3"></i>
+                    <h3 class="font-bold text-slate-900 mb-2">Leasing & Reservations</h3>
+                    <p class="text-sm text-slate-500">Manage monthly content contracts and secure premium placement for your brand assets.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 text-left shadow-sm">
+                    <i class="ph-bold ph-shield-check text-2xl text-black mb-3"></i>
+                    <h3 class="font-bold text-slate-900 mb-2">Access & Security</h3>
+                    <p class="text-sm text-slate-500">Managed gate-keeping and 24/7 surveillance monitoring to protect your social accounts.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 text-left shadow-sm">
+                    <i class="ph-bold ph-chart-bar text-2xl text-black mb-3"></i>
+                    <h3 class="font-bold text-slate-900 mb-2">Reports & Analytics</h3>
+                    <p class="text-sm text-slate-500">Detailed monthly usage reports and data-driven insights to maximize your engagement.</p>
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -132,7 +133,6 @@
             }
         }
 
-        // Play/Pause video when overlay is clicked
         playButton.addEventListener('click', () => {
             if(video.paused){
                 video.play();
@@ -141,12 +141,10 @@
             }
         });
 
-        // Update overlay whenever video state changes
         video.addEventListener('play', updateOverlay);
         video.addEventListener('pause', updateOverlay);
         video.addEventListener('ended', updateOverlay);
 
-        // Initially show overlay
         updateOverlay();
     </script>
 
