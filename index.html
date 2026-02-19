@@ -266,7 +266,13 @@
       transition: opacity 0.5s ease, transform 0.5s ease; z-index: 5;
     }
     .welcome.hidden { opacity: 0; transform: translateY(-50px); pointer-events: none; }
-    .home-title { font-size: 3.6rem; font-weight: 700; color: white; margin-bottom: 40px; letter-spacing: -1px; }
+
+    .home-logo {
+      max-width: 320px;           /* bigger base size on mobile/tablet */
+      height: auto;
+      margin-bottom: 60px;        /* generous space below logo */
+      display: block;
+    }
 
     #search-input {
       width: 100%; max-width: 720px; padding: 18px 32px; font-size: 1.15rem;
@@ -278,10 +284,10 @@
     #search-input::placeholder { color: rgba(200,180,255,0.45); }
     #search-input:focus {
       border-color: rgba(160,120,255,0.75);
-      box-shadow: 0 10px 40px rgba(0,0,0,0.5); /* no extra glow */
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     }
 
-    /* New home info section styling */
+    /* Home info section */
     .home-info {
       margin-top: 42px; text-align: center; max-width: 680px;
       opacity: 0; transform: translateY(20px);
@@ -325,16 +331,19 @@
       width: auto;
       object-fit: contain;
       border-radius: 8px;
-      box-shadow: none;           /* removed drop shadow */
+      box-shadow: none;
     }
     .plus-sign {
       font-size: 2.2rem;
       font-weight: bold;
-      color: white;               /* white plus sign */
+      color: white;
     }
 
-    /* Larger logos + better spacing on big screens (computers) */
+    /* Larger sizes on desktop */
     @media (min-width: 1024px) {
+      .home-logo {
+        max-width: 420px;         /* matches the visual weight of old 3.6rem text */
+      }
       .bottom-credit {
         bottom: 40px;
         left: 48px;
@@ -342,7 +351,7 @@
         font-size: 1.1rem;
       }
       .bottom-credit img {
-        height: 72px;             /* bigger logos on desktop */
+        height: 72px;
       }
       .plus-sign {
         font-size: 3rem;
@@ -530,7 +539,8 @@
   <div class="content">
     <!-- Home / Welcome -->
     <div class="welcome" id="welcome">
-      <h1 class="home-title">JackLinus AI</h1>
+      <img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/ecqf.png?raw=true" alt="JackLinus Logo" class="home-logo">
+
       <input type="text" id="search-input" placeholder="Ask anything…" autocomplete="off"/>
 
       <!-- New free access + teaser section -->
