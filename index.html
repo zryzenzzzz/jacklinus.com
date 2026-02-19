@@ -339,6 +339,36 @@
       color: white;
     }
 
+    /* ── Bottom-right legal links ── */
+    .legal-links {
+      position: absolute;
+      bottom: 28px;
+      right: 32px;
+      display: flex;
+      gap: 24px;
+      z-index: 10;
+      font-size: 0.92rem;
+      color: rgba(200,180,255,0.75);
+    }
+    .legal-links a {
+      color: rgba(180,140,255,0.9);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .legal-links a:hover {
+      color: #d0b8ff;
+      text-decoration: underline;
+    }
+
+    /* Hide bottom credit + legal links on small screens (phones) */
+    @media (max-width: 767px) {
+      .bottom-credit,
+      .legal-links {
+        display: none;
+      }
+    }
+
     /* Larger sizes on desktop */
     @media (min-width: 1024px) {
       .home-logo {
@@ -355,6 +385,12 @@
       }
       .plus-sign {
         font-size: 3rem;
+      }
+      .legal-links {
+        bottom: 42px;
+        right: 48px;
+        font-size: 1rem;
+        gap: 32px;
       }
     }
 
@@ -556,12 +592,18 @@
         </div>
       </div>
 
-      <!-- Bottom-left credit -->
+      <!-- Bottom-left credit (hidden on mobile) -->
       <div class="bottom-credit">
         <span>Especially made for</span>
         <img src="https://github.com/zryzenzzzz/ryanward.org/blob/main/Pics/Davinci.png?raw=true" alt="DaVinci Connect">
         <span class="plus-sign">+</span>
         <img src="https://github.com/zryzenzzzz/ryanward.org/blob/main/Pics/Canvas.png?raw=true" alt="Canvas">
+      </div>
+
+      <!-- Bottom-right legal links (hidden on mobile) -->
+      <div class="legal-links">
+        <a href="https://jacklinus.com/terms" target="_blank">Terms of Service</a>
+        <a href="https://jacklinus.com/privacy" target="_blank">Privacy Policy</a>
       </div>
     </div>
 
@@ -578,6 +620,7 @@
   </div>
 
   <script type="module">
+    // ── Your existing JavaScript remains completely unchanged ──
     const HF_TOKEN   = "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";
     const SPACE_ID   = "hassan773/SageBot";
     const MODEL      = "llama-3.3-70b-versatile";
