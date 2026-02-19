@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Terms of Service – JackLinus AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0f001a;
+      color: #f0e8ff;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* ── Background particles ── */
+    .particles {
+      position: fixed; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(120,60,200,0.12) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(180,100,255,0.10) 0%, transparent 50%);
+      z-index: 1;
+    }
+
+    /* ── Header ── */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 30;
+      padding: 16px 32px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      background: rgba(15,5,30,0.75);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(140,80,220,0.25);
+      height: 72px;
+    }
+
+    .logo {
+      height: 48px;
+      width: auto;
+      cursor: pointer;
+      justify-self: start;
+    }
+
+    .page-title {
+      justify-self: center;
+      font-size: 1.28rem;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      color: #d0b8ff;
+    }
+
+    /* ── Main Content ── */
+    main {
+      position: relative;
+      z-index: 10;
+      padding: 110px 32px 80px;
+      max-width: 860px;
+      margin: 0 auto;
+      line-height: 1.68;
+      font-size: 1.03rem;
+      color: #e8d8ff;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #c090ff;
+      margin-bottom: 0.6em;
+      letter-spacing: -0.5px;
+    }
+
+    h2 {
+      font-size: 1.68rem;
+      font-weight: 600;
+      color: #b080ff;
+      margin: 2.2em 0 0.9em;
+    }
+
+    h3 {
+      font-size: 1.28rem;
+      font-weight: 600;
+      color: #d0b8ff;
+      margin: 1.8em 0 0.7em;
+    }
+
+    p, li {
+      margin-bottom: 1.1em;
+      color: #d8c8ff;
+    }
+
+    li {
+      margin-left: 1.4em;
+      position: relative;
+    }
+
+    li::before {
+      content: "•";
+      color: #b080ff;
+      position: absolute;
+      left: -1.1em;
+      font-size: 1.4em;
+      line-height: 1;
+    }
+
+    strong {
+      color: #e0d0ff;
+      font-weight: 600;
+    }
+
+    a {
+      color: #c090ff;
+      text-decoration: none;
+      transition: color 0.18s;
+    }
+
+    a:hover {
+      color: #d0aaff;
+      text-decoration: underline;
+    }
+
+    .highlight-box {
+      margin: 2.5rem 0;
+      padding: 24px 28px;
+      background: rgba(140,80,220,0.08);
+      border: 1px solid rgba(140,80,220,0.25);
+      border-radius: 16px;
+      font-size: 0.97rem;
+      color: #c8b8ff;
+    }
+
+    .highlight-box strong {
+      color: #d0b8ff;
+    }
+
+    .last-updated {
+      margin-top: 3.5rem;
+      font-size: 0.95rem;
+      color: rgba(200,170,255,0.65);
+      text-align: center;
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 60px 32px 40px;
+      text-align: center;
+      color: rgba(200,170,255,0.55);
+      font-size: 0.92rem;
+      border-top: 1px solid rgba(140,80,220,0.18);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 680px) {
+      main {
+        padding: 100px 20px 60px;
+      }
+      h1 { font-size: 2.1rem; }
+      h2 { font-size: 1.52rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="particles"></div>
+
+  <header>
+    <a href="/">
+      <img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20white.png?raw=true"
+           alt="JackLinus" class="logo"/>
+    </a>
+    <div class="page-title">Terms of Service</div>
+    <div></div> <!-- spacer -->
+  </header>
+
+  <main>
+    <h1>Terms of Service</h1>
+
+    <p><strong>Effective Date:</strong> February 19, 2026</p>
+
+    <p>Welcome to JackLinus AI. These Terms of Service (“Terms”) govern your access to and use of the JackLinus AI website (jacklinus.com), chat interface, and any related services (collectively, the “Service”), operated by JackLinus AI.</p>
+
+    <p>By accessing or using the Service, you agree to be bound by these Terms. If you do not agree, you must not use the Service.</p>
+
+    <h2>1. Eligibility</h2>
+    <p>You must be at least 13 years old to use the Service. If you are under 18, you must have permission from a parent or legal guardian.</p>
+
+    <h2>2. Account & Google Sign-In</h2>
+    <ul>
+      <li>You may sign in using Google. We receive your name, email address, and profile picture as provided by Google.</li>
+      <li>You are responsible for maintaining the confidentiality of your session and any activity under your account.</li>
+      <li>We reserve the right to suspend or terminate access if we believe your use violates these Terms or applicable law.</li>
+    </ul>
+
+    <h2>3. Acceptable Use</h2>
+    <p>You agree not to:</p>
+    <ul>
+      <li>Use the Service for any illegal purpose or in violation of any law</li>
+      <li>Transmit spam, malware, or harmful code</li>
+      <li>Harass, threaten, impersonate, or abuse others</li>
+      <li>Attempt to gain unauthorized access to the Service or related systems</li>
+      <li>Scrape, crawl, or systematically collect data from the Service without permission</li>
+      <li>Use the Service to generate or distribute content that is obscene, excessively violent, or promotes hate or discrimination</li>
+    </ul>
+
+    <h2>4. User Content & Conversations</h2>
+    <ul>
+      <li>You retain ownership of any text or content you input into the Service (“User Content”).</li>
+      <li>By submitting User Content, you grant us a worldwide, non-exclusive, royalty-free license to use, store, reproduce, and display that content solely to provide, maintain, and improve the Service.</li>
+      <li>Chat history is currently stored <strong>only in your browser (localStorage)</strong> and is not transmitted to or stored on our servers. We do not have access to your conversations unless you voluntarily share them with us.</li>
+    </ul>
+
+    <h2>5. Our Content & AI Output</h2>
+    <p>Responses generated by the Service (“AI Output”) are provided “as is”. We do not claim ownership of AI Output, but you may not rely on it as professional advice (legal, medical, financial, etc.).</p>
+
+    <h2>6. Third-Party Services</h2>
+    <ul>
+      <li>The Service uses <strong>Google Identity Services</strong> for authentication — subject to Google’s terms and privacy policy.</li>
+      <li>AI inference is powered by models hosted on <strong>Hugging Face Spaces</strong> — subject to Hugging Face’s terms and policies.</li>
+    </ul>
+
+    <h2>7. No Warranty – Service “As Is”</h2>
+    <p>The Service is provided “as is” and “as available” without warranties of any kind, express or implied. We do not guarantee uninterrupted, error-free, or secure operation of the Service.</p>
+
+    <h2>8. Limitation of Liability</h2>
+    <p>To the fullest extent permitted by law, JackLinus AI and its contributors shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Service, even if advised of the possibility of such damages.</p>
+
+    <div class="highlight-box">
+      <strong>Important notice (current phase):</strong><br/>
+      JackLinus AI is currently offered free of charge during our launch period. We may introduce paid features, usage limits, or change the availability of the Service at any time without prior notice.
+    </div>
+
+    <h2>9. Termination</h2>
+    <p>We may suspend or terminate your access to the Service at any time, with or without cause or notice, including if we believe you have violated these Terms.</p>
+
+    <h2>10. Changes to Terms</h2>
+    <p>We may update these Terms from time to time. We will post the revised version on this page and update the effective date. Continued use of the Service after changes constitutes acceptance of the updated Terms.</p>
+
+    <h2>11. Governing Law</h2>
+    <p>These Terms are governed by the laws of the jurisdiction in which JackLinus AI is primarily operated, without regard to conflict of law principles.</p>
+
+    <p class="last-updated">Last updated: February 19, 2026</p>
+  </main>
+
+  <footer>
+    <p>JackLinus AI • Use at your own risk • Questions? Use the chat interface.</p>
+  </footer>
+
+</body>
+</html>
