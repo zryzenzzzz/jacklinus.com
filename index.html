@@ -629,7 +629,7 @@
       document.getElementById('sign-in-btn').style.display = 'none';
       const avatarArea = document.getElementById('user-avatar-area');
       avatarArea.classList.add('visible');
-      document.getElementById('user-avatar').src = currentUser.picture;
+      document.getElementById('user-avatar').src = currentUser.picture || 'https://via.placeholder.com/40?text=?'; // fallback if no picture
       document.getElementById('user-name').textContent = currentUser.name.split(' ')[0];
       document.getElementById('history-logged-out').style.display = 'none';
       document.getElementById('history-logged-in').style.display = 'block';
@@ -638,6 +638,13 @@
     }
 
     function signOut() {
+      if (!currentUser) return;
+
+      // ← Added confirmation dialog
+      if (!confirm("Are you sure you want to sign out?")) {
+        return;
+      }
+
       if (window.google && currentUser) {
         google.accounts.id.revoke(currentUser.email, () => {});
       }
@@ -751,7 +758,9 @@
     function closeAvatarMenu() { avatarMenuOpen = false; avatarMenu.classList.remove('open'); }
     userAvatar.addEventListener('click', e => { e.stopPropagation(); avatarMenuOpen ? closeAvatarMenu() : openAvatarMenu(); });
     document.addEventListener('click', e => { if (avatarMenuOpen && !avatarMenu.contains(e.target) && e.target !== userAvatar) closeAvatarMenu(); });
-    document.getElementById('sign-out-btn').addEventListener('click', signOut);
+    document.getElementById('sign-out-btn').addEventListener('click', () => {
+      signOut();  // Now calls the updated function with confirm
+    });
     document.getElementById('avatar-history-btn').addEventListener('click', () => { closeAvatarMenu(); openHistory(); });
 
     document.getElementById('sign-in-btn').addEventListener('click', () => {
