@@ -307,6 +307,48 @@
       color: rgba(220,200,255,0.7); font-weight: 500;
     }
 
+    /* ── Bottom-left credit section ── */
+    .bottom-credit {
+      position: absolute;
+      bottom: 24px;
+      left: 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 1rem;
+      color: rgba(220,200,255,0.9);
+      z-index: 10;
+      pointer-events: none;
+    }
+    .bottom-credit img {
+      height: 52px;
+      width: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: none;           /* removed drop shadow */
+    }
+    .plus-sign {
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: white;               /* white plus sign */
+    }
+
+    /* Larger logos + better spacing on big screens (computers) */
+    @media (min-width: 1024px) {
+      .bottom-credit {
+        bottom: 40px;
+        left: 48px;
+        gap: 24px;
+        font-size: 1.1rem;
+      }
+      .bottom-credit img {
+        height: 72px;             /* bigger logos on desktop */
+      }
+      .plus-sign {
+        font-size: 3rem;
+      }
+    }
+
     /* ── Chat area ── */
     .chat-area {
       position: absolute; inset: 72px 0 0 0; display: flex; flex-direction: column;
@@ -503,6 +545,14 @@
           <span> — coming soon</span>
         </div>
       </div>
+
+      <!-- Bottom-left credit -->
+      <div class="bottom-credit">
+        <span>Especially made for</span>
+        <img src="https://github.com/zryzenzzzz/ryanward.org/blob/main/Pics/Davinci.png?raw=true" alt="DaVinci Connect">
+        <span class="plus-sign">+</span>
+        <img src="https://github.com/zryzenzzzz/ryanward.org/blob/main/Pics/Canvas.png?raw=true" alt="Canvas">
+      </div>
     </div>
 
     <!-- Chat -->
@@ -629,7 +679,7 @@
       document.getElementById('sign-in-btn').style.display = 'none';
       const avatarArea = document.getElementById('user-avatar-area');
       avatarArea.classList.add('visible');
-      document.getElementById('user-avatar').src = currentUser.picture || 'https://via.placeholder.com/40?text=?'; // fallback if no picture
+      document.getElementById('user-avatar').src = currentUser.picture || 'https://via.placeholder.com/40?text=?';
       document.getElementById('user-name').textContent = currentUser.name.split(' ')[0];
       document.getElementById('history-logged-out').style.display = 'none';
       document.getElementById('history-logged-in').style.display = 'block';
@@ -640,7 +690,6 @@
     function signOut() {
       if (!currentUser) return;
 
-      // ← Added confirmation dialog
       if (!confirm("Are you sure you want to sign out?")) {
         return;
       }
@@ -759,7 +808,7 @@
     userAvatar.addEventListener('click', e => { e.stopPropagation(); avatarMenuOpen ? closeAvatarMenu() : openAvatarMenu(); });
     document.addEventListener('click', e => { if (avatarMenuOpen && !avatarMenu.contains(e.target) && e.target !== userAvatar) closeAvatarMenu(); });
     document.getElementById('sign-out-btn').addEventListener('click', () => {
-      signOut();  // Now calls the updated function with confirm
+      signOut();
     });
     document.getElementById('avatar-history-btn').addEventListener('click', () => { closeAvatarMenu(); openHistory(); });
 
