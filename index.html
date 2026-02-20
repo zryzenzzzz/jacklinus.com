@@ -7,7 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Google Identity Services -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <style>
@@ -264,6 +263,8 @@
       position: absolute; inset: 72px 0 0 0;
       display: flex; flex-direction: column; justify-content: center; align-items: center;
       transition: opacity 0.5s ease, transform 0.5s ease; z-index: 5;
+      overflow-y: auto;
+      padding: 20px 20px 80px;
     }
     .welcome.hidden { opacity: 0; transform: translateY(-50px); pointer-events: none; }
 
@@ -272,6 +273,7 @@
       height: auto;
       margin-bottom: 60px;
       display: block;
+      flex-shrink: 0;
     }
 
     #search-input {
@@ -280,6 +282,7 @@
       border-radius: 60px; color: white; outline: none;
       backdrop-filter: blur(12px); box-shadow: 0 10px 40px rgba(0,0,0,0.5);
       transition: border-color 0.25s ease;
+      flex-shrink: 0;
     }
     #search-input::placeholder { color: rgba(200,180,255,0.45); }
     #search-input:focus {
@@ -292,6 +295,7 @@
       margin-top: 42px; text-align: center; max-width: 680px;
       opacity: 0; transform: translateY(20px);
       animation: fadeInUp 1.1s ease forwards 0.5s;
+      flex-shrink: 0;
     }
     @keyframes fadeInUp {
       to { opacity: 1; transform: translateY(0); }
@@ -313,20 +317,19 @@
       color: rgba(220,200,255,0.7); font-weight: 500;
     }
 
-    /* ── Bottom-left credit section ── */
-    .bottom-credit {
-      position: absolute;
-      bottom: 24px;
-      left: 32px;
+    /* ── Inline credit section (below teaser, in flow) ── */
+    .inline-credit {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 16px;
+      margin-top: 32px;
       font-size: 1rem;
       color: rgba(220,200,255,0.9);
-      z-index: 10;
-      pointer-events: none;
+      flex-shrink: 0;
+      flex-wrap: wrap;
     }
-    .bottom-credit img {
+    .inline-credit img {
       height: 52px;
       width: auto;
       object-fit: contain;
@@ -339,9 +342,9 @@
       color: white;
     }
 
-    /* ── Bottom-right legal links ── */
+    /* ── Bottom-right legal links (fixed corner) ── */
     .legal-links {
-      position: absolute;
+      position: fixed;
       bottom: 28px;
       right: 32px;
       display: flex;
@@ -361,26 +364,41 @@
       text-decoration: underline;
     }
 
-    /* Hide bottom credit + legal links on small screens (phones) */
+    /* Hide legal links when chat is active */
+    .chat-area.active ~ .legal-links-home {
+      display: none;
+    }
+
+    /* Responsive */
     @media (max-width: 767px) {
-      .bottom-credit,
+      .inline-credit {
+        gap: 10px;
+        font-size: 0.82rem;
+      }
+      .inline-credit img {
+        height: 36px;
+      }
+      .plus-sign {
+        font-size: 1.5rem;
+      }
       .legal-links {
-        display: none;
+        bottom: 12px;
+        right: 16px;
+        gap: 16px;
+        font-size: 0.78rem;
       }
     }
 
-    /* Larger sizes on desktop */
     @media (min-width: 1024px) {
       .home-logo {
         max-width: 420px;
       }
-      .bottom-credit {
-        bottom: 40px;
-        left: 48px;
+      .inline-credit {
+        margin-top: 40px;
         gap: 24px;
         font-size: 1.1rem;
       }
-      .bottom-credit img {
+      .inline-credit img {
         height: 72px;
       }
       .plus-sign {
@@ -572,6 +590,12 @@
 
   <div id="toast"></div>
 
+  <!-- Bottom-right legal links (always visible on homepage, same-tab navigation) -->
+  <div class="legal-links" id="legal-links">
+    <a href="https://www.jacklinus.com/terms/">Terms of Service</a>
+    <a href="https://www.jacklinus.com/privacy/">Privacy Policy</a>
+  </div>
+
   <div class="content">
     <!-- Home / Welcome -->
     <div class="welcome" id="welcome">
@@ -579,7 +603,7 @@
 
       <input type="text" id="search-input" placeholder="Ask anything…" autocomplete="off"/>
 
-      <!-- New free access + teaser section -->
+      <!-- Info section -->
       <div class="home-info">
         <div class="pricing">$0 <span>/ month</span></div>
         <p class="free-notice">
@@ -590,20 +614,14 @@
           Advanced uncensored and unfiltered conversation mode
           <span> — coming soon</span>
         </div>
-      </div>
 
-      <!-- Bottom-left credit (hidden on mobile) -->
-      <div class="bottom-credit">
-        <span>Especially made for</span>
-        <img src="https://github.com/zryzenzzzz/ryanward.org/blob/main/Pics/Davinci.png?raw=true" alt="DaVinci Connect">
-        <span class="plus-sign">+</span>
-        <img src="https://github.com/zryzenzzzz/ryanward.org/blob/main/Pics/Canvas.png?raw=true" alt="Canvas">
-      </div>
-
-      <!-- Bottom-right legal links (hidden on mobile) -->
-      <div class="legal-links">
-        <a href="https://jacklinus.com/terms" target="_blank">Terms of Service</a>
-        <a href="https://jacklinus.com/privacy" target="_blank">Privacy Policy</a>
+        <!-- Especially made for — always below the teaser, in document flow -->
+        <div class="inline-credit">
+          <span>Especially made for</span>
+          <img src="https://github.com/zryzenzzzz/ryanward.org/blob/main/Pics/Davinci.png?raw=true" alt="DaVinci Connect">
+          <span class="plus-sign">+</span>
+          <img src="https://github.com/zryzenzzzz/ryanward.org/blob/main/Pics/Canvas.png?raw=true" alt="Canvas">
+        </div>
       </div>
     </div>
 
@@ -620,7 +638,6 @@
   </div>
 
   <script type="module">
-    // ── Your existing JavaScript remains completely unchanged ──
     const HF_TOKEN   = "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";
     const SPACE_ID   = "hassan773/SageBot";
     const MODEL      = "llama-3.3-70b-versatile";
@@ -721,6 +738,16 @@
       toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
     }
 
+    /* Show/hide legal links based on view */
+    const legalLinks = document.getElementById('legal-links');
+    function updateLegalLinksVisibility() {
+      if (chatArea.classList.contains('active')) {
+        legalLinks.style.display = 'none';
+      } else {
+        legalLinks.style.display = 'flex';
+      }
+    }
+
     window.handleGoogleSignIn = function(response) {
       const payload = JSON.parse(atob(response.credential.split('.')[1]));
       currentUser = { name: payload.name, email: payload.email, picture: payload.picture, sub: payload.sub };
@@ -742,11 +769,7 @@
 
     function signOut() {
       if (!currentUser) return;
-
-      if (!confirm("Are you sure you want to sign out?")) {
-        return;
-      }
-
+      if (!confirm("Are you sure you want to sign out?")) return;
       if (window.google && currentUser) {
         google.accounts.id.revoke(currentUser.email, () => {});
       }
@@ -831,6 +854,7 @@
 
       welcome.classList.add('hidden');
       chatArea.classList.add('active');
+      updateLegalLinksVisibility();
       chat.innerHTML = '';
       sessionMessages = [...session.messages];
       session.messages.forEach(m => {
@@ -860,9 +884,7 @@
     function closeAvatarMenu() { avatarMenuOpen = false; avatarMenu.classList.remove('open'); }
     userAvatar.addEventListener('click', e => { e.stopPropagation(); avatarMenuOpen ? closeAvatarMenu() : openAvatarMenu(); });
     document.addEventListener('click', e => { if (avatarMenuOpen && !avatarMenu.contains(e.target) && e.target !== userAvatar) closeAvatarMenu(); });
-    document.getElementById('sign-out-btn').addEventListener('click', () => {
-      signOut();
-    });
+    document.getElementById('sign-out-btn').addEventListener('click', () => { signOut(); });
     document.getElementById('avatar-history-btn').addEventListener('click', () => { closeAvatarMenu(); openHistory(); });
 
     document.getElementById('sign-in-btn').addEventListener('click', () => {
@@ -926,6 +948,7 @@
     function goToHome() {
       welcome.classList.remove('hidden');
       chatArea.classList.remove('active');
+      updateLegalLinksVisibility();
       chat.innerHTML = '';
       chatInput.value = '';
       isProcessing = false;
@@ -941,6 +964,7 @@
     function enterChat(initialText) {
       welcome.classList.add('hidden');
       chatArea.classList.add('active');
+      updateLegalLinksVisibility();
       sessionMessages = [];
       activeChatId = null;
       hist = [];
@@ -1006,6 +1030,7 @@
     });
 
     window.addEventListener('load', () => {
+      updateLegalLinksVisibility();
       if (window.google) {
         google.accounts.id.initialize({
           client_id: '346581259871-mb5b7plclk8rjkt1ud7l0q0b6o8poec3.apps.googleusercontent.com',
