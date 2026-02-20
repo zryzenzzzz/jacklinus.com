@@ -21,6 +21,7 @@
       position: relative;
     }
 
+    /* ── Loading Screen ── */
     #loading-screen {
       position: fixed; inset: 0; background: #0f001a;
       z-index: 9999; display: flex; flex-direction: column;
@@ -44,6 +45,7 @@
     }
     .loading-label { font-size: 0.88rem; color: rgba(200,170,255,0.6); letter-spacing: 0.05em; }
 
+    /* ── Background ── */
     .particles {
       position: fixed; inset: 0; pointer-events: none;
       background:
@@ -52,6 +54,7 @@
       z-index: 1;
     }
 
+    /* ── Header ── */
     header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 30;
       padding: 16px 32px;
@@ -66,6 +69,7 @@
     .logo { height: 48px; width: auto; cursor: pointer; justify-self: start; }
     .auth-area { justify-self: end; display: flex; align-items: center; gap: 12px; }
 
+    /* ── Sign In Button ── */
     #sign-in-btn {
       display: flex; align-items: center; gap: 8px;
       padding: 8px 16px; background: white; color: #111;
@@ -79,6 +83,7 @@
       background: url('https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png') center / contain no-repeat;
     }
 
+    /* ── User Avatar ── */
     #user-avatar-area { display: none; align-items: center; gap: 10px; }
     #user-avatar-area.visible { display: flex; }
     #user-avatar {
@@ -97,6 +102,7 @@
       max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
 
+    /* ── Avatar dropdown ── */
     .avatar-menu-wrapper { position: relative; }
     #avatar-menu {
       position: absolute; top: calc(100% + 10px); right: 0;
@@ -119,6 +125,7 @@
     .avatar-menu-item.danger:hover { background: rgba(255,80,80,0.1); color: #ff9090; }
     .avatar-menu-divider { height: 1px; background: rgba(140,80,220,0.2); margin: 4px 0; }
 
+    /* ── History Button (center) ── */
     .history-center { position: relative; display: flex; flex-direction: column; align-items: center; }
     .history-btn {
       display: flex; align-items: center; gap: 7px; padding: 8px 20px;
@@ -132,6 +139,7 @@
     .history-btn .arrow { width: 14px; height: 14px; transition: transform 0.3s ease; opacity: 0.75; }
     .history-btn.open .arrow { transform: rotate(180deg); }
 
+    /* ── History Dropdown ── */
     .history-dropdown {
       position: absolute; top: calc(100% + 14px); left: 50%;
       transform: translateX(-50%) scaleY(0.92) translateY(-8px);
@@ -160,6 +168,7 @@
       margin-bottom: 14px; text-align: center;
     }
 
+    /* ── History Grid ── */
     .history-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
     .history-card {
       position: relative; height: 90px; border-radius: 12px;
@@ -186,6 +195,7 @@
     .lock-icon { opacity: 0.5; }
     .history-card-label { font-size: 0.65rem; font-weight: 600; color: rgba(200,170,255,0.6); letter-spacing: 0.06em; text-transform: uppercase; }
 
+    /* ── Real History Cards ── */
     .real-history-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
     .real-history-card {
       position: relative; height: 90px; border-radius: 12px;
@@ -224,6 +234,7 @@
     }
     .no-history-msg span { font-size: 1.8rem; display: block; margin-bottom: 8px; }
 
+    /* ── History Notice ── */
     .history-notice {
       text-align: center; padding: 14px 16px;
       background: rgba(140,80,220,0.08); border: 1px solid rgba(140,80,220,0.2); border-radius: 12px;
@@ -244,8 +255,10 @@
       border-color: rgba(180,140,255,0.55);
     }
 
+    /* ── Main layout ── */
     .content { padding-top: 72px; height: 100vh; display: flex; flex-direction: column; position: relative; z-index: 2; }
 
+    /* ── Welcome / Home ── */
     .welcome {
       position: absolute; inset: 72px 0 0 0;
       display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -277,6 +290,7 @@
       box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     }
 
+    /* Home info section */
     .home-info {
       margin-top: 42px; text-align: center; max-width: 680px;
       opacity: 0; transform: translateY(20px);
@@ -303,6 +317,7 @@
       color: rgba(220,200,255,0.7); font-weight: 500;
     }
 
+    /* ── Inline credit section (below teaser, in flow) ── */
     .inline-credit {
       display: flex;
       align-items: center;
@@ -327,6 +342,7 @@
       color: white;
     }
 
+    /* ── Bottom-right legal links (fixed corner) ── */
     .legal-links {
       position: fixed;
       bottom: 28px;
@@ -348,6 +364,12 @@
       text-decoration: underline;
     }
 
+    /* Hide legal links when chat is active */
+    .chat-area.active ~ .legal-links-home {
+      display: none;
+    }
+
+    /* Responsive */
     @media (max-width: 767px) {
       .inline-credit {
         gap: 10px;
@@ -390,6 +412,7 @@
       }
     }
 
+    /* ── Chat area ── */
     .chat-area {
       position: absolute; inset: 72px 0 0 0; display: flex; flex-direction: column;
       opacity: 0; transform: translateY(30px);
@@ -408,6 +431,7 @@
     .chat-container::-webkit-scrollbar-thumb { background: rgba(160,120,255,0.4); border-radius: 4px; }
     .chat-container::-webkit-scrollbar-thumb:hover { background: rgba(160,120,255,0.65); }
 
+    /* ── Messages ── */
     .message {
       max-width: 72%; padding: 12px 18px; border-radius: 20px;
       line-height: 1.6; font-size: 1rem; word-break: break-word; white-space: pre-wrap;
@@ -415,6 +439,7 @@
     .user { align-self: flex-end; background: linear-gradient(135deg, #6b4eff, #9b6eff); color: white; border-bottom-right-radius: 5px; }
     .bot { align-self: flex-start; background: rgba(45,25,80,0.85); border: 1px solid rgba(140,100,220,0.35); color: #e8d8ff; border-bottom-left-radius: 5px; }
 
+    /* ── Typing indicator ── */
     .typing-indicator {
       align-self: flex-start; display: flex; align-items: center; gap: 10px;
       padding: 12px 18px; background: rgba(45,25,80,0.85);
@@ -427,6 +452,7 @@
     .dot:nth-child(3) { animation-delay: 0.36s; }
     @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-7px); } }
 
+    /* ── Input bar ── */
     .input-area {
       flex-shrink: 0; padding: 14px 32px 18px;
       background: rgba(15,5,30,0.92); backdrop-filter: blur(16px);
@@ -452,6 +478,7 @@
     .send-btn:active:not(:disabled) { transform: scale(0.97); }
     .send-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
+    /* ── Error banner ── */
     .error-msg {
       align-self: flex-start; max-width: 72%;
       padding: 10px 16px; border-radius: 12px;
@@ -459,6 +486,7 @@
       color: rgba(255,160,160,0.95); font-size: 0.88rem; line-height: 1.5;
     }
 
+    /* ── Toast ── */
     #toast {
       position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
       background: rgba(35,15,70,0.95); border: 1px solid rgba(160,120,255,0.35);
@@ -473,12 +501,14 @@
 </head>
 <body>
 
+  <!-- Loading Screen -->
   <div id="loading-screen">
     <img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20white.png?raw=true" alt="JackLinus" class="loading-logo"/>
     <div class="loading-bar-track"><div class="loading-bar-fill" id="loading-bar"></div></div>
     <span class="loading-label">Loading JackLinus AI…</span>
   </div>
 
+  <!-- Google GSI trigger -->
   <div id="g_id_onload"
     data-client_id="346581259871-mb5b7plclk8rjkt1ud7l0q0b6o8poec3.apps.googleusercontent.com"
     data-callback="handleGoogleSignIn"
@@ -560,17 +590,20 @@
 
   <div id="toast"></div>
 
+  <!-- Bottom-right legal links (always visible on homepage, same-tab navigation) -->
   <div class="legal-links" id="legal-links">
     <a href="https://www.jacklinus.com/terms/">Terms of Service</a>
     <a href="https://www.jacklinus.com/privacy/">Privacy Policy</a>
   </div>
 
   <div class="content">
+    <!-- Home / Welcome -->
     <div class="welcome" id="welcome">
       <img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/AI%20soulution.png?raw=true" alt="JackLinus AI" class="home-logo">
 
       <input type="text" id="search-input" placeholder="Ask anything…" autocomplete="off"/>
 
+      <!-- Info section -->
       <div class="home-info">
         <div class="pricing">$0 <span>/ month</span></div>
         <p class="free-notice">
@@ -582,6 +615,7 @@
           <span> — coming soon</span>
         </div>
 
+        <!-- Especially made for — always below the teaser, in document flow -->
         <div class="inline-credit">
           <span>Especially made for</span>
           <img src="https://github.com/zryzenzzzz/ryanward.org/blob/main/Pics/Davinci.png?raw=true" alt="DaVinci Connect">
@@ -591,6 +625,7 @@
       </div>
     </div>
 
+    <!-- Chat -->
     <div class="chat-area" id="chatArea">
       <div class="chat-container" id="chat"></div>
       <div class="input-area">
@@ -608,74 +643,6 @@
     const MODEL      = "llama-3.3-70b-versatile";
     const TEMP       = 0.7;
     const SYSTEM_MSG = "You are a professional assistant.";
-
-    /* ── Session persistence ── */
-    const SESSION_KEY = 'jl_user_session';
-    const SESSION_DURATION = 60 * 60 * 1000; // 1 hour in ms
-    let sessionTimer = null;
-
-    function saveSession(user) {
-      const data = {
-        name: user.name,
-        email: user.email,
-        picture: user.picture,
-        sub: user.sub,
-        loginTime: Date.now()
-      };
-      try { localStorage.setItem(SESSION_KEY, JSON.stringify(data)); } catch {}
-    }
-
-    function loadSavedSession() {
-      try {
-        const raw = localStorage.getItem(SESSION_KEY);
-        if (!raw) return null;
-        const data = JSON.parse(raw);
-        if (!data || !data.sub || !data.loginTime) return null;
-        // Check if session has expired
-        if (Date.now() - data.loginTime >= SESSION_DURATION) {
-          localStorage.removeItem(SESSION_KEY);
-          return null;
-        }
-        return data;
-      } catch {
-        localStorage.removeItem(SESSION_KEY);
-        return null;
-      }
-    }
-
-    function clearSavedSession() {
-      try { localStorage.removeItem(SESSION_KEY); } catch {}
-    }
-
-    function startSessionTimer(loginTime) {
-      if (sessionTimer) clearTimeout(sessionTimer);
-      const elapsed = Date.now() - loginTime;
-      const remaining = SESSION_DURATION - elapsed;
-      if (remaining <= 0) {
-        autoSignOut();
-        return;
-      }
-      sessionTimer = setTimeout(() => {
-        autoSignOut();
-      }, remaining);
-    }
-
-    function autoSignOut() {
-      if (!currentUser) return;
-      clearSavedSession();
-      if (sessionTimer) { clearTimeout(sessionTimer); sessionTimer = null; }
-      currentUser = null;
-      activeChatId = null;
-      document.getElementById('sign-in-btn').style.display = 'flex';
-      document.getElementById('user-avatar-area').classList.remove('visible');
-      document.getElementById('user-avatar').src = '';
-      document.getElementById('user-name').textContent = '';
-      closeAvatarMenu();
-      document.getElementById('history-logged-out').style.display = 'block';
-      document.getElementById('history-logged-in').style.display = 'none';
-      goToHome();
-      showToast('Your session has expired. Please sign in again.');
-    }
 
     let hist = [];
     let sageBotClient = null;
@@ -771,6 +738,7 @@
       toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
     }
 
+    /* Show/hide legal links based on view */
     const legalLinks = document.getElementById('legal-links');
     function updateLegalLinksVisibility() {
       if (chatArea.classList.contains('active')) {
@@ -780,18 +748,14 @@
       }
     }
 
-    /* Google sign-in callback — only fires on fresh Google auth */
     window.handleGoogleSignIn = function(response) {
       const payload = JSON.parse(atob(response.credential.split('.')[1]));
       currentUser = { name: payload.name, email: payload.email, picture: payload.picture, sub: payload.sub };
       chatHistory = loadHistory(currentUser.sub);
-      saveSession(currentUser);
-      startSessionTimer(Date.now());
-      applyLoggedInUI();
+      onUserLoggedIn();
     };
 
-    /* Apply the logged-in UI state (no toast, no welcome message) */
-    function applyLoggedInUI() {
+    function onUserLoggedIn() {
       document.getElementById('sign-in-btn').style.display = 'none';
       const avatarArea = document.getElementById('user-avatar-area');
       avatarArea.classList.add('visible');
@@ -800,6 +764,7 @@
       document.getElementById('history-logged-out').style.display = 'none';
       document.getElementById('history-logged-in').style.display = 'block';
       renderHistoryCards();
+      showToast(`Welcome back, ${currentUser.name.split(' ')[0]}! 👋`);
     }
 
     function signOut() {
@@ -808,8 +773,6 @@
       if (window.google && currentUser) {
         google.accounts.id.revoke(currentUser.email, () => {});
       }
-      clearSavedSession();
-      if (sessionTimer) { clearTimeout(sessionTimer); sessionTimer = null; }
       currentUser = null; activeChatId = null;
       document.getElementById('sign-in-btn').style.display = 'flex';
       document.getElementById('user-avatar-area').classList.remove('visible');
@@ -1066,20 +1029,16 @@
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage(); }
     });
 
-    /* ── On page load: restore session from localStorage, no Google prompt ── */
     window.addEventListener('load', () => {
       updateLegalLinksVisibility();
-
-      // Try to restore a saved session silently
-      const saved = loadSavedSession();
-      if (saved) {
-        currentUser = { name: saved.name, email: saved.email, picture: saved.picture, sub: saved.sub };
-        chatHistory = loadHistory(currentUser.sub);
-        applyLoggedInUI();
-        startSessionTimer(saved.loginTime);
+      if (window.google) {
+        google.accounts.id.initialize({
+          client_id: '346581259871-mb5b7plclk8rjkt1ud7l0q0b6o8poec3.apps.googleusercontent.com',
+          callback: window.handleGoogleSignIn,
+          auto_select: true
+        });
+        google.accounts.id.prompt();
       }
-      // Do NOT call google.accounts.id.prompt() here — no auto-prompt on refresh
-
       connectSageBot();
     });
   </script>
