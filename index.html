@@ -29,28 +29,38 @@
       transition: opacity 0.6s ease, visibility 0.6s ease;
     }
     #loading-screen.fade-out { opacity: 0; visibility: hidden; }
-    .loading-logo { height: 80px; width: auto; animation: pulse 1.8s ease-in-out infinite; }
+    .loading-logo {
+      height: 80px; width: auto;
+      animation: pulse 1.8s ease-in-out infinite;
+    }
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.6; transform: scale(0.96); }
     }
     .loading-bar-track {
       width: 220px; height: 4px;
-      background: rgba(160,120,255,0.2); border-radius: 999px; overflow: hidden;
+      background: rgba(160,120,255,0.2);
+      border-radius: 999px; overflow: hidden;
     }
     .loading-bar-fill {
       height: 100%; width: 0%;
       background: linear-gradient(90deg, #9b70ff, #c090ff);
       border-radius: 999px; transition: width 0.12s linear;
     }
-    .loading-label { font-size: 0.88rem; color: rgba(200,170,255,0.6); letter-spacing: 0.05em; }
+    .loading-label {
+      font-size: 0.88rem;
+      color: rgba(200,170,255,0.6);
+      letter-spacing: 0.05em;
+    }
 
     /* ── Background ── */
     .particles {
       position: fixed; inset: 0; pointer-events: none;
       background:
-        radial-gradient(circle at 20% 30%, rgba(120,60,200,0.12) 0%, transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(180,100,255,0.10) 0%, transparent 50%);
+        radial-gradient(circle at 20% 30%,
+          rgba(120,60,200,0.12) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%,
+          rgba(180,100,255,0.10) 0%, transparent 50%);
       z-index: 1;
     }
 
@@ -66,8 +76,14 @@
       border-bottom: 1px solid rgba(140,80,220,0.25);
       height: 72px;
     }
-    .logo { height: 48px; width: auto; cursor: pointer; justify-self: start; }
-    .auth-area { justify-self: end; display: flex; align-items: center; gap: 12px; }
+    .logo {
+      height: 48px; width: auto;
+      cursor: pointer; justify-self: start;
+    }
+    .auth-area {
+      justify-self: end;
+      display: flex; align-items: center; gap: 12px;
+    }
 
     /* ── Sign In Button ── */
     #sign-in-btn {
@@ -80,16 +96,28 @@
     #sign-in-btn:hover { background: #f0f0f0; }
     .g-icon {
       width: 20px; height: 20px;
-      background: url('https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png') center / contain no-repeat;
+      background: url('https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png')
+        center / contain no-repeat;
+    }
+
+    /* ── Google rendered button fallback ── */
+    #g-btn-fallback {
+      display: none;
+    }
+    #g-btn-fallback.visible {
+      display: block;
     }
 
     /* ── User Avatar ── */
-    #user-avatar-area { display: none; align-items: center; gap: 10px; }
+    #user-avatar-area {
+      display: none; align-items: center; gap: 10px;
+    }
     #user-avatar-area.visible { display: flex; }
     #user-avatar {
       width: 40px; height: 40px; border-radius: 50%;
-      border: 2px solid rgba(160,120,255,0.6); object-fit: cover;
-      cursor: pointer; transition: border-color 0.2s, transform 0.2s;
+      border: 2px solid rgba(160,120,255,0.6);
+      object-fit: cover; cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
       box-shadow: 0 0 0 0 rgba(160,120,255,0);
     }
     #user-avatar:hover {
@@ -99,60 +127,99 @@
     #user-name {
       font-size: 0.88rem; font-weight: 500;
       color: rgba(210,185,255,0.9);
-      max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      max-width: 120px; overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap;
     }
 
     /* ── Avatar dropdown ── */
     .avatar-menu-wrapper { position: relative; }
     #avatar-menu {
       position: absolute; top: calc(100% + 10px); right: 0;
-      background: rgba(18,6,36,0.98); border: 1px solid rgba(140,80,220,0.35);
+      background: rgba(18,6,36,0.98);
+      border: 1px solid rgba(140,80,220,0.35);
       border-radius: 12px; padding: 8px; min-width: 160px;
       box-shadow: 0 16px 40px rgba(0,0,0,0.6);
-      opacity: 0; pointer-events: none; transform: translateY(-6px);
+      opacity: 0; pointer-events: none;
+      transform: translateY(-6px);
       transition: opacity 0.2s, transform 0.2s; z-index: 200;
     }
-    #avatar-menu.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+    #avatar-menu.open {
+      opacity: 1; pointer-events: all;
+      transform: translateY(0);
+    }
     .avatar-menu-item {
       display: flex; align-items: center; gap: 8px;
-      width: 100%; padding: 9px 12px; background: none; border: none; border-radius: 8px;
-      color: rgba(200,170,255,0.85); font-size: 0.85rem; font-family: inherit;
-      font-weight: 500; cursor: pointer; text-align: left;
+      width: 100%; padding: 9px 12px;
+      background: none; border: none; border-radius: 8px;
+      color: rgba(200,170,255,0.85); font-size: 0.85rem;
+      font-family: inherit; font-weight: 500; cursor: pointer;
+      text-align: left;
       transition: background 0.15s, color 0.15s;
     }
-    .avatar-menu-item:hover { background: rgba(140,80,220,0.15); color: #e0d0ff; }
-    .avatar-menu-item.danger { color: rgba(255,120,120,0.8); }
-    .avatar-menu-item.danger:hover { background: rgba(255,80,80,0.1); color: #ff9090; }
-    .avatar-menu-divider { height: 1px; background: rgba(140,80,220,0.2); margin: 4px 0; }
+    .avatar-menu-item:hover {
+      background: rgba(140,80,220,0.15); color: #e0d0ff;
+    }
+    .avatar-menu-item.danger {
+      color: rgba(255,120,120,0.8);
+    }
+    .avatar-menu-item.danger:hover {
+      background: rgba(255,80,80,0.1); color: #ff9090;
+    }
+    .avatar-menu-divider {
+      height: 1px;
+      background: rgba(140,80,220,0.2); margin: 4px 0;
+    }
 
     /* ── History Button (center) ── */
-    .history-center { position: relative; display: flex; flex-direction: column; align-items: center; }
-    .history-btn {
-      display: flex; align-items: center; gap: 7px; padding: 8px 20px;
-      background: rgba(140,80,220,0.15); border: 1px solid rgba(160,120,255,0.3);
-      border-radius: 999px; color: rgba(210,185,255,0.9);
-      font-size: 0.9rem; font-weight: 600; font-family: inherit;
-      letter-spacing: 0.04em; cursor: pointer;
-      transition: background 0.2s, border-color 0.2s, color 0.2s; user-select: none;
+    .history-center {
+      position: relative;
+      display: flex; flex-direction: column;
+      align-items: center;
     }
-    .history-btn:hover { background: rgba(160,100,255,0.22); border-color: rgba(180,140,255,0.5); color: #e0d0ff; }
-    .history-btn .arrow { width: 14px; height: 14px; transition: transform 0.3s ease; opacity: 0.75; }
+    .history-btn {
+      display: flex; align-items: center; gap: 7px;
+      padding: 8px 20px;
+      background: rgba(140,80,220,0.15);
+      border: 1px solid rgba(160,120,255,0.3);
+      border-radius: 999px;
+      color: rgba(210,185,255,0.9);
+      font-size: 0.9rem; font-weight: 600;
+      font-family: inherit; letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+      user-select: none;
+    }
+    .history-btn:hover {
+      background: rgba(160,100,255,0.22);
+      border-color: rgba(180,140,255,0.5);
+      color: #e0d0ff;
+    }
+    .history-btn .arrow {
+      width: 14px; height: 14px;
+      transition: transform 0.3s ease; opacity: 0.75;
+    }
     .history-btn.open .arrow { transform: rotate(180deg); }
 
     /* ── History Dropdown ── */
     .history-dropdown {
-      position: absolute; top: calc(100% + 14px); left: 50%;
+      position: absolute; top: calc(100% + 14px);
+      left: 50%;
       transform: translateX(-50%) scaleY(0.92) translateY(-8px);
       transform-origin: top center; width: 440px;
-      background: rgba(18,6,36,0.97); border: 1px solid rgba(140,80,220,0.35);
+      background: rgba(18,6,36,0.97);
+      border: 1px solid rgba(140,80,220,0.35);
       border-radius: 18px; padding: 20px;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(140,80,220,0.1);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.7),
+        0 0 0 1px rgba(140,80,220,0.1);
       backdrop-filter: blur(20px);
       opacity: 0; pointer-events: none;
-      transition: opacity 0.28s ease, transform 0.28s ease; z-index: 100;
+      transition: opacity 0.28s ease, transform 0.28s ease;
+      z-index: 100;
     }
     .history-dropdown.open {
-      opacity: 1; transform: translateX(-50%) scaleY(1) translateY(0); pointer-events: all;
+      opacity: 1;
+      transform: translateX(-50%) scaleY(1) translateY(0);
+      pointer-events: all;
     }
     .history-dropdown::before {
       content: ''; position: absolute; top: -7px; left: 50%;
@@ -163,128 +230,194 @@
       rotate: 45deg;
     }
     .history-dropdown-header {
-      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em;
-      text-transform: uppercase; color: rgba(180,140,255,0.55);
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(180,140,255,0.55);
       margin-bottom: 14px; text-align: center;
     }
 
     /* ── History Grid ── */
-    .history-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .history-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px; margin-bottom: 16px;
+    }
     .history-card {
       position: relative; height: 90px; border-radius: 12px;
-      border: 1px solid rgba(140,80,220,0.25); overflow: hidden;
-      background: rgba(35,15,70,0.6);
+      border: 1px solid rgba(140,80,220,0.25);
+      overflow: hidden; background: rgba(35,15,70,0.6);
     }
     .history-card-blur {
-      position: absolute; inset: 0; display: flex; flex-direction: column;
-      gap: 6px; padding: 10px; filter: blur(3.5px);
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      gap: 6px; padding: 10px;
+      filter: blur(3.5px);
       user-select: none; pointer-events: none;
     }
-    .blur-line { height: 8px; border-radius: 4px; background: rgba(180,140,255,0.25); }
+    .blur-line {
+      height: 8px; border-radius: 4px;
+      background: rgba(180,140,255,0.25);
+    }
     .blur-line.short { width: 55%; }
     .blur-line.medium { width: 80%; }
     .blur-line.long { width: 100%; }
-    .blur-line.tiny { width: 35%; height: 6px; background: rgba(160,120,255,0.18); }
-    .blur-icon { width: 22px; height: 22px; border-radius: 50%; background: rgba(140,80,220,0.35); margin-bottom: 4px; flex-shrink: 0; }
+    .blur-line.tiny {
+      width: 35%; height: 6px;
+      background: rgba(160,120,255,0.18);
+    }
+    .blur-icon {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: rgba(140,80,220,0.35);
+      margin-bottom: 4px; flex-shrink: 0;
+    }
     .history-card-overlay {
-      position: absolute; inset: 0; display: flex;
-      align-items: center; justify-content: center;
+      position: absolute; inset: 0;
+      display: flex; align-items: center;
+      justify-content: center;
       background: rgba(10,0,22,0.45);
     }
-    .history-card-lock { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .history-card-lock {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 5px;
+    }
     .lock-icon { opacity: 0.5; }
-    .history-card-label { font-size: 0.65rem; font-weight: 600; color: rgba(200,170,255,0.6); letter-spacing: 0.06em; text-transform: uppercase; }
+    .history-card-label {
+      font-size: 0.65rem; font-weight: 600;
+      color: rgba(200,170,255,0.6);
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
 
     /* ── Real History Cards ── */
-    .real-history-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .real-history-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px; margin-bottom: 16px;
+    }
     .real-history-card {
       position: relative; height: 90px; border-radius: 12px;
-      border: 1px solid rgba(140,80,220,0.3); overflow: hidden;
-      background: rgba(35,15,70,0.7); cursor: pointer;
+      border: 1px solid rgba(140,80,220,0.3);
+      overflow: hidden; background: rgba(35,15,70,0.7);
+      cursor: pointer;
       transition: border-color 0.2s, background 0.2s;
-      padding: 10px; display: flex; flex-direction: column; gap: 5px;
+      padding: 10px; display: flex;
+      flex-direction: column; gap: 5px;
     }
-    .real-history-card:hover { border-color: rgba(180,140,255,0.55); background: rgba(50,20,90,0.8); }
+    .real-history-card:hover {
+      border-color: rgba(180,140,255,0.55);
+      background: rgba(50,20,90,0.8);
+    }
     .real-history-card-title {
-      font-size: 0.72rem; font-weight: 600; color: rgba(210,185,255,0.9);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      font-size: 0.72rem; font-weight: 600;
+      color: rgba(210,185,255,0.9);
+      white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis;
     }
     .real-history-card-preview {
-      font-size: 0.65rem; color: rgba(180,150,255,0.55);
+      font-size: 0.65rem;
+      color: rgba(180,150,255,0.55);
       overflow: hidden; display: -webkit-box;
-      -webkit-line-clamp: 3; -webkit-box-orient: vertical; line-height: 1.4;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical; line-height: 1.4;
     }
     .real-history-card-time {
       position: absolute; bottom: 7px; right: 10px;
-      font-size: 0.58rem; color: rgba(160,120,255,0.45); font-weight: 500;
+      font-size: 0.58rem;
+      color: rgba(160,120,255,0.45); font-weight: 500;
     }
     .real-history-card-del {
       position: absolute; top: 6px; right: 7px;
       background: none; border: none; cursor: pointer;
       color: rgba(200,150,255,0.3); font-size: 0.75rem;
       line-height: 1; padding: 2px 4px; border-radius: 4px;
-      transition: color 0.15s, background 0.15s; display: none;
+      transition: color 0.15s, background 0.15s;
+      display: none;
     }
-    .real-history-card:hover .real-history-card-del { display: block; }
-    .real-history-card-del:hover { color: rgba(255,100,100,0.85); background: rgba(255,60,60,0.12); }
+    .real-history-card:hover .real-history-card-del {
+      display: block;
+    }
+    .real-history-card-del:hover {
+      color: rgba(255,100,100,0.85);
+      background: rgba(255,60,60,0.12);
+    }
 
     .no-history-msg {
       text-align: center; padding: 24px 0 10px;
-      color: rgba(180,150,255,0.45); font-size: 0.82rem; line-height: 1.6;
+      color: rgba(180,150,255,0.45);
+      font-size: 0.82rem; line-height: 1.6;
     }
-    .no-history-msg span { font-size: 1.8rem; display: block; margin-bottom: 8px; }
+    .no-history-msg span {
+      font-size: 1.8rem; display: block; margin-bottom: 8px;
+    }
 
     /* ── History Notice ── */
     .history-notice {
       text-align: center; padding: 14px 16px;
-      background: rgba(140,80,220,0.08); border: 1px solid rgba(140,80,220,0.2); border-radius: 12px;
+      background: rgba(140,80,220,0.08);
+      border: 1px solid rgba(140,80,220,0.2);
+      border-radius: 12px;
     }
-    .history-notice p { font-size: 0.82rem; color: rgba(200,170,255,0.75); line-height: 1.55; }
-    .history-notice strong { color: rgba(210,185,255,0.95); font-weight: 600; }
+    .history-notice p {
+      font-size: 0.82rem;
+      color: rgba(200,170,255,0.75); line-height: 1.55;
+    }
+    .history-notice strong {
+      color: rgba(210,185,255,0.95); font-weight: 600;
+    }
     .sign-in-link {
       display: inline-flex; align-items: center; gap: 5px;
       margin-top: 10px; padding: 6px 16px;
-      background: linear-gradient(135deg, rgba(155,112,255,0.25), rgba(192,144,255,0.18));
-      border: 1px solid rgba(160,120,255,0.35); border-radius: 999px;
-      color: rgba(210,185,255,0.9); font-size: 0.8rem; font-weight: 600;
-      cursor: pointer; font-family: inherit; letter-spacing: 0.03em;
+      background: linear-gradient(135deg,
+        rgba(155,112,255,0.25), rgba(192,144,255,0.18));
+      border: 1px solid rgba(160,120,255,0.35);
+      border-radius: 999px;
+      color: rgba(210,185,255,0.9); font-size: 0.8rem;
+      font-weight: 600; cursor: pointer; font-family: inherit;
+      letter-spacing: 0.03em;
       transition: background 0.2s, border-color 0.2s;
     }
     .sign-in-link:hover {
-      background: linear-gradient(135deg, rgba(155,112,255,0.38), rgba(192,144,255,0.28));
+      background: linear-gradient(135deg,
+        rgba(155,112,255,0.38), rgba(192,144,255,0.28));
       border-color: rgba(180,140,255,0.55);
     }
 
     /* ── Main layout ── */
-    .content { padding-top: 72px; height: 100vh; display: flex; flex-direction: column; position: relative; z-index: 2; }
+    .content {
+      padding-top: 72px; height: 100vh;
+      display: flex; flex-direction: column;
+      position: relative; z-index: 2;
+    }
 
     /* ── Welcome / Home ── */
     .welcome {
       position: absolute; inset: 72px 0 0 0;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      transition: opacity 0.5s ease, transform 0.5s ease; z-index: 5;
-      overflow-y: auto;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      z-index: 5; overflow-y: auto;
       padding: 20px 20px 80px;
     }
-    .welcome.hidden { opacity: 0; transform: translateY(-50px); pointer-events: none; }
+    .welcome.hidden {
+      opacity: 0; transform: translateY(-50px);
+      pointer-events: none;
+    }
 
     .home-logo {
-      max-width: 320px;
-      height: auto;
-      margin-bottom: 60px;
-      display: block;
-      flex-shrink: 0;
+      max-width: 320px; height: auto;
+      margin-bottom: 60px; display: block; flex-shrink: 0;
     }
 
     #search-input {
-      width: 100%; max-width: 720px; padding: 18px 32px; font-size: 1.15rem;
-      background: rgba(35,15,70,0.65); border: 1px solid rgba(160,120,255,0.45);
+      width: 100%; max-width: 720px;
+      padding: 18px 32px; font-size: 1.15rem;
+      background: rgba(35,15,70,0.65);
+      border: 1px solid rgba(160,120,255,0.45);
       border-radius: 60px; color: white; outline: none;
-      backdrop-filter: blur(12px); box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-      transition: border-color 0.25s ease;
-      flex-shrink: 0;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      transition: border-color 0.25s ease; flex-shrink: 0;
     }
-    #search-input::placeholder { color: rgba(200,180,255,0.45); }
+    #search-input::placeholder {
+      color: rgba(200,180,255,0.45);
+    }
     #search-input:focus {
       border-color: rgba(160,120,255,0.75);
       box-shadow: 0 10px 40px rgba(0,0,0,0.5);
@@ -294,185 +427,194 @@
     .home-info {
       margin-top: 42px; text-align: center; max-width: 680px;
       opacity: 0; transform: translateY(20px);
-      animation: fadeInUp 1.1s ease forwards 0.5s;
-      flex-shrink: 0;
+      animation: fadeInUp 1.1s ease forwards 0.5s; flex-shrink: 0;
     }
     @keyframes fadeInUp {
       to { opacity: 1; transform: translateY(0); }
     }
     .pricing {
-      font-size: 1.9rem; font-weight: 700; color: #d0b8ff; margin-bottom: 8px;
+      font-size: 1.9rem; font-weight: 700;
+      color: #d0b8ff; margin-bottom: 8px;
     }
-    .pricing span {
-      font-size: 1.1rem; font-weight: 500; opacity: 0.92;
-    }
+    .pricing span { font-size: 1.1rem; font-weight: 500; opacity: 0.92; }
     .free-notice {
-      font-size: 1.05rem; color: rgba(220,200,255,0.92); line-height: 1.55;
+      font-size: 1.05rem;
+      color: rgba(220,200,255,0.92); line-height: 1.55;
       margin-bottom: 28px;
     }
     .teaser {
-      font-size: 1.12rem; font-weight: 600; color: #c090ff; letter-spacing: 0.4px;
+      font-size: 1.12rem; font-weight: 600;
+      color: #c090ff; letter-spacing: 0.4px;
     }
     .teaser span {
       color: rgba(220,200,255,0.7); font-weight: 500;
     }
 
-    /* ── Inline credit section (below teaser, in flow) ── */
+    /* ── Inline credit section ── */
     .inline-credit {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      margin-top: 32px;
-      font-size: 1rem;
+      display: flex; align-items: center;
+      justify-content: center; gap: 16px;
+      margin-top: 32px; font-size: 1rem;
       color: rgba(220,200,255,0.9);
-      flex-shrink: 0;
-      flex-wrap: wrap;
+      flex-shrink: 0; flex-wrap: wrap;
     }
     .inline-credit img {
-      height: 52px;
-      width: auto;
-      object-fit: contain;
-      border-radius: 8px;
-      box-shadow: none;
+      height: 52px; width: auto; object-fit: contain;
+      border-radius: 8px; box-shadow: none;
     }
     .plus-sign {
-      font-size: 2.2rem;
-      font-weight: bold;
-      color: white;
+      font-size: 2.2rem; font-weight: bold; color: white;
     }
 
-    /* ── Bottom-right legal links (fixed corner) ── */
+    /* ── Bottom-right legal links ── */
     .legal-links {
-      position: fixed;
-      bottom: 28px;
-      right: 32px;
-      display: flex;
-      gap: 24px;
-      z-index: 10;
-      font-size: 0.92rem;
-      color: rgba(200,180,255,0.75);
+      position: fixed; bottom: 28px; right: 32px;
+      display: flex; gap: 24px; z-index: 10;
+      font-size: 0.92rem; color: rgba(200,180,255,0.75);
     }
     .legal-links a {
-      color: rgba(180,140,255,0.9);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s;
+      color: rgba(180,140,255,0.9); text-decoration: none;
+      font-weight: 500; transition: color 0.2s;
     }
     .legal-links a:hover {
-      color: #d0b8ff;
-      text-decoration: underline;
-    }
-
-    /* Hide legal links when chat is active */
-    .chat-area.active ~ .legal-links-home {
-      display: none;
+      color: #d0b8ff; text-decoration: underline;
     }
 
     /* Responsive */
     @media (max-width: 767px) {
-      .inline-credit {
-        gap: 10px;
-        font-size: 0.82rem;
-      }
-      .inline-credit img {
-        height: 36px;
-      }
-      .plus-sign {
-        font-size: 1.5rem;
-      }
+      .inline-credit { gap: 10px; font-size: 0.82rem; }
+      .inline-credit img { height: 36px; }
+      .plus-sign { font-size: 1.5rem; }
       .legal-links {
-        bottom: 12px;
-        right: 16px;
-        gap: 16px;
-        font-size: 0.78rem;
+        bottom: 12px; right: 16px;
+        gap: 16px; font-size: 0.78rem;
       }
     }
 
     @media (min-width: 1024px) {
-      .home-logo {
-        max-width: 420px;
-      }
+      .home-logo { max-width: 420px; }
       .inline-credit {
-        margin-top: 40px;
-        gap: 24px;
-        font-size: 1.1rem;
+        margin-top: 40px; gap: 24px; font-size: 1.1rem;
       }
-      .inline-credit img {
-        height: 72px;
-      }
-      .plus-sign {
-        font-size: 3rem;
-      }
+      .inline-credit img { height: 72px; }
+      .plus-sign { font-size: 3rem; }
       .legal-links {
-        bottom: 42px;
-        right: 48px;
-        font-size: 1rem;
-        gap: 32px;
+        bottom: 42px; right: 48px;
+        font-size: 1rem; gap: 32px;
       }
     }
 
     /* ── Chat area ── */
     .chat-area {
-      position: absolute; inset: 72px 0 0 0; display: flex; flex-direction: column;
+      position: absolute; inset: 72px 0 0 0;
+      display: flex; flex-direction: column;
       opacity: 0; transform: translateY(30px);
-      transition: opacity 0.55s ease 0.1s, transform 0.55s ease 0.1s;
+      transition: opacity 0.55s ease 0.1s,
+        transform 0.55s ease 0.1s;
       pointer-events: none; z-index: 4;
     }
-    .chat-area.active { opacity: 1; transform: translateY(0); pointer-events: all; }
+    .chat-area.active {
+      opacity: 1; transform: translateY(0);
+      pointer-events: all;
+    }
 
     .chat-container {
       flex: 1; overflow-y: auto; overflow-x: hidden;
-      padding: 24px 32px 20px; display: flex; flex-direction: column;
+      padding: 24px 32px 20px;
+      display: flex; flex-direction: column;
       gap: 14px; min-height: 0;
     }
     .chat-container::-webkit-scrollbar { width: 6px; }
-    .chat-container::-webkit-scrollbar-track { background: transparent; }
-    .chat-container::-webkit-scrollbar-thumb { background: rgba(160,120,255,0.4); border-radius: 4px; }
-    .chat-container::-webkit-scrollbar-thumb:hover { background: rgba(160,120,255,0.65); }
+    .chat-container::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .chat-container::-webkit-scrollbar-thumb {
+      background: rgba(160,120,255,0.4); border-radius: 4px;
+    }
+    .chat-container::-webkit-scrollbar-thumb:hover {
+      background: rgba(160,120,255,0.65);
+    }
 
     /* ── Messages ── */
     .message {
-      max-width: 72%; padding: 12px 18px; border-radius: 20px;
-      line-height: 1.6; font-size: 1rem; word-break: break-word; white-space: pre-wrap;
+      max-width: 72%; padding: 12px 18px;
+      border-radius: 20px; line-height: 1.6;
+      font-size: 1rem; word-break: break-word;
+      white-space: pre-wrap;
     }
-    .user { align-self: flex-end; background: linear-gradient(135deg, #6b4eff, #9b6eff); color: white; border-bottom-right-radius: 5px; }
-    .bot { align-self: flex-start; background: rgba(45,25,80,0.85); border: 1px solid rgba(140,100,220,0.35); color: #e8d8ff; border-bottom-left-radius: 5px; }
+    .user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #6b4eff, #9b6eff);
+      color: white; border-bottom-right-radius: 5px;
+    }
+    .bot {
+      align-self: flex-start;
+      background: rgba(45,25,80,0.85);
+      border: 1px solid rgba(140,100,220,0.35);
+      color: #e8d8ff; border-bottom-left-radius: 5px;
+    }
 
     /* ── Typing indicator ── */
     .typing-indicator {
-      align-self: flex-start; display: flex; align-items: center; gap: 10px;
-      padding: 12px 18px; background: rgba(45,25,80,0.85);
-      border: 1px solid rgba(140,100,220,0.35); border-radius: 20px;
-      border-bottom-left-radius: 5px; font-size: 0.92rem; color: #c0a8ff; max-width: 72%;
+      align-self: flex-start;
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 18px;
+      background: rgba(45,25,80,0.85);
+      border: 1px solid rgba(140,100,220,0.35);
+      border-radius: 20px; border-bottom-left-radius: 5px;
+      font-size: 0.92rem; color: #c0a8ff; max-width: 72%;
     }
     .dots { display: flex; gap: 5px; }
-    .dot { width: 7px; height: 7px; background: #b080ff; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out; }
+    .dot {
+      width: 7px; height: 7px; background: #b080ff;
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out;
+    }
     .dot:nth-child(2) { animation-delay: 0.18s; }
     .dot:nth-child(3) { animation-delay: 0.36s; }
-    @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-7px); } }
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-7px); }
+    }
 
     /* ── Input bar ── */
     .input-area {
       flex-shrink: 0; padding: 14px 32px 18px;
-      background: rgba(15,5,30,0.92); backdrop-filter: blur(16px);
+      background: rgba(15,5,30,0.92);
+      backdrop-filter: blur(16px);
       border-top: 1px solid rgba(140,80,220,0.28);
     }
-    .input-wrapper { display: flex; gap: 12px; max-width: 900px; margin: 0 auto; }
+    .input-wrapper {
+      display: flex; gap: 12px;
+      max-width: 900px; margin: 0 auto;
+    }
     #chat-input {
       flex: 1; padding: 13px 22px; font-size: 1rem;
-      border: 1px solid rgba(160,120,255,0.4); border-radius: 999px;
-      background: rgba(35,15,70,0.8); color: white; outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s; font-family: inherit;
+      border: 1px solid rgba(160,120,255,0.4);
+      border-radius: 999px;
+      background: rgba(35,15,70,0.8); color: white;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
     }
-    #chat-input::placeholder { color: rgba(200,180,255,0.4); }
-    #chat-input:focus { border-color: #b080ff; box-shadow: 0 0 0 4px rgba(176,128,255,0.2); }
-    #chat-input:disabled { opacity: 0.5; cursor: not-allowed; }
+    #chat-input::placeholder {
+      color: rgba(200,180,255,0.4);
+    }
+    #chat-input:focus {
+      border-color: #b080ff;
+      box-shadow: 0 0 0 4px rgba(176,128,255,0.2);
+    }
+    #chat-input:disabled {
+      opacity: 0.5; cursor: not-allowed;
+    }
     .send-btn {
-      padding: 0 28px; height: 46px; font-size: 1rem; font-family: inherit;
-      font-weight: 600; background: linear-gradient(135deg, #9b70ff, #c090ff);
-      color: white; border: none; border-radius: 999px; cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s; white-space: nowrap;
+      padding: 0 28px; height: 46px; font-size: 1rem;
+      font-family: inherit; font-weight: 600;
+      background: linear-gradient(135deg, #9b70ff, #c090ff);
+      color: white; border: none; border-radius: 999px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      white-space: nowrap;
     }
     .send-btn:hover:not(:disabled) { opacity: 0.9; }
     .send-btn:active:not(:disabled) { transform: scale(0.97); }
@@ -482,68 +624,170 @@
     .error-msg {
       align-self: flex-start; max-width: 72%;
       padding: 10px 16px; border-radius: 12px;
-      background: rgba(255,60,60,0.12); border: 1px solid rgba(255,80,80,0.3);
-      color: rgba(255,160,160,0.95); font-size: 0.88rem; line-height: 1.5;
+      background: rgba(255,60,60,0.12);
+      border: 1px solid rgba(255,80,80,0.3);
+      color: rgba(255,160,160,0.95);
+      font-size: 0.88rem; line-height: 1.5;
     }
 
     /* ── Toast ── */
     #toast {
-      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
-      background: rgba(35,15,70,0.95); border: 1px solid rgba(160,120,255,0.35);
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(35,15,70,0.95);
+      border: 1px solid rgba(160,120,255,0.35);
       border-radius: 999px; padding: 10px 22px;
-      font-size: 0.85rem; color: rgba(210,185,255,0.95);
+      font-size: 0.85rem;
+      color: rgba(210,185,255,0.95);
       box-shadow: 0 8px 30px rgba(0,0,0,0.5);
       opacity: 0; pointer-events: none;
-      transition: opacity 0.3s ease, transform 0.3s ease; z-index: 9000;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      z-index: 9000;
     }
-    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
   </style>
 </head>
 <body>
 
   <!-- Loading Screen -->
   <div id="loading-screen">
-    <img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20white.png?raw=true" alt="JackLinus" class="loading-logo"/>
-    <div class="loading-bar-track"><div class="loading-bar-fill" id="loading-bar"></div></div>
+    <img
+      src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20white.png?raw=true"
+      alt="JackLinus" class="loading-logo"/>
+    <div class="loading-bar-track">
+      <div class="loading-bar-fill" id="loading-bar"></div>
+    </div>
     <span class="loading-label">Loading JackLinus AI…</span>
-  </div>
-
-  <!-- Google GSI trigger -->
-  <div id="g_id_onload"
-    data-client_id="346581259871-mb5b7plclk8rjkt1ud7l0q0b6o8poec3.apps.googleusercontent.com"
-    data-callback="handleGoogleSignIn"
-    data-auto_prompt="false">
   </div>
 
   <div class="particles"></div>
 
   <header>
-    <img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20white.png?raw=true" alt="JackLinus" class="logo" id="logo-btn"/>
+    <img
+      src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20white.png?raw=true"
+      alt="JackLinus" class="logo" id="logo-btn"/>
 
     <div class="history-center">
-      <button class="history-btn" id="history-btn" aria-expanded="false" aria-haspopup="true">
+      <button class="history-btn" id="history-btn"
+        aria-expanded="false" aria-haspopup="true">
         History
-        <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="arrow" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
           <polyline points="6 9 12 15 18 9"/>
         </svg>
       </button>
 
-      <div class="history-dropdown" id="history-dropdown" role="dialog" aria-label="Chat History">
+      <div class="history-dropdown" id="history-dropdown"
+        role="dialog" aria-label="Chat History">
         <p class="history-dropdown-header">Chat History</p>
 
         <div id="history-logged-out">
           <div class="history-grid">
-            <div class="history-card"><div class="history-card-blur"><div class="blur-icon"></div><div class="blur-line medium"></div><div class="blur-line short"></div><div class="blur-line long"></div><div class="blur-line tiny"></div></div><div class="history-card-overlay"><div class="history-card-lock"><svg class="lock-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(200,170,255,0.7)" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="history-card-label">Locked</span></div></div></div>
-            <div class="history-card"><div class="history-card-blur"><div class="blur-icon"></div><div class="blur-line long"></div><div class="blur-line medium"></div><div class="blur-line short"></div><div class="blur-line tiny"></div></div><div class="history-card-overlay"><div class="history-card-lock"><svg class="lock-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(200,170,255,0.7)" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="history-card-label">Locked</span></div></div></div>
-            <div class="history-card"><div class="history-card-blur"><div class="blur-icon"></div><div class="blur-line short"></div><div class="blur-line long"></div><div class="blur-line medium"></div><div class="blur-line tiny"></div></div><div class="history-card-overlay"><div class="history-card-lock"><svg class="lock-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(200,170,255,0.7)" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="history-card-label">Locked</span></div></div></div>
-            <div class="history-card"><div class="history-card-blur"><div class="blur-icon"></div><div class="blur-line medium"></div><div class="blur-line long"></div><div class="blur-line short"></div><div class="blur-line tiny"></div></div><div class="history-card-overlay"><div class="history-card-lock"><svg class="lock-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(200,170,255,0.7)" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="history-card-label">Locked</span></div></div></div>
+            <div class="history-card">
+              <div class="history-card-blur">
+                <div class="blur-icon"></div>
+                <div class="blur-line medium"></div>
+                <div class="blur-line short"></div>
+                <div class="blur-line long"></div>
+                <div class="blur-line tiny"></div>
+              </div>
+              <div class="history-card-overlay">
+                <div class="history-card-lock">
+                  <svg class="lock-icon" width="18" height="18"
+                    viewBox="0 0 24 24" fill="none"
+                    stroke="rgba(200,170,255,0.7)" stroke-width="2"
+                    stroke-linecap="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  <span class="history-card-label">Locked</span>
+                </div>
+              </div>
+            </div>
+            <div class="history-card">
+              <div class="history-card-blur">
+                <div class="blur-icon"></div>
+                <div class="blur-line long"></div>
+                <div class="blur-line medium"></div>
+                <div class="blur-line short"></div>
+                <div class="blur-line tiny"></div>
+              </div>
+              <div class="history-card-overlay">
+                <div class="history-card-lock">
+                  <svg class="lock-icon" width="18" height="18"
+                    viewBox="0 0 24 24" fill="none"
+                    stroke="rgba(200,170,255,0.7)" stroke-width="2"
+                    stroke-linecap="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  <span class="history-card-label">Locked</span>
+                </div>
+              </div>
+            </div>
+            <div class="history-card">
+              <div class="history-card-blur">
+                <div class="blur-icon"></div>
+                <div class="blur-line short"></div>
+                <div class="blur-line long"></div>
+                <div class="blur-line medium"></div>
+                <div class="blur-line tiny"></div>
+              </div>
+              <div class="history-card-overlay">
+                <div class="history-card-lock">
+                  <svg class="lock-icon" width="18" height="18"
+                    viewBox="0 0 24 24" fill="none"
+                    stroke="rgba(200,170,255,0.7)" stroke-width="2"
+                    stroke-linecap="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  <span class="history-card-label">Locked</span>
+                </div>
+              </div>
+            </div>
+            <div class="history-card">
+              <div class="history-card-blur">
+                <div class="blur-icon"></div>
+                <div class="blur-line medium"></div>
+                <div class="blur-line long"></div>
+                <div class="blur-line short"></div>
+                <div class="blur-line tiny"></div>
+              </div>
+              <div class="history-card-overlay">
+                <div class="history-card-lock">
+                  <svg class="lock-icon" width="18" height="18"
+                    viewBox="0 0 24 24" fill="none"
+                    stroke="rgba(200,170,255,0.7)" stroke-width="2"
+                    stroke-linecap="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  <span class="history-card-label">Locked</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="history-notice">
-            <p><strong>Your conversation history is private.</strong><br/>Chat sessions will be securely saved and accessible once you are signed in to your JackLinus account.</p>
+            <p>
+              <strong>Your conversation history is private.</strong>
+              <br/>Chat sessions will be securely saved and
+              accessible once you are signed in to your
+              JackLinus account.
+            </p>
             <button class="sign-in-link" id="history-sign-in-btn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+              <svg width="14" height="14" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0
+                  0 1-2 2h-4"/>
+                <polyline points="10 17 15 12 10 7"/>
+                <line x1="15" y1="12" x2="3" y2="12"/>
               </svg>
               Sign in to access history
             </button>
@@ -551,9 +795,13 @@
         </div>
 
         <div id="history-logged-in" style="display:none;">
-          <div class="real-history-grid" id="real-history-grid"></div>
-          <div id="no-history-msg" class="no-history-msg" style="display:none;">
-            <span>💬</span>No conversations saved yet.<br/>Start a chat and your sessions<br/>will appear here automatically.
+          <div class="real-history-grid"
+            id="real-history-grid"></div>
+          <div id="no-history-msg" class="no-history-msg"
+            style="display:none;">
+            <span>💬</span>No conversations saved yet.
+            <br/>Start a chat and your sessions
+            <br/>will appear here automatically.
           </div>
         </div>
       </div>
@@ -564,21 +812,35 @@
         <span class="g-icon"></span>
         Sign in with Google
       </button>
+
+      <!-- Fallback rendered Google button -->
+      <div id="g-btn-fallback"></div>
+
       <div id="user-avatar-area">
         <span id="user-name"></span>
         <div class="avatar-menu-wrapper">
           <img id="user-avatar" src="" alt="Profile"/>
           <div id="avatar-menu">
-            <button class="avatar-menu-item" id="avatar-history-btn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            <button class="avatar-menu-item"
+              id="avatar-history-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
               </svg>
               View History
             </button>
             <div class="avatar-menu-divider"></div>
-            <button class="avatar-menu-item danger" id="sign-out-btn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+            <button class="avatar-menu-item danger"
+              id="sign-out-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round">
+                <path d="M9 21H5a2 2 0 0
+                  1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
               </svg>
               Sign Out
             </button>
@@ -590,7 +852,6 @@
 
   <div id="toast"></div>
 
-  <!-- Bottom-right legal links (always visible on homepage, same-tab navigation) -->
   <div class="legal-links" id="legal-links">
     <a href="https://www.jacklinus.com/terms/">Terms of Service</a>
     <a href="https://www.jacklinus.com/privacy/">Privacy Policy</a>
@@ -599,28 +860,35 @@
   <div class="content">
     <!-- Home / Welcome -->
     <div class="welcome" id="welcome">
-      <img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/AI%20soulution.png?raw=true" alt="JackLinus AI" class="home-logo">
+      <img
+        src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/AI%20soulution.png?raw=true"
+        alt="JackLinus AI" class="home-logo">
 
-      <input type="text" id="search-input" placeholder="Ask anything…" autocomplete="off"/>
+      <input type="text" id="search-input"
+        placeholder="Ask anything…" autocomplete="off"/>
 
-      <!-- Info section -->
       <div class="home-info">
         <div class="pricing">$0 <span>/ month</span></div>
         <p class="free-notice">
-          Full access to JackLinus AI is currently available completely free of charge.<br/>
-          Special thanks to our founder for making this possible during our launch phase.
+          Full access to JackLinus AI is currently available
+          completely free of charge.<br/>
+          Special thanks to our founder for making this
+          possible during our launch phase.
         </p>
         <div class="teaser">
           Advanced uncensored and unfiltered conversation mode
           <span> — coming soon</span>
         </div>
 
-        <!-- Especially made for — always below the teaser, in document flow -->
         <div class="inline-credit">
           <span>Especially made for</span>
-          <img src="https://github.com/zryzenzzzz/ryanward.org/blob/main/Pics/Davinci.png?raw=true" alt="DaVinci Connect">
+          <img
+            src="https://github.com/zryzenzzzz/ryanward.org/blob/main/Pics/Davinci.png?raw=true"
+            alt="DaVinci Connect">
           <span class="plus-sign">+</span>
-          <img src="https://github.com/zryzenzzzz/ryanward.org/blob/main/Pics/Canvas.png?raw=true" alt="Canvas">
+          <img
+            src="https://github.com/zryzenzzzz/ryanward.org/blob/main/Pics/Canvas.png?raw=true"
+            alt="Canvas">
         </div>
       </div>
     </div>
@@ -630,7 +898,9 @@
       <div class="chat-container" id="chat"></div>
       <div class="input-area">
         <div class="input-wrapper">
-          <input type="text" id="chat-input" placeholder="Type your message…" autocomplete="off"/>
+          <input type="text" id="chat-input"
+            placeholder="Type your message…"
+            autocomplete="off"/>
           <button class="send-btn" id="send-btn">Send</button>
         </div>
       </div>
@@ -638,6 +908,167 @@
   </div>
 
   <script type="module">
+    /* ═══════════════════════════════════════════════
+       GOOGLE SIGN-IN – COOLDOWN FIX
+       ═══════════════════════════════════════════════ */
+
+    const CLIENT_ID =
+      '346581259871-mb5b7plclk8rjkt1ud7l0q0b6o8poec3.apps.googleusercontent.com';
+
+    function clearGStateCookie() {
+      const paths = ['/', window.location.pathname];
+      const domains = [
+        window.location.hostname,
+        '.' + window.location.hostname,
+        ''
+      ];
+      paths.forEach(path => {
+        domains.forEach(domain => {
+          const domainPart = domain
+            ? `; domain=${domain}` : '';
+          document.cookie =
+            `g_state=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=${path}${domainPart}`;
+        });
+      });
+      document.cookie =
+        'g_state=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    }
+
+    function initializeGSI() {
+      if (!window.google) return;
+
+      clearGStateCookie();
+
+      google.accounts.id.initialize({
+        client_id: CLIENT_ID,
+        callback: handleGoogleSignIn,
+        auto_select: false,
+        cancel_on_tap_outside: true,
+        itp_support: true
+      });
+
+      const fallbackDiv =
+        document.getElementById('g-btn-fallback');
+      google.accounts.id.renderButton(fallbackDiv, {
+        type: 'standard',
+        theme: 'outline',
+        size: 'large',
+        text: 'signin_with',
+        shape: 'rectangular',
+        width: 250
+      });
+    }
+
+    function showGSIPrompt() {
+      if (!window.google) {
+        setTimeout(showGSIPrompt, 500);
+        return;
+      }
+
+      clearGStateCookie();
+
+      google.accounts.id.prompt((notification) => {
+        if (notification.isSkippedMoment()) {
+          showFallbackButton();
+        }
+      });
+    }
+
+    function showFallbackButton() {
+      const fallback =
+        document.getElementById('g-btn-fallback');
+      fallback.classList.add('visible');
+      document.getElementById('sign-in-btn')
+        .style.display = 'none';
+    }
+
+    /**
+     * Force re-prompt: cancel → clear cookie →
+     * re-initialize → prompt again.
+     * This is now what the Sign In button does.
+     */
+    function forceSignIn() {
+      if (!window.google) {
+        showToast(
+          'Google Sign-In is loading, please try again.'
+        );
+        return;
+      }
+
+      // Cancel any existing prompt
+      google.accounts.id.cancel();
+
+      // Nuke the cooldown cookie
+      clearGStateCookie();
+
+      // Re-initialize from scratch
+      setTimeout(() => {
+        google.accounts.id.initialize({
+          client_id: CLIENT_ID,
+          callback: window.handleGoogleSignIn,
+          auto_select: false,
+          cancel_on_tap_outside: true,
+          itp_support: true
+        });
+
+        // Re-render fallback just in case
+        const fallbackDiv =
+          document.getElementById('g-btn-fallback');
+        google.accounts.id.renderButton(fallbackDiv, {
+          type: 'standard',
+          theme: 'outline',
+          size: 'large',
+          text: 'signin_with',
+          shape: 'rectangular',
+          width: 250
+        });
+
+        // Show the One Tap prompt
+        setTimeout(() => {
+          google.accounts.id.prompt((notification) => {
+            if (notification.isSkippedMoment()) {
+              showFallbackButton();
+              showToast(
+                'Tap the Google button to sign in.',
+                3500
+              );
+            }
+          });
+        }, 300);
+      }, 200);
+    }
+
+    /* ═══════════════════════════════════════════════
+       GOOGLE SIGN-IN CALLBACK
+       ═══════════════════════════════════════════════ */
+
+    window.handleGoogleSignIn = function(response) {
+      try {
+        const parts = response.credential.split('.');
+        const payload = JSON.parse(atob(parts[1]));
+
+        currentUser = {
+          name: payload.name,
+          email: payload.email,
+          picture: payload.picture,
+          sub: payload.sub
+        };
+
+        chatHistory = loadHistory(currentUser.sub);
+        onUserLoggedIn();
+
+        document.getElementById('g-btn-fallback')
+          .classList.remove('visible');
+      } catch (err) {
+        console.error('[GSI] Token parse error:', err);
+        showToast('Sign-in failed. Please try again.');
+      }
+    };
+
+    /* ═══════════════════════════════════════════════
+       SAGEBOT / AI CONNECTION
+       ═══════════════════════════════════════════════ */
+
     const HF_TOKEN   = "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";
     const SPACE_ID   = "hassan773/SageBot";
     const MODEL      = "llama-3.3-70b-versatile";
@@ -649,8 +1080,12 @@
 
     async function connectSageBot() {
       try {
-        const { Client } = await import("https://esm.sh/@gradio/client");
-        sageBotClient = await Client.connect(SPACE_ID, { hf_token: HF_TOKEN });
+        const { Client } = await import(
+          "https://esm.sh/@gradio/client"
+        );
+        sageBotClient = await Client.connect(
+          SPACE_ID, { hf_token: HF_TOKEN }
+        );
         console.log("[SageBot] Connected successfully.");
       } catch (err) {
         console.warn("[SageBot] Connection failed:", err);
@@ -661,18 +1096,25 @@
     async function callSageBot(userMessage) {
       if (!sageBotClient) {
         await connectSageBot();
-        if (!sageBotClient) throw new Error("Unable to connect to SageBot. Please try again.");
+        if (!sageBotClient)
+          throw new Error(
+            "Unable to connect to SageBot. Please try again."
+          );
       }
 
-      const userResult = await sageBotClient.predict("/user_turn", { msg: userMessage, hist: hist });
+      const userResult = await sageBotClient.predict(
+        "/user_turn", { msg: userMessage, hist: hist }
+      );
       const updatedHist = userResult.data[1];
 
-      const botResult = await sageBotClient.predict("/bot_turn_1", {
-        hist: updatedHist,
-        m: MODEL,
-        t: TEMP,
-        s: SYSTEM_MSG
-      });
+      const botResult = await sageBotClient.predict(
+        "/bot_turn_1", {
+          hist: updatedHist,
+          m: MODEL,
+          t: TEMP,
+          s: SYSTEM_MSG
+        }
+      );
 
       const finalHist = botResult.data[0];
       hist = finalHist;
@@ -680,53 +1122,82 @@
       let botReply = "";
       for (let i = finalHist.length - 1; i >= 0; i--) {
         const entry = finalHist[i];
-        const role = entry?.role ?? (Array.isArray(entry) ? entry[0] : null);
+        const role = entry?.role ??
+          (Array.isArray(entry) ? entry[0] : null);
         if (role === "assistant" || role === "bot") {
-          const content = entry?.content ?? (Array.isArray(entry) ? entry[1] : entry);
+          const content = entry?.content ??
+            (Array.isArray(entry) ? entry[1] : entry);
           if (Array.isArray(content)) {
-            botReply = content.map(c => c?.text ?? c).join("");
+            botReply = content
+              .map(c => c?.text ?? c).join("");
           } else {
             botReply = String(content ?? "");
           }
           break;
         }
-        if (Array.isArray(entry) && entry.length === 2 && entry[1]) {
+        if (Array.isArray(entry) &&
+            entry.length === 2 && entry[1]) {
           botReply = String(entry[1]);
           break;
         }
       }
 
-      return botReply || "I'm sorry, I couldn't generate a response. Please try again.";
+      return botReply ||
+        "I'm sorry, I couldn't generate a response. " +
+        "Please try again.";
     }
 
-    /* Loading Bar */
-    const loadingScreen = document.getElementById('loading-screen');
-    const loadingBar    = document.getElementById('loading-bar');
+    /* ═══════════════════════════════════════════════
+       LOADING BAR
+       ═══════════════════════════════════════════════ */
+
+    const loadingScreen =
+      document.getElementById('loading-screen');
+    const loadingBar =
+      document.getElementById('loading-bar');
     let progress = 0;
+
     const fillInterval = setInterval(() => {
-      progress = Math.min(progress + Math.random() * 18, 90);
+      progress = Math.min(
+        progress + Math.random() * 18, 90
+      );
       loadingBar.style.width = progress + '%';
     }, 140);
+
     window.addEventListener('load', () => {
       clearInterval(fillInterval);
       loadingBar.style.width = '100%';
-      setTimeout(() => loadingScreen.classList.add('fade-out'), 420);
+      setTimeout(() => {
+        loadingScreen.classList.add('fade-out');
+      }, 420);
     });
 
-    /* App State */
+    /* ═══════════════════════════════════════════════
+       APP STATE
+       ═══════════════════════════════════════════════ */
+
     let currentUser     = null;
     let chatHistory     = [];
     let activeChatId    = null;
     let isProcessing    = false;
     let sessionMessages = [];
 
-    function storageKey(sub) { return `jl_history_${sub}`; }
+    function storageKey(sub) {
+      return `jl_history_${sub}`;
+    }
     function loadHistory(sub) {
-      try { return JSON.parse(localStorage.getItem(storageKey(sub)) || '[]'); }
-      catch { return []; }
+      try {
+        return JSON.parse(
+          localStorage.getItem(storageKey(sub)) || '[]'
+        );
+      } catch { return []; }
     }
     function saveHistory(sub, history) {
-      try { localStorage.setItem(storageKey(sub), JSON.stringify(history)); } catch {}
+      try {
+        localStorage.setItem(
+          storageKey(sub), JSON.stringify(history)
+        );
+      } catch {}
     }
 
     const toast = document.getElementById('toast');
@@ -735,10 +1206,11 @@
       toast.textContent = msg;
       toast.classList.add('show');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
+      toastTimer = setTimeout(
+        () => toast.classList.remove('show'), duration
+      );
     }
 
-    /* Show/hide legal links based on view */
     const legalLinks = document.getElementById('legal-links');
     function updateLegalLinksVisibility() {
       if (chatArea.classList.contains('active')) {
@@ -748,76 +1220,132 @@
       }
     }
 
-    window.handleGoogleSignIn = function(response) {
-      const payload = JSON.parse(atob(response.credential.split('.')[1]));
-      currentUser = { name: payload.name, email: payload.email, picture: payload.picture, sub: payload.sub };
-      chatHistory = loadHistory(currentUser.sub);
-      onUserLoggedIn();
-    };
+    /* ═══════════════════════════════════════════════
+       AUTH UI
+       ═══════════════════════════════════════════════ */
 
     function onUserLoggedIn() {
-      document.getElementById('sign-in-btn').style.display = 'none';
-      const avatarArea = document.getElementById('user-avatar-area');
+      document.getElementById('sign-in-btn')
+        .style.display = 'none';
+      document.getElementById('g-btn-fallback')
+        .classList.remove('visible');
+
+      const avatarArea =
+        document.getElementById('user-avatar-area');
       avatarArea.classList.add('visible');
-      document.getElementById('user-avatar').src = currentUser.picture || 'https://via.placeholder.com/40?text=?';
-      document.getElementById('user-name').textContent = currentUser.name.split(' ')[0];
-      document.getElementById('history-logged-out').style.display = 'none';
-      document.getElementById('history-logged-in').style.display = 'block';
+      document.getElementById('user-avatar').src =
+        currentUser.picture ||
+        'https://via.placeholder.com/40?text=?';
+      document.getElementById('user-name').textContent =
+        currentUser.name.split(' ')[0];
+
+      document.getElementById('history-logged-out')
+        .style.display = 'none';
+      document.getElementById('history-logged-in')
+        .style.display = 'block';
       renderHistoryCards();
-      showToast(`Welcome back, ${currentUser.name.split(' ')[0]}! 👋`);
+      showToast(
+        `Welcome back, ${currentUser.name.split(' ')[0]}! 👋`
+      );
     }
 
     function signOut() {
       if (!currentUser) return;
-      if (!confirm("Are you sure you want to sign out?")) return;
+      if (!confirm("Are you sure you want to sign out?"))
+        return;
+
       if (window.google && currentUser) {
-        google.accounts.id.revoke(currentUser.email, () => {});
+        google.accounts.id.revoke(
+          currentUser.email, () => {}
+        );
       }
-      currentUser = null; activeChatId = null;
-      document.getElementById('sign-in-btn').style.display = 'flex';
-      document.getElementById('user-avatar-area').classList.remove('visible');
+
+      currentUser = null;
+      activeChatId = null;
+
+      document.getElementById('sign-in-btn')
+        .style.display = 'flex';
+      document.getElementById('g-btn-fallback')
+        .classList.remove('visible');
+      document.getElementById('user-avatar-area')
+        .classList.remove('visible');
       document.getElementById('user-avatar').src = '';
       document.getElementById('user-name').textContent = '';
       closeAvatarMenu();
-      document.getElementById('history-logged-out').style.display = 'block';
-      document.getElementById('history-logged-in').style.display = 'none';
+
+      document.getElementById('history-logged-out')
+        .style.display = 'block';
+      document.getElementById('history-logged-in')
+        .style.display = 'none';
+
+      clearGStateCookie();
       goToHome();
       showToast('You have been signed out.');
+
+      // Auto re-prompt after sign out
+      setTimeout(() => forceSignIn(), 800);
     }
 
+    /* ═══════════════════════════════════════════════
+       HISTORY
+       ═══════════════════════════════════════════════ */
+
     function escHtml(str) {
-      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
     }
+
     function timeAgo(ts) {
       const diff = (Date.now() - ts) / 1000;
       if (diff < 60) return 'Just now';
-      if (diff < 3600) return Math.floor(diff/60) + 'm ago';
-      if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
-      return Math.floor(diff/86400) + 'd ago';
+      if (diff < 3600)
+        return Math.floor(diff / 60) + 'm ago';
+      if (diff < 86400)
+        return Math.floor(diff / 3600) + 'h ago';
+      return Math.floor(diff / 86400) + 'd ago';
     }
 
     function renderHistoryCards() {
       if (!currentUser) return;
-      const grid  = document.getElementById('real-history-grid');
-      const noMsg = document.getElementById('no-history-msg');
+      const grid =
+        document.getElementById('real-history-grid');
+      const noMsg =
+        document.getElementById('no-history-msg');
       grid.innerHTML = '';
-      if (chatHistory.length === 0) { noMsg.style.display = 'block'; return; }
+
+      if (chatHistory.length === 0) {
+        noMsg.style.display = 'block'; return;
+      }
       noMsg.style.display = 'none';
+
       chatHistory.slice(0, 6).forEach(session => {
         const card = document.createElement('div');
         card.className = 'real-history-card';
         card.innerHTML = `
-          <button class="real-history-card-del" title="Delete" data-id="${session.id}">✕</button>
-          <div class="real-history-card-title">${escHtml(session.title)}</div>
-          <div class="real-history-card-preview">${escHtml(session.preview)}</div>
-          <div class="real-history-card-time">${session.time}</div>`;
+          <button class="real-history-card-del"
+            title="Delete" data-id="${session.id}">✕</button>
+          <div class="real-history-card-title">
+            ${escHtml(session.title)}</div>
+          <div class="real-history-card-preview">
+            ${escHtml(session.preview)}</div>
+          <div class="real-history-card-time">
+            ${session.time}</div>`;
+
         card.addEventListener('click', (e) => {
-          if (e.target.classList.contains('real-history-card-del')) return;
-          loadChatSession(session.id); closeHistory();
+          if (e.target.classList
+              .contains('real-history-card-del')) return;
+          loadChatSession(session.id);
+          closeHistory();
         });
-        card.querySelector('.real-history-card-del').addEventListener('click', (e) => {
-          e.stopPropagation(); deleteSession(session.id);
-        });
+
+        card.querySelector('.real-history-card-del')
+          .addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteSession(session.id);
+          });
         grid.appendChild(card);
       });
     }
@@ -830,12 +1358,23 @@
 
     function saveChatSession(messages, userQuery) {
       if (!currentUser || messages.length === 0) return;
-      const title   = userQuery.length > 38 ? userQuery.slice(0,35) + '…' : userQuery;
+      const title = userQuery.length > 38
+        ? userQuery.slice(0, 35) + '…' : userQuery;
       const botMsgs = messages.filter(m => !m.isUser);
-      const preview = botMsgs.length > 0 ? botMsgs[botMsgs.length-1].text : userQuery;
-      const session = { id: Date.now().toString(), title, preview, time: timeAgo(Date.now()), timestamp: Date.now(), messages };
+      const preview = botMsgs.length > 0
+        ? botMsgs[botMsgs.length - 1].text : userQuery;
+
+      const session = {
+        id: Date.now().toString(),
+        title, preview,
+        time: timeAgo(Date.now()),
+        timestamp: Date.now(),
+        messages
+      };
+
       chatHistory.unshift(session);
-      if (chatHistory.length > 20) chatHistory = chatHistory.slice(0, 20);
+      if (chatHistory.length > 20)
+        chatHistory = chatHistory.slice(0, 20);
       saveHistory(currentUser.sub, chatHistory);
       activeChatId = session.id;
       renderHistoryCards();
@@ -849,7 +1388,8 @@
       hist = [];
       const msgs = session.messages;
       for (let i = 0; i < msgs.length - 1; i += 2) {
-        if (msgs[i] && msgs[i+1]) hist.push([msgs[i].text, msgs[i+1].text]);
+        if (msgs[i] && msgs[i + 1])
+          hist.push([msgs[i].text, msgs[i + 1].text]);
       }
 
       welcome.classList.add('hidden');
@@ -857,66 +1397,139 @@
       updateLegalLinksVisibility();
       chat.innerHTML = '';
       sessionMessages = [...session.messages];
+
       session.messages.forEach(m => {
         const el = document.createElement('div');
-        el.classList.add('message', m.isUser ? 'user' : 'bot');
+        el.classList.add('message',
+          m.isUser ? 'user' : 'bot');
         el.textContent = m.text;
         chat.appendChild(el);
       });
       scrollToBottom();
     }
 
-    const historyBtn      = document.getElementById('history-btn');
-    const historyDropdown = document.getElementById('history-dropdown');
+    /* ═══════════════════════════════════════════════
+       DROPDOWN TOGGLES
+       ═══════════════════════════════════════════════ */
+
+    const historyBtn =
+      document.getElementById('history-btn');
+    const historyDropdown =
+      document.getElementById('history-dropdown');
     let historyOpen = false;
 
-    function openHistory()  { historyOpen = true;  historyBtn.classList.add('open');    historyDropdown.classList.add('open');    historyBtn.setAttribute('aria-expanded','true');  if (currentUser) renderHistoryCards(); }
-    function closeHistory() { historyOpen = false; historyBtn.classList.remove('open'); historyDropdown.classList.remove('open'); historyBtn.setAttribute('aria-expanded','false'); }
+    function openHistory() {
+      historyOpen = true;
+      historyBtn.classList.add('open');
+      historyDropdown.classList.add('open');
+      historyBtn.setAttribute('aria-expanded', 'true');
+      if (currentUser) renderHistoryCards();
+    }
+    function closeHistory() {
+      historyOpen = false;
+      historyBtn.classList.remove('open');
+      historyDropdown.classList.remove('open');
+      historyBtn.setAttribute('aria-expanded', 'false');
+    }
 
-    historyBtn.addEventListener('click', e => { e.stopPropagation(); historyOpen ? closeHistory() : openHistory(); });
-    document.addEventListener('click', e => { if (historyOpen && !historyDropdown.contains(e.target) && e.target !== historyBtn) closeHistory(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeHistory(); closeAvatarMenu(); } });
+    historyBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      historyOpen ? closeHistory() : openHistory();
+    });
 
-    const userAvatar = document.getElementById('user-avatar');
-    const avatarMenu = document.getElementById('avatar-menu');
-    let avatarMenuOpen = false;
-    function openAvatarMenu()  { avatarMenuOpen = true;  avatarMenu.classList.add('open'); }
-    function closeAvatarMenu() { avatarMenuOpen = false; avatarMenu.classList.remove('open'); }
-    userAvatar.addEventListener('click', e => { e.stopPropagation(); avatarMenuOpen ? closeAvatarMenu() : openAvatarMenu(); });
-    document.addEventListener('click', e => { if (avatarMenuOpen && !avatarMenu.contains(e.target) && e.target !== userAvatar) closeAvatarMenu(); });
-    document.getElementById('sign-out-btn').addEventListener('click', () => { signOut(); });
-    document.getElementById('avatar-history-btn').addEventListener('click', () => { closeAvatarMenu(); openHistory(); });
+    document.addEventListener('click', e => {
+      if (historyOpen &&
+          !historyDropdown.contains(e.target) &&
+          e.target !== historyBtn)
+        closeHistory();
+    });
 
-    document.getElementById('sign-in-btn').addEventListener('click', () => {
-      if (window.google) {
-        google.accounts.id.initialize({
-          client_id: '346581259871-mb5b7plclk8rjkt1ud7l0q0b6o8poec3.apps.googleusercontent.com',
-          callback: window.handleGoogleSignIn
-        });
-        google.accounts.id.prompt();
-      } else {
-        showToast('Google Sign-In is loading, please try again.');
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeHistory();
+        closeAvatarMenu();
       }
     });
 
-    document.getElementById('history-sign-in-btn').addEventListener('click', () => {
-      closeHistory();
-      document.getElementById('sign-in-btn').click();
+    const userAvatar =
+      document.getElementById('user-avatar');
+    const avatarMenu =
+      document.getElementById('avatar-menu');
+    let avatarMenuOpen = false;
+
+    function openAvatarMenu() {
+      avatarMenuOpen = true;
+      avatarMenu.classList.add('open');
+    }
+    function closeAvatarMenu() {
+      avatarMenuOpen = false;
+      avatarMenu.classList.remove('open');
+    }
+
+    userAvatar.addEventListener('click', e => {
+      e.stopPropagation();
+      avatarMenuOpen
+        ? closeAvatarMenu() : openAvatarMenu();
     });
 
-    const logoBtn     = document.getElementById('logo-btn');
-    const welcome     = document.getElementById('welcome');
-    const chatArea    = document.getElementById('chatArea');
-    const chat        = document.getElementById('chat');
-    const searchInput = document.getElementById('search-input');
-    const chatInput   = document.getElementById('chat-input');
-    const sendBtn     = document.getElementById('send-btn');
+    document.addEventListener('click', e => {
+      if (avatarMenuOpen &&
+          !avatarMenu.contains(e.target) &&
+          e.target !== userAvatar)
+        closeAvatarMenu();
+    });
 
-    function scrollToBottom() { chat.scrollTop = chat.scrollHeight; }
+    document.getElementById('sign-out-btn')
+      .addEventListener('click', () => signOut());
+
+    document.getElementById('avatar-history-btn')
+      .addEventListener('click', () => {
+        closeAvatarMenu();
+        openHistory();
+      });
+
+    /* ═══════════════════════════════════════════════
+       SIGN-IN BUTTON → FORCE RE-PROMPT
+       ═══════════════════════════════════════════════ */
+
+    document.getElementById('sign-in-btn')
+      .addEventListener('click', () => {
+        forceSignIn();
+      });
+
+    document.getElementById('history-sign-in-btn')
+      .addEventListener('click', () => {
+        closeHistory();
+        forceSignIn();
+      });
+
+    /* ═══════════════════════════════════════════════
+       CHAT UI ELEMENTS
+       ═══════════════════════════════════════════════ */
+
+    const logoBtn =
+      document.getElementById('logo-btn');
+    const welcome =
+      document.getElementById('welcome');
+    const chatArea =
+      document.getElementById('chatArea');
+    const chat =
+      document.getElementById('chat');
+    const searchInput =
+      document.getElementById('search-input');
+    const chatInput =
+      document.getElementById('chat-input');
+    const sendBtn =
+      document.getElementById('send-btn');
+
+    function scrollToBottom() {
+      chat.scrollTop = chat.scrollHeight;
+    }
 
     function addMessage(text, isUser = false) {
       const msg = document.createElement('div');
-      msg.classList.add('message', isUser ? 'user' : 'bot');
+      msg.classList.add('message',
+        isUser ? 'user' : 'bot');
       msg.textContent = text;
       chat.appendChild(msg);
       scrollToBottom();
@@ -933,16 +1546,30 @@
 
     function showTyping() {
       const el = document.createElement('div');
-      el.className = 'typing-indicator'; el.id = 'typing';
-      el.innerHTML = `JackLinus is thinking<span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>`;
-      chat.appendChild(el); scrollToBottom();
+      el.className = 'typing-indicator';
+      el.id = 'typing';
+      el.innerHTML =
+        `JackLinus is thinking` +
+        `<span class="dots">` +
+        `<span class="dot"></span>` +
+        `<span class="dot"></span>` +
+        `<span class="dot"></span>` +
+        `</span>`;
+      chat.appendChild(el);
+      scrollToBottom();
     }
 
-    function hideTyping() { const el = document.getElementById('typing'); if (el) el.remove(); }
+    function hideTyping() {
+      const el = document.getElementById('typing');
+      if (el) el.remove();
+    }
 
     function setInputLocked(locked) {
-      chatInput.disabled = locked; sendBtn.disabled = locked;
-      chatInput.placeholder = locked ? 'Waiting for reply…' : 'Type your message…';
+      chatInput.disabled = locked;
+      sendBtn.disabled = locked;
+      chatInput.placeholder = locked
+        ? 'Waiting for reply…'
+        : 'Type your message…';
     }
 
     function goToHome() {
@@ -973,12 +1600,17 @@
         addMessage(initialText, true);
         fetchBotReply(initialText, true);
       } else {
-        addMessage("Hey! I'm JackLinus. How can I help you today?", false);
+        addMessage(
+          "Hey! I'm JackLinus. How can I help you today?",
+          false
+        );
         setTimeout(() => chatInput.focus(), 300);
       }
     }
 
-    async function fetchBotReply(userMessage, isInitial = false) {
+    async function fetchBotReply(
+      userMessage, isInitial = false
+    ) {
       if (isProcessing) return;
       isProcessing = true;
       setInputLocked(true);
@@ -990,14 +1622,24 @@
         addMessage(reply, false);
 
         if (currentUser) {
-          const firstUserMsg = sessionMessages.find(m => m.isUser)?.text || userMessage;
-          saveChatSession([...sessionMessages], firstUserMsg);
+          const firstUserMsg =
+            sessionMessages.find(m => m.isUser)?.text
+            || userMessage;
+          saveChatSession(
+            [...sessionMessages], firstUserMsg
+          );
         }
       } catch (err) {
         hideTyping();
         console.error('[SageBot] Error:', err);
-        addErrorMessage(err.message || 'Something went wrong. Please try again.');
-        showToast('Failed to get a response from SageBot.', 3500);
+        addErrorMessage(
+          err.message ||
+          'Something went wrong. Please try again.'
+        );
+        showToast(
+          'Failed to get a response from SageBot.',
+          3500
+        );
       } finally {
         isProcessing = false;
         setInputLocked(false);
@@ -1014,31 +1656,63 @@
       fetchBotReply(text, false);
     }
 
+    /* ═══════════════════════════════════════════════
+       EVENT LISTENERS
+       ═══════════════════════════════════════════════ */
+
     logoBtn.addEventListener('click', goToHome);
 
     searchInput.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
         const text = searchInput.value.trim();
-        if (text) { searchInput.value = ''; enterChat(text); }
+        if (text) {
+          searchInput.value = '';
+          enterChat(text);
+        }
       }
     });
 
     sendBtn.addEventListener('click', sendChatMessage);
 
     chatInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage(); }
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendChatMessage();
+      }
     });
+
+    /* ═══════════════════════════════════════════════
+       INITIALIZATION ON PAGE LOAD
+       ═══════════════════════════════════════════════ */
 
     window.addEventListener('load', () => {
       updateLegalLinksVisibility();
-      if (window.google) {
-        google.accounts.id.initialize({
-          client_id: '346581259871-mb5b7plclk8rjkt1ud7l0q0b6o8poec3.apps.googleusercontent.com',
-          callback: window.handleGoogleSignIn,
-          auto_select: true
-        });
-        google.accounts.id.prompt();
-      }
+
+      const waitForGoogle = setInterval(() => {
+        if (window.google && google.accounts) {
+          clearInterval(waitForGoogle);
+
+          clearGStateCookie();
+          initializeGSI();
+
+          // Auto-prompt on every page load
+          setTimeout(() => {
+            showGSIPrompt();
+          }, 600);
+        }
+      }, 100);
+
+      setTimeout(() => {
+        clearInterval(waitForGoogle);
+        if (!window.google) {
+          showToast(
+            'Google Sign-In unavailable. ' +
+            'Check your connection.',
+            5000
+          );
+        }
+      }, 10000);
+
       connectSageBot();
     });
   </script>
