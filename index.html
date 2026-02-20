@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6127223516122354"
+     crossorigin="anonymous"></script>
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -982,11 +984,6 @@
         .style.display = 'none';
     }
 
-    /**
-     * Force re-prompt: cancel → clear cookie →
-     * re-initialize → prompt again.
-     * This is now what the Sign In button does.
-     */
     function forceSignIn() {
       if (!window.google) {
         showToast(
@@ -995,13 +992,9 @@
         return;
       }
 
-      // Cancel any existing prompt
       google.accounts.id.cancel();
-
-      // Nuke the cooldown cookie
       clearGStateCookie();
 
-      // Re-initialize from scratch
       setTimeout(() => {
         google.accounts.id.initialize({
           client_id: CLIENT_ID,
@@ -1011,7 +1004,6 @@
           itp_support: true
         });
 
-        // Re-render fallback just in case
         const fallbackDiv =
           document.getElementById('g-btn-fallback');
         google.accounts.id.renderButton(fallbackDiv, {
@@ -1023,7 +1015,6 @@
           width: 250
         });
 
-        // Show the One Tap prompt
         setTimeout(() => {
           google.accounts.id.prompt((notification) => {
             if (notification.isSkippedMoment()) {
@@ -1282,7 +1273,6 @@
       goToHome();
       showToast('You have been signed out.');
 
-      // Auto re-prompt after sign out
       setTimeout(() => forceSignIn(), 800);
     }
 
@@ -1695,7 +1685,6 @@
           clearGStateCookie();
           initializeGSI();
 
-          // Auto-prompt on every page load
           setTimeout(() => {
             showGSIPrompt();
           }, 600);
