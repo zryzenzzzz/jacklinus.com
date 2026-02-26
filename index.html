@@ -479,22 +479,6 @@
       color: rgba(220,200,255,0.7); font-weight: 500;
     }
 
-    /* ── Inline credit section ── */
-    .inline-credit {
-      display: flex; align-items: center;
-      justify-content: center; gap: 16px;
-      margin-top: 32px; font-size: 1rem;
-      color: rgba(220,200,255,0.9);
-      flex-shrink: 0; flex-wrap: wrap;
-    }
-    .inline-credit img {
-      height: 52px; width: auto; object-fit: contain;
-      border-radius: 8px; box-shadow: none;
-    }
-    .plus-sign {
-      font-size: 2.2rem; font-weight: bold; color: white;
-    }
-
     /* ── Bottom-right legal links ── */
     .legal-links {
       position: fixed; bottom: 28px; right: 32px;
@@ -511,9 +495,6 @@
 
     /* Responsive */
     @media (max-width: 767px) {
-      .inline-credit { gap: 10px; font-size: 0.82rem; }
-      .inline-credit img { height: 36px; }
-      .plus-sign { font-size: 1.5rem; }
       .legal-links {
         bottom: 12px; right: 16px;
         gap: 16px; font-size: 0.78rem;
@@ -522,11 +503,6 @@
 
     @media (min-width: 1024px) {
       .home-logo { max-width: 420px; }
-      .inline-credit {
-        margin-top: 40px; gap: 24px; font-size: 1.1rem;
-      }
-      .inline-credit img { height: 72px; }
-      .plus-sign { font-size: 3rem; }
       .legal-links {
         bottom: 42px; right: 48px;
         font-size: 1rem; gap: 32px;
@@ -907,17 +883,6 @@
         <div class="teaser">
           Advanced uncensored and unfiltered conversation mode
           <span> — coming soon</span>
-        </div>
-
-        <div class="inline-credit">
-          <span>Especially made for</span>
-          <img
-            src="https://github.com/zryzenzzzz/ryanward.org/blob/main/Pics/Davinci.png?raw=true"
-            alt="DaVinci Connect">
-          <span class="plus-sign">+</span>
-          <img
-            src="https://github.com/zryzenzzzz/ryanward.org/blob/main/Pics/Canvas.png?raw=true"
-            alt="Canvas">
         </div>
       </div>
     </div>
