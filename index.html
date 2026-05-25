@@ -12,7 +12,6 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none;
         }
 
         body {
@@ -27,71 +26,67 @@
             position: relative;
         }
 
-        /* Logo in top-left corner */
-        .corner-logo {
+        /* Large logo in top-left corner of the white page */
+        .page-logo {
             position: fixed;
-            top: 24px;
-            left: 24px;
+            top: 30px;
+            left: 30px;
             z-index: 100;
         }
-
-        .corner-logo img {
-            width: 56px;
-            height: 56px;
+        .page-logo img {
+            width: 80px;
+            height: 80px;
             object-fit: contain;
             display: block;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
         }
 
-        /* Brand area outside black box */
-        .site-brand {
+        /* Tagline above the black box */
+        .above-tagline {
             text-align: center;
             margin-bottom: 20px;
-        }
-
-        .brand-image {
-            max-width: 220px;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-        }
-
-        .security-tagline {
-            font-size: 14px;
-            color: #333;
-            margin-top: 12px;
+            font-size: 16px;
             font-weight: 500;
+            color: #333;
             letter-spacing: 0.3px;
         }
 
-        /* MAIN CARD — black square */
-        .main-card {
-            max-width: 1300px;
+        /* MAIN CONTAINER */
+        .game-container {
             width: 100%;
+            max-width: 1100px;
+            min-width: 320px;
+            min-height: 480px;
             background: #000000;
-            border-radius: 32px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.35);
+            border-radius: 24px;
+            box-shadow: 0px 4px 16px 0px rgba(0,0,0,0.35), 0px 34px 44px 0px rgba(0,0,0,0.17);
             overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        /* ========== INTRO PANEL ========== */
-        .intro-panel {
+        /* Intro screen */
+        .intro-screen {
             background: #000;
-            padding: 48px 32px 64px;
-            text-align: center;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-            min-height: 500px;
+            align-items: center;
+            padding: 60px 40px;
+            min-height: 480px;
+            width: 100%;
+            height: 100%;
         }
 
-        .main-title {
-            font-size: 52px;
-            font-weight: 600;
-            letter-spacing: -1px;
-            color: white;
+        .intro-title {
             font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0 0 24px 0;
+            font-size: 64px;
+            font-weight: 600;
+            letter-spacing: -1.5px;
+            line-height: 1.2;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 56px;
         }
 
         .action-buttons {
@@ -99,11 +94,11 @@
             flex-direction: column;
             gap: 20px;
             width: 100%;
-            max-width: 340px;
+            max-width: 320px;
             margin: 0 auto;
         }
 
-        .rect-pill {
+        .action-btn {
             background: rgba(255,255,255,0.08);
             backdrop-filter: blur(4px);
             border: 1px solid rgba(255,255,255,0.2);
@@ -118,305 +113,252 @@
             text-align: center;
         }
 
-        .rect-pill:hover {
+        .action-btn:hover {
             background: rgba(255,255,255,0.18);
             transform: scale(1.01);
             border-color: rgba(255,255,255,0.5);
         }
-
-        .rect-pill:active {
+        .action-btn:active {
             transform: scale(0.98);
         }
 
-        .back-to-main {
-            margin-top: 30px;
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 60px;
-            padding: 10px 24px;
-            color: #aaa;
-            font-size: 14px;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: 'Segoe UI', Arial, sans-serif;
+        /* Flow containers - now properly positioned inside the black box */
+        .flow-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            z-index: 10;
         }
-
-        .back-to-main:hover {
-            border-color: rgba(255,255,255,0.5);
-            color: white;
-        }
-
-        .name-step-container {
-            width: 100%;
-            max-width: 340px;
-            margin: 20px auto 0;
-            transition: all 0.2s;
-        }
-
-        .name-input-group {
+        .flow-container.active {
             display: flex;
-            gap: 12px;
+        }
+        .flow-input-group {
+            display: flex;
+            gap: 10px;
             background: #111;
-            border-radius: 80px;
+            border-radius: 60px;
             padding: 4px;
             border: 1px solid #2a2a2a;
+            width: 100%;
+            max-width: 280px;
         }
-
-        .name-input-field {
+        .flow-input {
             flex: 1;
             background: transparent;
             border: none;
-            padding: 14px 20px;
-            font-size: 16px;
+            padding: 12px 16px;
             color: white;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 14px;
             outline: none;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
-
-        .name-input-field::placeholder {
-            color: #666;
-        }
-
-        .action-btn {
+        .flow-btn {
             background: white;
             border: none;
             border-radius: 60px;
-            padding: 0 28px;
+            padding: 0 20px;
             font-weight: 600;
-            font-size: 14px;
             cursor: pointer;
-            color: black;
-            transition: 0.15s;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
-
-        .action-btn:active { transform: scale(0.96); }
-
-        .code-step {
-            margin-top: 16px;
-            display: flex;
-            gap: 12px;
-            background: #111;
-            border-radius: 80px;
-            padding: 4px;
-            border: 1px solid #2a2a2a;
-        }
-
-        .code-input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            padding: 14px 20px;
-            font-size: 16px;
-            color: white;
+        .code-display {
             font-family: monospace;
-            letter-spacing: 1px;
-            outline: none;
+            font-size: 32px;
+            letter-spacing: 6px;
+            background: #0a0a0a;
+            padding: 16px 24px;
+            border-radius: 50px;
+            margin-top: 20px;
+            color: #fff;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
         }
-
-        /* Copy button for generated code */
         .copy-code-btn {
             background: #2c2c2e;
             border: none;
-            border-radius: 60px;
-            padding: 0 20px;
-            font-weight: 500;
+            border-radius: 30px;
+            padding: 8px 20px;
+            color: white;
             font-size: 13px;
             cursor: pointer;
-            color: white;
-            transition: 0.15s;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
-        .copy-code-btn:active { transform: scale(0.96); background: #3a3a3c; }
-
         .error-msg {
             color: #ff8a7a;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        .back-link {
+            margin-top: 24px;
+            color: #888;
             font-size: 13px;
-            margin-top: 12px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
-
-        .waiting-message {
-            margin-top: 28px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 48px;
-            padding: 12px 20px;
-            font-size: 14px;
+        .waiting-msg {
             color: #ccc;
-            display: inline-block;
+            margin-top: 20px;
+            font-size: 14px;
         }
 
-        .code-highlight {
-            font-family: monospace;
-            font-size: 32px;
-            letter-spacing: 8px;
-            background: #0a0a0a;
-            padding: 16px 28px;
-            border-radius: 50px;
-            margin-top: 16px;
-            color: #ffffff;
-            font-weight: bold;
-            border: 1px solid #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        /* ========== CHAT + DRAW ROOM ========== */
+        /* Chat + Draw Room */
         .chat-draw-room {
-            display: flex;
+            display: none;
             flex-direction: row;
-            height: 70vh;
+            height: 65vh;
             min-height: 500px;
             background: #0f0f12;
+            width: 100%;
         }
-
         .chat-section {
-            flex: 2;
+            flex: 3;
             display: flex;
             flex-direction: column;
+            background: #000;
             border-right: 1px solid #222;
-            background: #000000;
         }
-
         .chat-header {
             padding: 18px 24px;
             border-bottom: 1px solid #1e1e1e;
             display: flex;
             justify-content: space-between;
-            align-items: baseline;
+            align-items: center;
             flex-wrap: wrap;
         }
-
         .room-code-badge {
             background: #1a1a1a;
             border-radius: 40px;
-            padding: 6px 16px;
+            padding: 6px 18px;
             font-size: 13px;
             font-family: monospace;
             color: #aaa;
         }
-
         .online-badge {
             font-size: 12px;
             color: #4cd964;
+            background: #1a1a1a;
+            padding: 4px 12px;
+            border-radius: 20px;
         }
-
         .messages-area {
             flex: 1;
             overflow-y: auto;
-            padding: 20px 20px 10px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
-
-        .message-bubble {
-            max-width: 85%;
-            background: #1c1c1e;
-            border-radius: 26px;
-            padding: 10px 18px;
-            align-self: flex-start;
+        .messages-area::-webkit-scrollbar {
+            width: 6px;
         }
-
+        .messages-area::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 4px;
+        }
+        .messages-area::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 4px;
+        }
+        .message-bubble {
+            max-width: 80%;
+            background: #1c1c1e;
+            border-radius: 22px;
+            padding: 10px 16px;
+            align-self: flex-start;
+            word-wrap: break-word;
+        }
         .message-own {
             background: #2c2c2e;
             align-self: flex-end;
             border: 1px solid #3a3a3c;
         }
-
         .msg-name {
             font-size: 12px;
             font-weight: 600;
             color: #b0b0ff;
             margin-bottom: 4px;
         }
-
         .msg-text {
-            font-size: 15px;
+            font-size: 14px;
             color: #fff;
             word-break: break-word;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.4;
         }
-
-        .msg-time {
-            font-size: 9px;
-            color: #6c6c70;
-            margin-top: 5px;
-            text-align: right;
-        }
-
         .chat-input-area {
             display: flex;
-            padding: 16px 20px 24px;
+            padding: 16px 20px 20px;
             gap: 12px;
             background: #000;
             border-top: 1px solid #1c1c1e;
         }
-
         .chat-input {
             flex: 1;
             background: #1c1c1e;
             border: none;
-            border-radius: 32px;
+            border-radius: 30px;
             padding: 12px 18px;
             color: white;
-            font-size: 15px;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 14px;
             outline: none;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
-
         .send-btn {
             background: white;
             border: none;
-            border-radius: 40px;
+            border-radius: 30px;
             padding: 0 24px;
             font-weight: 600;
             cursor: pointer;
             transition: 0.1s;
         }
-
         .draw-section {
-            flex: 1.2;
+            flex: 2;
             background: #0a0a0c;
             display: flex;
             flex-direction: column;
-            border-left: 1px solid #1e1e1e;
+            border-left: 1px solid #222;
         }
-
         .draw-header {
-            padding: 12px 16px;
+            padding: 14px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #222;
         }
-
         .draw-header span {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 500;
             color: #ddd;
-            font-family: 'Segoe UI', Arial, sans-serif;
         }
-
         .draw-tools {
             display: flex;
             gap: 12px;
         }
-
         .tool-btn {
             background: #1c1c1e;
             border: none;
             border-radius: 30px;
             padding: 6px 18px;
             color: white;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
-            transition: 0.1s;
             font-family: 'Segoe UI', Arial, sans-serif;
+            transition: 0.1s;
         }
-
         .tool-btn:active { opacity: 0.7; }
-
         canvas {
             flex: 1;
             width: 100%;
@@ -425,492 +367,483 @@
             touch-action: none;
         }
 
-        /* Glass terminate button */
+        /* Terminate button */
         .glass-btn {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            padding: 14px 28px;
-            font-size: 15px;
+            padding: 12px 28px;
+            font-size: 14px;
             color: #fff;
             border: none;
             background: rgba(0, 0, 0, 0.75);
-            border-radius: 20px;
-            backdrop-filter: blur(15px);
+            border-radius: 40px;
+            backdrop-filter: blur(12px);
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.15);
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            font-family: 'Segoe UI', Arial, sans-serif;
-            letter-spacing: 0.5px;
             z-index: 200;
             display: none;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+        }
+        .glass-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.02);
+        }
+        .glass-btn.visible {
+            display: block;
         }
 
-        .glass-btn.visible { display: block; }
-        .glass-btn::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.6s;
-        }
-        .glass-btn:hover::before { left: 100%; }
-        .glass-btn:active { transform: translateY(1px) scale(0.98); }
-        .glass-btn span { position: relative; z-index: 1; font-weight: 500; }
-
-        @media (max-width: 760px) {
-            body { padding: 20px 16px; }
-            .corner-logo img { width: 40px; height: 40px; }
-            .brand-image { max-width: 160px; }
-            .main-title { font-size: 36px; }
-            .code-highlight { font-size: 22px; letter-spacing: 4px; padding: 12px 16px; gap: 10px; }
-            .copy-code-btn { padding: 0 16px; font-size: 12px; }
+        @media (max-width: 700px) {
+            .chat-draw-room {
+                flex-direction: column;
+                height: auto;
+                min-height: 600px;
+            }
+            .chat-section { min-height: 400px; }
+            .draw-section { min-height: 280px; border-left: none; border-top: 1px solid #222; }
+            .intro-title { font-size: 44px; }
+            .page-logo img { width: 55px; height: 55px; top: 20px; left: 20px; }
+            .above-tagline { font-size: 13px; margin-bottom: 16px; }
         }
     </style>
 </head>
 <body>
-    <!-- Top-left corner logo -->
-    <div class="corner-logo">
+    <!-- Large logo in top-left corner of the white page -->
+    <div class="page-logo">
         <img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20black.png?raw=true" alt="Jacklinus">
     </div>
 
-    <!-- Brand area outside black box: image + tagline -->
-    <div class="site-brand">
-        <img class="brand-image" src="https://raw.githubusercontent.com/zryzenzzzz/jacklinus.com/main/Photos/chattab.png?raw=true" alt="Chat Tab" onerror="this.style.display='none';">
-        <div class="security-tagline">Chat securely with Chat Tab by jacklinus</div>
-    </div>
+    <!-- Tagline above the box -->
+    <div class="above-tagline">Chat securely with Chat Tab by jacklinus</div>
 
-    <!-- Terminate Session Button (hidden by default) -->
-    <button class="glass-btn" id="terminateSessionBtn">
-        <span>Terminate Session</span>
-    </button>
-
-<div class="main-card" id="appContainer">
-    <!-- Intro Panel -->
-    <div id="introPanel" class="intro-panel">
-        <div class="main-title">Stay Encrypted</div>
-        <div class="action-buttons" id="mainActionButtons">
-            <div class="rect-pill" id="createRoomBtn">Create a Chat Tab</div>
-            <div class="rect-pill" id="showJoinBtn">Join a Chat Tab</div>
-        </div>
-
-        <!-- Create flow -->
-        <div id="createNameContainer" style="display: none;" class="name-step-container">
-            <div class="name-input-group">
-                <input type="text" id="createNameInput" class="name-input-field" placeholder="Your name" maxlength="20" autocomplete="off">
-                <button id="generateCodeBtn" class="action-btn">Generate</button>
+    <div class="game-container" id="gameContainer">
+        <!-- Intro Screen -->
+        <div id="introScreen" class="intro-screen">
+            <h1 class="intro-title">Stay<br>Encrypted</h1>
+            <div class="action-buttons">
+                <button class="action-btn" id="createBtn">Create a Chat Tab</button>
+                <button class="action-btn" id="joinBtn">Join a Chat Tab</button>
             </div>
-            <div id="createNameError" class="error-msg"></div>
-            <button class="back-to-main" id="backFromCreateBtn">← Back</button>
         </div>
 
-        <!-- Join flow -->
-        <div id="joinNameContainer" style="display: none;" class="name-step-container">
-            <div class="name-input-group">
-                <input type="text" id="joinNameInput" class="name-input-field" placeholder="Your name" maxlength="20" autocomplete="off">
-                <button id="proceedToCodeBtn" class="action-btn">Next</button>
+        <!-- Create flow (name input) -->
+        <div id="createFlow" class="flow-container">
+            <div class="flow-input-group">
+                <input type="text" id="createNameInput" class="flow-input" placeholder="Your name" maxlength="20" autocomplete="off">
+                <button id="confirmCreateBtn" class="flow-btn">Create</button>
+            </div>
+            <div id="createError" class="error-msg"></div>
+            <button class="back-link" id="backFromCreate">← Back</button>
+        </div>
+
+        <!-- Join flow: name first -->
+        <div id="joinFlowName" class="flow-container">
+            <div class="flow-input-group">
+                <input type="text" id="joinNameInput" class="flow-input" placeholder="Your name" maxlength="20" autocomplete="off">
+                <button id="nextToCodeBtn" class="flow-btn">Next</button>
             </div>
             <div id="joinNameError" class="error-msg"></div>
-            <button class="back-to-main" id="backFromJoinNameBtn">← Back</button>
+            <button class="back-link" id="backFromJoinName">← Back</button>
         </div>
 
-        <div id="joinCodeContainer" style="display: none;" class="name-step-container">
-            <div class="code-step">
-                <input type="text" id="joinCodeInput" class="code-input" placeholder="Enter 6-digit code" maxlength="6" autocomplete="off">
-                <button id="submitJoinFinalBtn" class="action-btn">Join</button>
+        <!-- Join flow: code input -->
+        <div id="joinFlowCode" class="flow-container">
+            <div class="flow-input-group">
+                <input type="text" id="joinCodeInput" class="flow-input" placeholder="Enter 6-digit code" maxlength="6" style="text-transform:uppercase" autocomplete="off">
+                <button id="submitJoinBtn" class="flow-btn">Join</button>
             </div>
             <div id="joinCodeError" class="error-msg"></div>
-            <button class="back-to-main" id="backFromJoinCodeBtn">← Back</button>
+            <button class="back-link" id="backFromJoinCode">← Back</button>
         </div>
 
-        <!-- Waiting zone with COPY button -->
-        <div id="waitingZone" style="display: none;">
-            <div class="waiting-message" id="waitingMsg">⏳ Waiting for other person to join...</div>
-            <div id="waitingCodeDisplay" class="code-highlight">
-                <span id="roomCodeText"></span>
-                <button id="copyRoomCodeBtn" class="copy-code-btn">Copy</button>
+        <!-- Waiting screen (creator) -->
+        <div id="waitingFlow" class="flow-container">
+            <div class="waiting-msg">⏳ Waiting for other person to join...</div>
+            <div class="code-display">
+                <span id="roomCodeSpanWait"></span>
+                <button id="copyWaitingCodeBtn" class="copy-code-btn">Copy</button>
             </div>
-            <div id="roomError" class="error-msg"></div>
-            <button class="back-to-main" id="backFromWaitingBtn">← Cancel</button>
+            <div id="waitingError" class="error-msg"></div>
+            <button class="back-link" id="cancelWaitingBtn">← Cancel</button>
         </div>
-    </div>
 
-    <!-- Chat + Draw Room -->
-    <div id="chatDrawRoom" class="chat-draw-room" style="display: none;">
-        <div class="chat-section">
-            <div class="chat-header">
-                <div><span class="room-code-badge" id="roomCodeSpan"></span></div>
-                <div><span class="online-badge" id="peerStatus">⚫ Connecting...</span></div>
-            </div>
-            <div class="messages-area" id="messagesList"></div>
-            <div class="chat-input-area">
-                <input type="text" id="chatInput" class="chat-input" placeholder="Type message...">
-                <button id="sendMsgBtn" class="send-btn">Send</button>
-            </div>
-        </div>
-        <div class="draw-section">
-            <div class="draw-header">
-                <span>Live drawing (sync)</span>
-                <div class="draw-tools">
-                    <button id="eraserBtn" class="tool-btn">Eraser</button>
-                    <button id="clearCanvasBtn" class="tool-btn">Clear</button>
-                    <button id="penBtn" class="tool-btn">Pen</button>
+        <!-- Chat + Draw Room -->
+        <div id="chatDrawRoom" class="chat-draw-room">
+            <div class="chat-section">
+                <div class="chat-header">
+                    <span class="room-code-badge" id="roomCodeDisplay"></span>
+                    <span class="online-badge" id="peerStatus">⚫ Connecting...</span>
+                </div>
+                <div class="messages-area" id="messagesList"></div>
+                <div class="chat-input-area">
+                    <input type="text" id="chatInput" class="chat-input" placeholder="Type message...">
+                    <button id="sendMsgBtn" class="send-btn">Send</button>
                 </div>
             </div>
-            <canvas id="drawCanvas" width="600" height="400" style="width:100%; height:auto; background:#111;"></canvas>
+            <div class="draw-section">
+                <div class="draw-header">
+                    <span>✏️ Live drawing</span>
+                    <div class="draw-tools">
+                        <button id="penTool" class="tool-btn">Pen</button>
+                        <button id="eraserTool" class="tool-btn">Eraser</button>
+                        <button id="clearCanvasBtn" class="tool-btn">Clear</button>
+                    </div>
+                </div>
+                <canvas id="drawCanvas"></canvas>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    // Firebase Config
-    const firebaseConfig = {
-        databaseURL: "https://games-5a163-default-rtdb.firebaseio.com/"
-    };
-    
-    let database;
-    try {
+    <button class="glass-btn" id="terminateBtn"><span>Terminate Session</span></button>
+
+    <script>
+        // Firebase Config
+        const firebaseConfig = { databaseURL: "https://games-5a163-default-rtdb.firebaseio.com/" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        database = firebase.database();
-    } catch (error) { console.error("Firebase error:", error); }
+        const db = firebase.database();
 
-    // Global state
-    let currentRoomId = null;
-    let myName = "";
-    let isCreator = false;
-    let roomRef = null;
-    let peerJoined = false;
-    let isDrawing = false;
-    let lastX = 0, lastY = 0;
-    let currentTool = "pen";
-    let terminationListener = null;
-    const canvas = document.getElementById('drawCanvas');
-    let ctx = null;
+        // DOM elements
+        const gameContainer = document.getElementById('gameContainer');
+        const introScreen = document.getElementById('introScreen');
+        const createFlow = document.getElementById('createFlow');
+        const joinFlowName = document.getElementById('joinFlowName');
+        const joinFlowCode = document.getElementById('joinFlowCode');
+        const waitingFlow = document.getElementById('waitingFlow');
+        const chatDrawRoom = document.getElementById('chatDrawRoom');
+        const terminateBtn = document.getElementById('terminateBtn');
 
-    // DOM elements
-    const introPanel = document.getElementById('introPanel');
-    const chatDrawRoom = document.getElementById('chatDrawRoom');
-    const mainActionButtons = document.getElementById('mainActionButtons');
-    const createRoomBtn = document.getElementById('createRoomBtn');
-    const showJoinBtn = document.getElementById('showJoinBtn');
-    const createNameContainer = document.getElementById('createNameContainer');
-    const joinNameContainer = document.getElementById('joinNameContainer');
-    const joinCodeContainer = document.getElementById('joinCodeContainer');
-    const waitingZone = document.getElementById('waitingZone');
-    const waitingCodeDisplay = document.getElementById('waitingCodeDisplay');
-    const roomCodeTextSpan = document.getElementById('roomCodeText');
-    const copyRoomCodeBtn = document.getElementById('copyRoomCodeBtn');
-    const generateCodeBtn = document.getElementById('generateCodeBtn');
-    const createNameInput = document.getElementById('createNameInput');
-    const proceedToCodeBtn = document.getElementById('proceedToCodeBtn');
-    const joinNameInput = document.getElementById('joinNameInput');
-    const submitJoinFinalBtn = document.getElementById('submitJoinFinalBtn');
-    const joinCodeInput = document.getElementById('joinCodeInput');
-    const createNameError = document.getElementById('createNameError');
-    const joinNameError = document.getElementById('joinNameError');
-    const joinCodeError = document.getElementById('joinCodeError');
-    const roomErrorSpan = document.getElementById('roomError');
-    const roomCodeSpan = document.getElementById('roomCodeSpan');
-    const peerStatusSpan = document.getElementById('peerStatus');
-    const messagesList = document.getElementById('messagesList');
-    const chatInput = document.getElementById('chatInput');
-    const sendMsgBtn = document.getElementById('sendMsgBtn');
-    const eraserBtn = document.getElementById('eraserBtn');
-    const clearCanvasBtn = document.getElementById('clearCanvasBtn');
-    const penBtn = document.getElementById('penBtn');
-    const terminateBtn = document.getElementById('terminateSessionBtn');
+        const createNameInput = document.getElementById('createNameInput');
+        const confirmCreateBtn = document.getElementById('confirmCreateBtn');
+        const createError = document.getElementById('createError');
+        const backFromCreate = document.getElementById('backFromCreate');
 
-    function generateRoomCode() {
-        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-        let code = "";
-        for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
-        return code;
-    }
+        const joinNameInput = document.getElementById('joinNameInput');
+        const nextToCodeBtn = document.getElementById('nextToCodeBtn');
+        const joinNameError = document.getElementById('joinNameError');
+        const backFromJoinName = document.getElementById('backFromJoinName');
 
-    // Copy room code to clipboard
-    function copyRoomCode() {
-        if (!currentRoomId) return;
-        navigator.clipboard.writeText(currentRoomId).then(() => {
-            const originalText = copyRoomCodeBtn.textContent;
-            copyRoomCodeBtn.textContent = "Copied!";
-            setTimeout(() => { copyRoomCodeBtn.textContent = originalText; }, 1500);
-        }).catch(() => {
-            copyRoomCodeBtn.textContent = "Error";
-            setTimeout(() => { copyRoomCodeBtn.textContent = "Copy"; }, 1500);
-        });
-    }
+        const joinCodeInput = document.getElementById('joinCodeInput');
+        const submitJoinBtn = document.getElementById('submitJoinBtn');
+        const joinCodeError = document.getElementById('joinCodeError');
+        const backFromJoinCode = document.getElementById('backFromJoinCode');
 
-    function setTerminateButtonVisible(visible) {
-        if (visible) terminateBtn.classList.add('visible');
-        else terminateBtn.classList.remove('visible');
-    }
+        const roomCodeSpanWait = document.getElementById('roomCodeSpanWait');
+        const copyWaitingCodeBtn = document.getElementById('copyWaitingCodeBtn');
+        const cancelWaitingBtn = document.getElementById('cancelWaitingBtn');
+        const waitingError = document.getElementById('waitingError');
 
-    async function terminateSession(isRemote = false, terminatorName = null) {
-        if (!isRemote && roomRef && currentRoomId && myName) {
-            try {
-                await roomRef.child('termination').set({ terminatedBy: myName, timestamp: Date.now() });
-            } catch(e) {}
+        const roomCodeDisplay = document.getElementById('roomCodeDisplay');
+        const peerStatus = document.getElementById('peerStatus');
+        const messagesList = document.getElementById('messagesList');
+        const chatInput = document.getElementById('chatInput');
+        const sendMsgBtn = document.getElementById('sendMsgBtn');
+        const penTool = document.getElementById('penTool');
+        const eraserTool = document.getElementById('eraserTool');
+        const clearCanvas = document.getElementById('clearCanvasBtn');
+        const canvas = document.getElementById('drawCanvas');
+        let ctx = canvas.getContext('2d');
+
+        // State
+        let currentRoomId = null;
+        let myName = "";
+        let isCreator = false;
+        let roomRef = null;
+        let peerJoined = false;
+        let isDrawing = false;
+        let lastX = 0, lastY = 0;
+        let currentTool = "pen";
+        let terminationListener = null;
+
+        function hideAllScreens() {
+            introScreen.style.display = 'none';
+            createFlow.classList.remove('active');
+            joinFlowName.classList.remove('active');
+            joinFlowCode.classList.remove('active');
+            waitingFlow.classList.remove('active');
+            chatDrawRoom.style.display = 'none';
         }
-        if (terminationListener && roomRef) roomRef.child('termination').off('value', terminationListener);
-        if (roomRef && currentRoomId && myName) {
-            try {
-                roomRef.child('activeUsers').child(myName).remove();
+
+        function showScreen(screen) {
+            hideAllScreens();
+            
+            if (screen === 'intro') {
+                introScreen.style.display = 'flex';
+                gameContainer.style.maxWidth = '1100px';
+                gameContainer.style.width = '100%';
+                terminateBtn.classList.remove('visible');
+            } else if (screen === 'create') {
+                createFlow.classList.add('active');
+            } else if (screen === 'joinName') {
+                joinFlowName.classList.add('active');
+            } else if (screen === 'joinCode') {
+                joinFlowCode.classList.add('active');
+            } else if (screen === 'waiting') {
+                waitingFlow.classList.add('active');
+            } else if (screen === 'chat') {
+                chatDrawRoom.style.display = 'flex';
+                gameContainer.style.maxWidth = '1200px';
+                gameContainer.style.width = '90vw';
+                terminateBtn.classList.add('visible');
+            }
+        }
+
+        function cleanupRoom() {
+            if (roomRef) {
+                if (terminationListener) roomRef.child('termination').off('value', terminationListener);
+                if (myName) roomRef.child('activeUsers').child(myName).remove();
                 if (isCreator) roomRef.child('peerJoined').set(false);
                 roomRef.off();
-            } catch(e) {}
-        }
-        roomRef = null; currentRoomId = null; peerJoined = false; isCreator = false;
-        setTerminateButtonVisible(false);
-        introPanel.style.display = "flex";
-        chatDrawRoom.style.display = "none";
-        showMainScreen();
-        if (ctx) { ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, canvas.width, canvas.height); }
-        if (messagesList) messagesList.innerHTML = "";
-    }
-
-    function setupTerminationListener() {
-        if (!roomRef) return;
-        if (terminationListener) roomRef.child('termination').off('value', terminationListener);
-        terminationListener = (snap) => {
-            const data = snap.val();
-            if (data && data.terminatedBy && data.terminatedBy !== myName) {
-                alert(`${data.terminatedBy} has terminated the session.`);
-                terminateSession(true, data.terminatedBy);
             }
-        };
-        roomRef.child('termination').on('value', terminationListener);
-    }
+            roomRef = null; currentRoomId = null; peerJoined = false; isCreator = false;
+        }
 
-    function showMainScreen() {
-        mainActionButtons.style.display = "flex";
-        createNameContainer.style.display = "none";
-        joinNameContainer.style.display = "none";
-        joinCodeContainer.style.display = "none";
-        waitingZone.style.display = "none";
-        createNameInput.value = ""; joinNameInput.value = ""; joinCodeInput.value = "";
-        createNameError.innerText = ""; joinNameError.innerText = ""; joinCodeError.innerText = ""; roomErrorSpan.innerText = "";
-        setTerminateButtonVisible(false);
-    }
+        async function terminateSession(isRemote = false, terminatorName = null) {
+            if (!isRemote && roomRef && currentRoomId && myName) {
+                try { await roomRef.child('termination').set({ terminatedBy: myName, timestamp: Date.now() }); } catch(e) {}
+            }
+            cleanupRoom();
+            showScreen('intro');
+            if (terminatorName && terminatorName !== myName) alert(`${terminatorName} has terminated the session.`);
+            if (ctx) { ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+            messagesList.innerHTML = "";
+        }
 
-    // CREATE FLOW
-    generateCodeBtn.addEventListener('click', async () => {
-        const name = createNameInput.value.trim();
-        if (!name) { createNameError.innerText = "Please enter your name"; return; }
-        if (!database) { createNameError.innerText = "Firebase not connected."; return; }
-        myName = name;
-        localStorage.setItem('jacklinus_lastName', myName);
-        createNameError.innerText = "";
-        const roomCode = generateRoomCode();
-        currentRoomId = roomCode;
-        isCreator = true;
-        roomRef = database.ref(`chat_tabs/${roomCode}`);
-        const roomData = { creator: myName, created: Date.now(), peerJoined: false, activeUsers: { [myName]: true }, messages: [], drawing: { strokes: [] } };
-        try {
-            await roomRef.set(roomData);
-            setupRoomListeners();
-            roomCodeTextSpan.textContent = roomCode;
-            waitingZone.style.display = "block";
-            createNameContainer.style.display = "none";
-            mainActionButtons.style.display = "none";
-        } catch (err) { createNameError.innerText = "Failed to create room."; }
-    });
+        function setupTerminationListener() {
+            if (!roomRef) return;
+            if (terminationListener) roomRef.child('termination').off('value', terminationListener);
+            terminationListener = (snap) => {
+                const data = snap.val();
+                if (data && data.terminatedBy && data.terminatedBy !== myName) {
+                    terminateSession(true, data.terminatedBy);
+                }
+            };
+            roomRef.child('termination').on('value', terminationListener);
+        }
 
-    // COPY BUTTON for generated code
-    copyRoomCodeBtn.addEventListener('click', copyRoomCode);
+        function generateRoomCode() {
+            const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+            let code = "";
+            for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+            return code;
+        }
 
-    // JOIN FLOW
-    proceedToCodeBtn.addEventListener('click', () => {
-        const name = joinNameInput.value.trim();
-        if (!name) { joinNameError.innerText = "Please enter your name"; return; }
-        myName = name;
-        localStorage.setItem('jacklinus_lastName', myName);
-        joinNameError.innerText = "";
-        joinNameContainer.style.display = "none";
-        joinCodeContainer.style.display = "flex";
-    });
+        // CREATE ROOM
+        confirmCreateBtn.addEventListener('click', async () => {
+            const name = createNameInput.value.trim();
+            if (!name) { createError.innerText = "Please enter your name"; return; }
+            myName = name;
+            createError.innerText = "";
+            const roomCode = generateRoomCode();
+            currentRoomId = roomCode;
+            isCreator = true;
+            roomRef = db.ref(`chat_tabs/${roomCode}`);
+            try {
+                await roomRef.set({
+                    creator: myName, created: Date.now(), peerJoined: false,
+                    activeUsers: { [myName]: true }, messages: [], drawing: { strokes: [] }
+                });
+                setupRoomListeners();
+                roomCodeSpanWait.textContent = roomCode;
+                showScreen('waiting');
+            } catch(e) { createError.innerText = "Failed to create room."; }
+        });
 
-    submitJoinFinalBtn.addEventListener('click', async () => {
-        const roomCode = joinCodeInput.value.trim().toUpperCase();
-        if (roomCode.length !== 6) { joinCodeError.innerText = "Enter 6-digit code"; return; }
-        if (!database) { joinCodeError.innerText = "Firebase not connected."; return; }
-        joinCodeError.innerText = "";
-        const roomCheckRef = database.ref(`chat_tabs/${roomCode}`);
-        try {
-            const snapshot = await roomCheckRef.once('value');
-            if (!snapshot.exists()) { joinCodeError.innerText = "Room doesn't exist."; return; }
-            const data = snapshot.val();
-            if (data.peerJoined === true && data.activeUsers && Object.keys(data.activeUsers).length >= 2) {
-                joinCodeError.innerText = "Room is full (2 players max).";
+        // JOIN FLOW
+        nextToCodeBtn.addEventListener('click', () => {
+            const name = joinNameInput.value.trim();
+            if (!name) { joinNameError.innerText = "Please enter your name"; return; }
+            myName = name;
+            joinNameError.innerText = "";
+            showScreen('joinCode');
+        });
+
+        submitJoinBtn.addEventListener('click', async () => {
+            const code = joinCodeInput.value.trim().toUpperCase();
+            if (code.length !== 6) { joinCodeError.innerText = "Enter 6-digit code"; return; }
+            const roomCheck = db.ref(`chat_tabs/${code}`);
+            const snap = await roomCheck.once('value');
+            if (!snap.exists()) { joinCodeError.innerText = "Room not found"; return; }
+            const data = snap.val();
+            if (data.peerJoined && Object.keys(data.activeUsers || {}).length >= 2) {
+                joinCodeError.innerText = "Room is full (2 players max)";
                 return;
             }
-            currentRoomId = roomCode;
+            currentRoomId = code;
             isCreator = false;
-            roomRef = roomCheckRef;
+            roomRef = roomCheck;
             await roomRef.child('peerJoined').set(true);
             await roomRef.child('activeUsers').update({ [myName]: true });
             setupRoomListeners();
-            enterChatDrawRoom();
-        } catch (err) { joinCodeError.innerText = "Failed to join room."; }
-    });
+            enterChatRoom();
+        });
 
-    function setupRoomListeners() {
-        if (!roomRef) return;
-        roomRef.child('peerJoined').on('value', (snap) => {
-            if (snap.val() === true && !peerJoined) {
-                peerJoined = true;
-                if (waitingZone.style.display !== "none") enterChatDrawRoom();
-                else if (chatDrawRoom.style.display === "flex") peerStatusSpan.innerText = "🟢 Connected";
-            }
-        });
-        roomRef.child('messages').on('value', (snap) => renderMessages(snap.val() || []));
-        roomRef.child('drawing/strokes').on('child_added', (snap) => {
-            if (!ctx || !canvas) return;
-            const stroke = snap.val();
-            if (stroke && stroke.sender !== myName) drawRemoteStroke(stroke);
-        });
-        roomRef.child('drawing/clearFlag').on('value', (snap) => {
-            if (snap.val() === true && ctx) {
+        function setupRoomListeners() {
+            if (!roomRef) return;
+            roomRef.child('peerJoined').on('value', (snap) => {
+                if (snap.val() === true && !peerJoined) {
+                    peerJoined = true;
+                    if (waitingFlow.classList.contains('active')) enterChatRoom();
+                }
+            });
+            roomRef.child('messages').on('value', (snap) => renderMessages(snap.val() || []));
+            roomRef.child('drawing/strokes').on('child_added', (snap) => {
+                if (!ctx) return;
+                const s = snap.val();
+                if (s && s.sender !== myName) drawRemoteStroke(s);
+            });
+            roomRef.child('drawing/clearFlag').on('value', (snap) => {
+                if (snap.val() === true && ctx) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = '#111'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    roomRef.child('drawing/clearFlag').set(false);
+                }
+            });
+            roomRef.child('activeUsers').on('value', (snap) => {
+                const cnt = Object.keys(snap.val() || {}).length;
+                peerStatus.innerText = cnt >= 2 ? "🟢 Connected • 2 users" : "🟡 Waiting for peer...";
+            });
+            setupTerminationListener();
+        }
+
+        async function enterChatRoom() {
+            showScreen('chat');
+            roomCodeDisplay.innerText = `Room: ${currentRoomId}`;
+            initCanvas();
+            await loadCanvasFromDb();
+        }
+
+        async function loadCanvasFromDb() {
+            if (!roomRef) return;
+            const strokesSnap = await roomRef.child('drawing/strokes').once('value');
+            const strokes = strokesSnap.val();
+            if (strokes && ctx) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = '#111'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-                roomRef.child('drawing/clearFlag').set(false);
+                Object.values(strokes).sort((a,b) => a.timestamp - b.timestamp).forEach(s => drawRemoteStroke(s));
             }
-        });
-        roomRef.child('activeUsers').on('value', (snap) => {
-            const count = Object.keys(snap.val() || {}).length;
-            peerStatusSpan.innerText = count >= 2 ? "🟢 Connected • 2 users" : "🟡 Waiting for peer...";
-        });
-        setupTerminationListener();
-    }
+        }
 
-    function enterChatDrawRoom() {
-        introPanel.style.display = "none";
-        chatDrawRoom.style.display = "flex";
-        roomCodeSpan.innerText = `Room: ${currentRoomId}`;
-        waitingZone.style.display = "none";
-        showMainScreen();
-        setTerminateButtonVisible(true);
-        peerStatusSpan.innerText = "🟢 Connected";
-        if (ctx === null) initCanvas();
-        loadCanvasFromDb();
-    }
+        function drawRemoteStroke(s) {
+            if (!ctx) return;
+            ctx.beginPath();
+            ctx.lineWidth = s.lineWidth || 3;
+            ctx.lineCap = 'round';
+            if (s.tool === 'eraser') { ctx.globalCompositeOperation = 'destination-out'; ctx.strokeStyle = 'rgba(0,0,0,1)'; }
+            else { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = s.color || '#FFF'; }
+            ctx.moveTo(s.x0, s.y0); ctx.lineTo(s.x1, s.y1); ctx.stroke();
+            ctx.globalCompositeOperation = 'source-over';
+        }
 
-    async function loadCanvasFromDb() {
-        if (!roomRef) return;
-        const strokesSnap = await roomRef.child('drawing/strokes').once('value');
-        const strokes = strokesSnap.val();
-        if (strokes && ctx && canvas) {
+        function initCanvas() {
+            const resize = () => {
+                const container = canvas.parentElement;
+                const w = container.clientWidth - 4;
+                const h = 280;
+                canvas.width = w; canvas.height = h;
+                canvas.style.width = `${w}px`; canvas.style.height = `${h}px`;
+                ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#111'; ctx.fillRect(0, 0, w, h);
+                ctx.strokeStyle = '#FFF'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+                loadCanvasFromDb();
+            };
+            resize();
+            window.addEventListener('resize', resize);
+            attachDrawingEvents();
+        }
+
+        function attachDrawingEvents() {
+            const getCoords = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const sx = canvas.width / rect.width, sy = canvas.height / rect.height;
+                let cx, cy;
+                if (e.touches) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
+                else { cx = e.clientX; cy = e.clientY; }
+                return { x: Math.min(Math.max(0, (cx - rect.left) * sx), canvas.width), y: Math.min(Math.max(0, (cy - rect.top) * sy), canvas.height) };
+            };
+            const start = (e) => { e.preventDefault(); isDrawing = true; const { x, y } = getCoords(e); lastX = x; lastY = y; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y); ctx.stroke(); };
+            const draw = (e) => {
+                if (!isDrawing) return; e.preventDefault();
+                const { x, y } = getCoords(e);
+                ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
+                if (roomRef) roomRef.child('drawing/strokes').push({
+                    x0: lastX, y0: lastY, x1: x, y1: y, tool: currentTool,
+                    color: currentTool === 'eraser' ? '#000' : '#FFF',
+                    lineWidth: currentTool === 'eraser' ? 15 : 3,
+                    sender: myName, timestamp: Date.now()
+                });
+                lastX = x; lastY = y;
+            };
+            const end = () => { isDrawing = false; };
+            canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', end);
+            canvas.addEventListener('touchstart', start); canvas.addEventListener('touchmove', draw); canvas.addEventListener('touchend', end);
+        }
+
+        function setPen() { currentTool = 'pen'; if (ctx) { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = '#FFF'; ctx.lineWidth = 3; } }
+        function setEraser() { currentTool = 'eraser'; if (ctx) { ctx.globalCompositeOperation = 'destination-out'; ctx.lineWidth = 15; } }
+        penTool.addEventListener('click', setPen);
+        eraserTool.addEventListener('click', setEraser);
+        clearCanvas.addEventListener('click', async () => {
+            if (!ctx) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = '#111'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            Object.values(strokes).sort((a,b) => a.timestamp - b.timestamp).forEach(s => drawRemoteStroke(s));
+            if (roomRef) { await roomRef.child('drawing/clearFlag').set(true); await roomRef.child('drawing/strokes').remove(); }
+            setPen();
+        });
+
+        function renderMessages(msgs) {
+            messagesList.innerHTML = "";
+            const arr = Array.isArray(msgs) ? msgs : Object.values(msgs || {});
+            arr.forEach(m => {
+                const div = document.createElement('div');
+                div.className = `message-bubble ${m.sender === myName ? 'message-own' : ''}`;
+                div.innerHTML = `<div class="msg-name">${escapeHtml(m.sender)}</div><div class="msg-text">${escapeHtml(m.text)}</div>`;
+                messagesList.appendChild(div);
+            });
+            messagesList.scrollTop = messagesList.scrollHeight;
         }
-    }
 
-    function drawRemoteStroke(stroke) {
-        if (!ctx) return;
-        ctx.beginPath();
-        ctx.lineWidth = stroke.lineWidth || 3;
-        ctx.lineCap = 'round';
-        if (stroke.tool === 'eraser') { ctx.globalCompositeOperation = 'destination-out'; ctx.strokeStyle = 'rgba(0,0,0,1)'; }
-        else { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = stroke.color || '#FFFFFF'; }
-        ctx.moveTo(stroke.x0, stroke.y0);
-        ctx.lineTo(stroke.x1, stroke.y1);
-        ctx.stroke();
-        ctx.globalCompositeOperation = 'source-over';
-    }
+        function sendMessage() {
+            const txt = chatInput.value.trim();
+            if (!txt || !roomRef) return;
+            roomRef.child('messages').transaction(cur => {
+                let arr = cur || [];
+                if (!Array.isArray(arr)) arr = Object.values(arr);
+                arr.push({ sender: myName, text: txt, timestamp: Date.now() });
+                if (arr.length > 200) arr.shift();
+                return arr;
+            });
+            chatInput.value = "";
+        }
 
-    function initCanvas() {
-        if (!canvas) return;
-        const resize = () => {
-            const w = canvas.parentElement.clientWidth - 2, h = 320;
-            canvas.width = w; canvas.height = h;
-            canvas.style.width = `${w}px`; canvas.style.height = `${h}px`;
-            ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#111'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 3; ctx.lineCap = 'round';
-            loadCanvasFromDb();
-        };
-        resize();
-        window.addEventListener('resize', resize);
-        attachCanvasEvents();
-    }
+        function escapeHtml(s) { return s.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
 
-    function attachCanvasEvents() {
-        const getCoords = (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width, scaleY = canvas.height / rect.height;
-            let cx, cy;
-            if (e.touches) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
-            else { cx = e.clientX; cy = e.clientY; }
-            let x = (cx - rect.left) * scaleX, y = (cy - rect.top) * scaleY;
-            return { x: Math.min(Math.max(0, x), canvas.width), y: Math.min(Math.max(0, y), canvas.height) };
-        };
-        const start = (e) => { e.preventDefault(); isDrawing = true; const { x, y } = getCoords(e); lastX = x; lastY = y; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y); ctx.stroke(); };
-        const draw = (e) => {
-            if (!isDrawing) return; e.preventDefault();
-            const { x, y } = getCoords(e);
-            ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
-            if (roomRef) roomRef.child('drawing/strokes').push({ x0: lastX, y0: lastY, x1: x, y1: y, tool: currentTool, color: currentTool === 'eraser' ? '#000000' : '#FFFFFF', lineWidth: currentTool === 'eraser' ? 15 : 3, sender: myName, timestamp: Date.now() });
-            lastX = x; lastY = y;
-        };
-        const end = () => { isDrawing = false; };
-        canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', end);
-        canvas.addEventListener('touchstart', start); canvas.addEventListener('touchmove', draw); canvas.addEventListener('touchend', end);
-    }
+        // Copy waiting code
+        copyWaitingCodeBtn.addEventListener('click', () => {
+            if (currentRoomId) navigator.clipboard.writeText(currentRoomId).then(() => {
+                copyWaitingCodeBtn.textContent = "Copied!";
+                setTimeout(() => copyWaitingCodeBtn.textContent = "Copy", 1500);
+            });
+        });
 
-    function setPen() { currentTool = 'pen'; if (ctx) { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 3; } }
-    function setEraser() { currentTool = 'eraser'; if (ctx) { ctx.globalCompositeOperation = 'destination-out'; ctx.lineWidth = 15; } }
-    penBtn.addEventListener('click', setPen);
-    eraserBtn.addEventListener('click', setEraser);
-    clearCanvasBtn.addEventListener('click', async () => {
-        if (!ctx) return;
-        ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Back / Cancel buttons
+        backFromCreate.addEventListener('click', () => showScreen('intro'));
+        backFromJoinName.addEventListener('click', () => showScreen('intro'));
+        backFromJoinCode.addEventListener('click', () => showScreen('joinName'));
+        cancelWaitingBtn.addEventListener('click', () => terminateSession(false, null));
+        sendMsgBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+        terminateBtn.addEventListener('click', () => terminateSession(false, null));
+
+        // Intro buttons
+        document.getElementById('createBtn').addEventListener('click', () => showScreen('create'));
+        document.getElementById('joinBtn').addEventListener('click', () => showScreen('joinName'));
+
+        // Initialize
+        showScreen('intro');
         setPen();
-        if (roomRef) { await roomRef.child('drawing/clearFlag').set(true); await roomRef.child('drawing/strokes').remove(); }
-    });
-
-    function renderMessages(msgs) {
-        if (!messagesList) return;
-        messagesList.innerHTML = "";
-        const arr = Array.isArray(msgs) ? msgs : Object.values(msgs || {});
-        arr.forEach(msg => {
-            const div = document.createElement('div');
-            div.className = `message-bubble ${msg.sender === myName ? 'message-own' : ''}`;
-            div.innerHTML = `<div class="msg-name">${escapeHtml(msg.sender)}</div><div class="msg-text">${escapeHtml(msg.text)}</div><div class="msg-time">${new Date(msg.timestamp).toLocaleTimeString()}</div>`;
-            messagesList.appendChild(div);
-        });
-        messagesList.scrollTop = messagesList.scrollHeight;
-    }
-    function sendMessage() {
-        const text = chatInput.value.trim();
-        if (!text || !roomRef) return;
-        roomRef.child('messages').transaction(current => {
-            let arr = current || [];
-            if (!Array.isArray(arr)) arr = Object.values(arr);
-            arr.push({ sender: myName, text, timestamp: Date.now() });
-            if (arr.length > 200) arr.shift();
-            return arr;
-        });
-        chatInput.value = "";
-    }
-    function escapeHtml(str) { return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
-
-    // Event bindings
-    createRoomBtn.addEventListener('click', () => { mainActionButtons.style.display = "none"; createNameContainer.style.display = "flex"; createNameInput.value = ""; createNameError.innerText = ""; });
-    showJoinBtn.addEventListener('click', () => { mainActionButtons.style.display = "none"; joinNameContainer.style.display = "flex"; joinNameInput.value = ""; joinNameError.innerText = ""; });
-    backFromCreateBtn.addEventListener('click', showMainScreen);
-    backFromJoinNameBtn.addEventListener('click', showMainScreen);
-    backFromJoinCodeBtn.addEventListener('click', () => { joinCodeContainer.style.display = "none"; joinNameContainer.style.display = "flex"; joinCodeInput.value = ""; joinCodeError.innerText = ""; });
-    backFromWaitingBtn.addEventListener('click', () => terminateSession());
-    sendMsgBtn.addEventListener('click', sendMessage);
-    chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
-    terminateBtn.addEventListener('click', () => terminateSession());
-
-    showMainScreen();
-    setPen();
-</script>
+    </script>
 </body>
 </html>
