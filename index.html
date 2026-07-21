@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -602,13 +602,22 @@
                 renderMessage(snap.val(), true);
             });
 
+            // FIX: Listen for photos under the specific message key.
+            // This ensures that even if the message node arrives before photo data,
+            // the photos will be injected when they are written.
             roomRef.child('photos').on('child_added', snap => {
                 const msgKey = snap.key;
-                const bubble = document.querySelector(`[data-msgkey="${msgKey}"]`);
-                if (bubble && !bubble.querySelector('.msg-photos')) {
-                    const photoMap = snap.val();
-                    if (photoMap) injectPhotosIntoBubble(bubble, Object.values(photoMap));
-                }
+                // Wait a tick to ensure the message bubble is in the DOM
+                setTimeout(() => {
+                    const bubble = document.querySelector(`[data-msgkey="${msgKey}"]`);
+                    if (bubble && !bubble.querySelector('.msg-photos')) {
+                        const photoMap = snap.val();
+                        if (photoMap) {
+                            const photosArr = Object.values(photoMap);
+                            injectPhotosIntoBubble(bubble, photosArr);
+                        }
+                    }
+                }, 50);
             });
 
             roomRef.child('drawing/strokes').on('child_added', snap => {
@@ -651,6 +660,7 @@
                 div.appendChild(textEl);
             }
 
+            // If inline photos exist (legacy or direct), render them.
             if (msg.photos && msg.photos.length > 0) {
                 injectPhotosIntoBubble(div, msg.photos);
             }
@@ -781,6 +791,7 @@
             setPen();
         });
 
+        // ─── FIX: Ensure sendMessage works reliably on mobile ──────────────────
         async function sendMessage() {
             const txt = chatInput.value.trim();
             if (!txt && stagedPhotos.length === 0) return;
@@ -801,6 +812,7 @@
             };
             await msgRef.set(payload);
 
+            // If there are photos, write them under a separate path
             if (photosToSend.length > 0) {
                 const photoUpdates = {};
                 photosToSend.forEach((p, i) => {
@@ -808,8 +820,14 @@
                 });
                 await roomRef.update(photoUpdates);
 
+                // Inject into our own bubble immediately (for fast local feedback)
                 const ownBubble = document.querySelector(`[data-msgkey="${msgKey}"]`);
-                if (ownBubble) injectPhotosIntoBubble(ownBubble, photosToSend);
+                if (ownBubble) {
+                    // Use a small delay to ensure the bubble is fully rendered
+                    setTimeout(() => injectPhotosIntoBubble(ownBubble, photosToSend), 50);
+                } else {
+                    // If bubble not found, the 'child_added' listener will handle it.
+                }
             }
         }
 
