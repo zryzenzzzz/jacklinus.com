@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Jacklinus.com — Secure Encrypted Chats</title>
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/JACK%20favicon.png?raw=true">
 
@@ -12,11 +12,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background: #f0f0f0;
@@ -31,263 +27,78 @@
         }
 
         /* Large logo in top-left corner */
-        .page-logo {
-            position: fixed;
-            top: 30px;
-            left: 30px;
-            z-index: 100;
-        }
-        .page-logo img {
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-            display: block;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
-        }
+        .page-logo { position: fixed; top: 30px; left: 30px; z-index: 100; }
+        .page-logo img { width: 80px; height: 80px; object-fit: contain; display: block; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1)); }
 
-        /* LinkedIn banner - BIG, clickable, no rounded corners */
-        .linkedin-link {
-            display: block;
-            text-align: center;
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-        .linkedin-link:hover {
-            transform: scale(1.02);
-        }
-        .linkedin-link:active {
-            transform: scale(0.98);
-        }
-        .linkedin-image {
-            max-width: 500px;
-            width: 90%;
-            height: auto;
-            display: inline-block;
-            border-radius: 0;
-        }
+        /* LinkedIn banner */
+        .linkedin-link { display: block; text-align: center; margin-bottom: 20px; cursor: pointer; transition: transform 0.2s ease; }
+        .linkedin-link:hover { transform: scale(1.02); }
+        .linkedin-link:active { transform: scale(0.98); }
+        .linkedin-image { max-width: 500px; width: 90%; height: auto; display: inline-block; border-radius: 0; }
 
-        /* Tagline above the black box */
-        .above-tagline {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
-            letter-spacing: 0.3px;
-        }
+        .above-tagline { text-align: center; margin-bottom: 20px; font-size: 16px; font-weight: 500; color: #333; letter-spacing: 0.3px; }
 
-        /* MAIN CONTAINER - fixed height, contains all flows */
+        /* MAIN CONTAINER */
         .game-container {
-            width: 100%;
-            max-width: 1000px;
-            min-width: 320px;
-            background: #000000;
-            border-radius: 28px;
+            width: 100%; max-width: 1000px; min-width: 320px;
+            background: #000000; border-radius: 28px;
             box-shadow: 0px 4px 16px 0px rgba(0,0,0,0.35), 0px 34px 44px 0px rgba(0,0,0,0.17);
-            overflow: hidden;
-            position: relative;
-            min-height: 480px;
+            overflow: hidden; position: relative; min-height: 480px;
             transition: min-height 0.2s ease;
         }
 
-        /* Base screen styles - all use absolute positioning */
         .screen-base {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.3s ease;
-            opacity: 0;
-            pointer-events: none;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            transition: opacity 0.3s ease; opacity: 0; pointer-events: none;
         }
-        .screen-base.active {
-            opacity: 1;
-            pointer-events: auto;
-            z-index: 5;
-        }
+        .screen-base.active { opacity: 1; pointer-events: auto; z-index: 5; }
 
-        /* Intro Screen specific - SMALLER image, closer to options */
-        .intro-screen {
-            padding: 30px 40px 50px 40px;
-            justify-content: center;
-        }
-        .intro-title-img {
-            max-width: 320px;
-            width: 75%;
-            height: auto;
-            display: block;
-            margin: 0 auto 12px auto;
-            pointer-events: none;
-        }
-        .action-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            width: 100%;
-            max-width: 320px;
-            margin: 0 auto;
-        }
+        /* Intro Screen */
+        .intro-screen { padding: 30px 40px 50px 40px; justify-content: center; }
+        .intro-title-img { max-width: 320px; width: 75%; height: auto; display: block; margin: 0 auto 12px auto; pointer-events: none; }
+        .action-buttons { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 320px; margin: 0 auto; }
         .action-btn {
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 60px;
-            padding: 14px 28px;
-            font-size: 18px;
-            font-weight: 600;
-            color: white;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
+            background: rgba(255,255,255,0.08); backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 60px;
+            padding: 14px 28px; font-size: 18px; font-weight: 600; color: white;
+            font-family: 'Segoe UI', Arial, sans-serif; cursor: pointer;
+            transition: all 0.2s ease; text-align: center;
         }
-        .action-btn:hover {
-            background: rgba(255,255,255,0.18);
-            transform: scale(1.01);
-            border-color: rgba(255,255,255,0.5);
-        }
-        .action-btn:active {
-            transform: scale(0.98);
-        }
+        .action-btn:hover { background: rgba(255,255,255,0.18); transform: scale(1.01); border-color: rgba(255,255,255,0.5); }
+        .action-btn:active { transform: scale(0.98); }
 
-        /* Flow containers (shared styles) */
-        .flow-container {
-            padding: 40px 20px;
-        }
+        /* Flow containers */
+        .flow-container { padding: 40px 20px; }
         .flow-input-group {
-            display: flex;
-            gap: 10px;
-            background: #111;
-            border-radius: 60px;
-            padding: 4px;
-            border: 1px solid #2a2a2a;
-            width: 100%;
-            max-width: 280px;
+            display: flex; gap: 10px; background: #111; border-radius: 60px;
+            padding: 4px; border: 1px solid #2a2a2a; width: 100%; max-width: 280px;
         }
-        .flow-input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            padding: 12px 16px;
-            color: white;
-            font-size: 14px;
-            outline: none;
-            font-family: 'Segoe UI', Arial, sans-serif;
-        }
-        .flow-btn {
-            background: white;
-            border: none;
-            border-radius: 60px;
-            padding: 0 20px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Segoe UI', Arial, sans-serif;
-        }
+        .flow-input { flex: 1; background: transparent; border: none; padding: 12px 16px; color: white; font-size: 14px; outline: none; font-family: 'Segoe UI', Arial, sans-serif; }
+        .flow-btn { background: white; border: none; border-radius: 60px; padding: 0 20px; font-weight: 600; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
         .code-display {
-            font-family: monospace;
-            font-size: 32px;
-            letter-spacing: 6px;
-            background: #0a0a0a;
-            padding: 16px 24px;
-            border-radius: 50px;
-            margin-top: 20px;
-            color: #fff;
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            flex-wrap: wrap;
-            justify-content: center;
+            font-family: monospace; font-size: 32px; letter-spacing: 6px;
+            background: #0a0a0a; padding: 16px 24px; border-radius: 50px;
+            margin-top: 20px; color: #fff; display: flex; gap: 20px;
+            align-items: center; flex-wrap: wrap; justify-content: center;
         }
-        .copy-code-btn {
-            background: #2c2c2e;
-            border: none;
-            border-radius: 30px;
-            padding: 8px 20px;
-            color: white;
-            font-size: 13px;
-            cursor: pointer;
-            font-family: 'Segoe UI', Arial, sans-serif;
-        }
-        .error-msg {
-            color: #ff8a7a;
-            font-size: 12px;
-            margin-top: 10px;
-        }
-        .back-link {
-            margin-top: 24px;
-            color: #888;
-            font-size: 13px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            font-family: 'Segoe UI', Arial, sans-serif;
-        }
-        .waiting-msg {
-            color: #ccc;
-            margin-top: 20px;
-            font-size: 14px;
-        }
+        .copy-code-btn { background: #2c2c2e; border: none; border-radius: 30px; padding: 8px 20px; color: white; font-size: 13px; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
+        .error-msg { color: #ff8a7a; font-size: 12px; margin-top: 10px; }
+        .back-link { margin-top: 24px; color: #888; font-size: 13px; cursor: pointer; background: none; border: none; font-family: 'Segoe UI', Arial, sans-serif; }
+        .waiting-msg { color: #ccc; margin-top: 20px; font-size: 14px; }
 
         /* Chat + Draw Room */
         .chat-draw-room {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #0f0f12;
-            display: none;
-            flex-direction: row;
-            z-index: 10;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #0f0f12; display: none; flex-direction: row; z-index: 10;
         }
-        .chat-draw-room.active {
-            display: flex;
-        }
-        .chat-section {
-            flex: 3;
-            display: flex;
-            flex-direction: column;
-            background: #000;
-            border-right: 1px solid #222;
-        }
-        .chat-header {
-            padding: 18px 24px;
-            border-bottom: 1px solid #1e1e1e;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .room-code-badge {
-            background: #1a1a1a;
-            border-radius: 40px;
-            padding: 6px 18px;
-            font-size: 13px;
-            font-family: monospace;
-            color: #aaa;
-        }
-        .online-badge {
-            font-size: 12px;
-            color: #4cd964;
-            background: #1a1a1a;
-            padding: 4px 12px;
-            border-radius: 20px;
-        }
-        .messages-area {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .chat-draw-room.active { display: flex; }
+        .chat-section { flex: 3; display: flex; flex-direction: column; background: #000; border-right: 1px solid #222; }
+        .chat-header { padding: 18px 24px; border-bottom: 1px solid #1e1e1e; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .room-code-badge { background: #1a1a1a; border-radius: 40px; padding: 6px 18px; font-size: 13px; font-family: monospace; color: #aaa; }
+        .online-badge { font-size: 12px; color: #4cd964; background: #1a1a1a; padding: 4px 12px; border-radius: 20px; }
+        .messages-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
         .messages-area::-webkit-scrollbar { width: 6px; }
         .messages-area::-webkit-scrollbar-track { background: #1a1a1a; border-radius: 4px; }
         .messages-area::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
@@ -297,100 +108,127 @@
             60% { opacity: 0.8; transform: translateY(-2px) scale(1.01); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .message-bubble {
-            max-width: 80%;
-            background: #1c1c1e;
-            border-radius: 22px;
-            padding: 10px 16px;
-            align-self: flex-start;
-            word-wrap: break-word;
-        }
-        .message-own {
-            background: #2c2c2e;
-            align-self: flex-end;
-            border: 1px solid #3a3a3c;
-        }
+
+        .message-bubble { max-width: 80%; background: #1c1c1e; border-radius: 22px; padding: 10px 16px; align-self: flex-start; word-wrap: break-word; }
+        .message-own { background: #2c2c2e; align-self: flex-end; border: 1px solid #3a3a3c; }
         .msg-name { font-size: 12px; font-weight: 600; color: #b0b0ff; margin-bottom: 4px; }
         .msg-text { font-size: 14px; color: #fff; word-break: break-word; line-height: 1.4; }
-        .chat-input-area {
-            display: flex;
-            padding: 16px 20px 20px;
-            gap: 12px;
-            background: #000;
-            border-top: 1px solid #1c1c1e;
+
+        /* Photo message styles */
+        .msg-photos { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+        .msg-photo-wrap { position: relative; }
+        .msg-photo {
+            max-width: 160px; max-height: 160px; border-radius: 12px;
+            object-fit: cover; cursor: zoom-in; display: block;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            border: 1px solid rgba(255,255,255,0.08);
         }
+        .msg-photo:hover { transform: scale(1.03); box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+            display: none; align-items: center; justify-content: center;
+            z-index: 9999; cursor: zoom-out; padding: 20px;
+        }
+        .lightbox.open { display: flex; }
+        .lightbox img { max-width: 92vw; max-height: 88vh; border-radius: 14px; object-fit: contain; box-shadow: 0 8px 40px rgba(0,0,0,0.7); }
+        .lightbox-close {
+            position: absolute; top: 20px; right: 24px; color: white; font-size: 32px;
+            cursor: pointer; background: none; border: none; line-height: 1;
+            opacity: 0.8; transition: opacity 0.15s;
+        }
+        .lightbox-close:hover { opacity: 1; }
+        .lightbox-nav {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            color: white; font-size: 36px; cursor: pointer; background: rgba(255,255,255,0.08);
+            border: none; border-radius: 50%; width: 48px; height: 48px;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.15s; user-select: none;
+        }
+        .lightbox-nav:hover { background: rgba(255,255,255,0.2); }
+        #lightboxPrev { left: 16px; }
+        #lightboxNext { right: 16px; }
+
+        /* Chat input area */
+        .chat-input-area { display: flex; padding: 12px 16px 16px; gap: 8px; background: #000; border-top: 1px solid #1c1c1e; flex-direction: column; }
+
+        /* Photo preview queue (staged images) */
+        .photo-preview-queue {
+            display: none; flex-wrap: wrap; gap: 8px; padding: 8px 4px 4px;
+        }
+        .photo-preview-queue.has-photos { display: flex; }
+        .preview-thumb-wrap {
+            position: relative; width: 60px; height: 60px;
+        }
+        .preview-thumb {
+            width: 60px; height: 60px; object-fit: cover;
+            border-radius: 10px; border: 1px solid #333; display: block;
+        }
+        .preview-thumb-remove {
+            position: absolute; top: -6px; right: -6px; background: #ff453a;
+            border: none; border-radius: 50%; width: 20px; height: 20px;
+            color: white; font-size: 13px; line-height: 1; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700;
+        }
+
+        /* Row: paperclip + text input + send */
+        .chat-input-row { display: flex; gap: 8px; align-items: center; }
+
+        /* Drag-over overlay */
+        .drag-overlay {
+            position: absolute; inset: 0; background: rgba(80,120,255,0.18);
+            border: 3px dashed rgba(130,160,255,0.7); border-radius: 18px;
+            display: none; align-items: center; justify-content: center;
+            z-index: 50; pointer-events: none; border-radius: 0;
+        }
+        .drag-overlay.active { display: flex; }
+        .drag-overlay-label { color: rgba(180,200,255,0.95); font-size: 18px; font-weight: 600; letter-spacing: 0.3px; }
+
+        /* Paperclip button */
+        .paperclip-btn {
+            background: #1c1c1e; border: none; border-radius: 50%;
+            width: 40px; height: 40px; display: flex; align-items: center;
+            justify-content: center; cursor: pointer; flex-shrink: 0;
+            transition: background 0.15s; position: relative;
+        }
+        .paperclip-btn:hover { background: #2c2c2e; }
+        .paperclip-btn svg { width: 20px; height: 20px; }
+
+        /* Tooltip */
+        .paperclip-btn::after {
+            content: 'Send files'; position: absolute; bottom: 110%; left: 50%;
+            transform: translateX(-50%); background: #222; color: #ddd;
+            font-size: 11px; padding: 4px 10px; border-radius: 8px;
+            white-space: nowrap; opacity: 0; pointer-events: none;
+            transition: opacity 0.15s; font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .paperclip-btn:hover::after { opacity: 1; }
+
         .chat-input {
-            flex: 1;
-            background: #1c1c1e;
-            border: none;
-            border-radius: 30px;
-            padding: 12px 18px;
-            color: white;
-            font-size: 14px;
-            outline: none;
+            flex: 1; background: #1c1c1e; border: none; border-radius: 30px;
+            padding: 12px 18px; color: white; font-size: 14px; outline: none;
             font-family: 'Segoe UI', Arial, sans-serif;
         }
-        .send-btn {
-            background: white;
-            border: none;
-            border-radius: 30px;
-            padding: 0 24px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .draw-section {
-            flex: 2;
-            background: #0a0a0c;
-            display: flex;
-            flex-direction: column;
-            border-left: 1px solid #222;
-        }
-        .draw-header {
-            padding: 14px 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #222;
-        }
+        .send-btn { background: white; border: none; border-radius: 30px; padding: 0 24px; font-weight: 600; cursor: pointer; height: 40px; }
+
+        /* Draw section */
+        .draw-section { flex: 2; background: #0a0a0c; display: flex; flex-direction: column; border-left: 1px solid #222; }
+        .draw-header { padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
         .draw-header span { font-size: 14px; font-weight: 500; color: #ddd; }
         .draw-tools { display: flex; gap: 12px; }
-        .tool-btn {
-            background: #1c1c1e;
-            border: none;
-            border-radius: 30px;
-            padding: 6px 18px;
-            color: white;
-            font-size: 12px;
-            cursor: pointer;
-        }
+        .tool-btn { background: #1c1c1e; border: none; border-radius: 30px; padding: 6px 18px; color: white; font-size: 12px; cursor: pointer; }
         .tool-btn:active { opacity: 0.7; }
-        canvas {
-            flex: 1;
-            width: 100%;
-            background: #111;
-            cursor: crosshair;
-            touch-action: none;
-        }
+        canvas { flex: 1; width: 100%; background: #111; cursor: crosshair; touch-action: none; }
 
         /* Terminate button */
         .glass-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            padding: 12px 28px;
-            font-size: 14px;
-            color: #fff;
-            border: none;
-            background: rgba(0, 0, 0, 0.75);
-            border-radius: 40px;
-            backdrop-filter: blur(12px);
-            cursor: pointer;
-            z-index: 200;
-            display: none;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            position: fixed; bottom: 30px; right: 30px; padding: 12px 28px;
+            font-size: 14px; color: #fff; border: none; background: rgba(0,0,0,0.75);
+            border-radius: 40px; backdrop-filter: blur(12px); cursor: pointer;
+            z-index: 200; display: none; font-family: 'Segoe UI', Arial, sans-serif;
+            font-weight: 500; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         .glass-btn.visible { display: block; }
 
@@ -399,11 +237,12 @@
             .chat-section { min-height: 400px; }
             .draw-section { min-height: 280px; border-left: none; border-top: 1px solid #222; }
             .intro-title-img { max-width: 220px; margin-bottom: 15px; }
-            .page-logo img { width: 55px; height: 55px; top: 20px; left: 20px; }
+            .page-logo img { width: 55px; height: 55px; }
             .above-tagline { font-size: 13px; }
             .linkedin-image { max-width: 320px; }
             .action-buttons { gap: 14px; }
             .intro-screen { padding: 25px 30px 40px 30px; }
+            .msg-photo { max-width: 120px; max-height: 120px; }
         }
     </style>
 </head>
@@ -420,6 +259,7 @@
     <div class="above-tagline">Chat securely with Chat Tab by jacklinus</div>
 
     <div class="game-container" id="gameContainer">
+
         <!-- Intro Screen -->
         <div id="introScreen" class="screen-base intro-screen active">
             <img class="intro-title-img" src="https://raw.githubusercontent.com/zryzenzzzz/jacklinus.com/main/Photos/smallersecure.png?raw=true" alt="Secure Encrypted Chats">
@@ -472,17 +312,37 @@
 
         <!-- Chat + Draw Room -->
         <div id="chatDrawRoom" class="chat-draw-room">
+
+            <!-- Drag-over overlay (covers the whole chat section) -->
+            <div class="drag-overlay" id="dragOverlay">
+                <div class="drag-overlay-label">📎 Drop photos to attach</div>
+            </div>
+
             <div class="chat-section">
                 <div class="chat-header">
                     <span class="room-code-badge" id="roomCodeDisplay"></span>
                     <span class="online-badge" id="peerStatus">⚫ Connecting...</span>
                 </div>
                 <div class="messages-area" id="messagesList"></div>
-                <div class="chat-input-area">
-                    <input type="text" id="chatInput" class="chat-input" placeholder="Type message...">
-                    <button id="sendMsgBtn" class="send-btn">Send</button>
+                <div class="chat-input-area" id="chatInputArea">
+                    <!-- Staged photo previews -->
+                    <div class="photo-preview-queue" id="photoPreviewQueue"></div>
+                    <!-- Input row -->
+                    <div class="chat-input-row">
+                        <!-- Hidden file input -->
+                        <input type="file" id="photoFileInput" accept="image/*" multiple style="display:none">
+                        <!-- Paperclip button -->
+                        <button class="paperclip-btn" id="paperclipBtn" title="Send files">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48"/>
+                            </svg>
+                        </button>
+                        <input type="text" id="chatInput" class="chat-input" placeholder="Type message...">
+                        <button id="sendMsgBtn" class="send-btn">Send</button>
+                    </div>
                 </div>
             </div>
+
             <div class="draw-section">
                 <div class="draw-header">
                     <span>Live drawing</span>
@@ -497,71 +357,93 @@
         </div>
     </div>
 
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose">✕</button>
+        <button class="lightbox-nav" id="lightboxPrev">&#8249;</button>
+        <img id="lightboxImg" src="" alt="">
+        <button class="lightbox-nav" id="lightboxNext">&#8250;</button>
+    </div>
+
     <button class="glass-btn" id="terminateBtn"><span>Terminate Session</span></button>
 
     <script>
-        // Firebase Config
+        // ─── Firebase ────────────────────────────────────────────────────────────
         const firebaseConfig = { databaseURL: "https://games-5a163-default-rtdb.firebaseio.com/" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // DOM elements
-        const gameContainer = document.getElementById('gameContainer');
+        // ─── DOM ─────────────────────────────────────────────────────────────────
+        const gameContainer   = document.getElementById('gameContainer');
+        const terminateBtn    = document.getElementById('terminateBtn');
         const screens = {
-            intro: document.getElementById('introScreen'),
-            create: document.getElementById('createFlow'),
+            intro:    document.getElementById('introScreen'),
+            create:   document.getElementById('createFlow'),
             joinName: document.getElementById('joinFlowName'),
             joinCode: document.getElementById('joinFlowCode'),
-            waiting: document.getElementById('waitingFlow'),
-            chat: document.getElementById('chatDrawRoom')
+            waiting:  document.getElementById('waitingFlow'),
+            chat:     document.getElementById('chatDrawRoom')
         };
-        const terminateBtn = document.getElementById('terminateBtn');
 
-        // Input elements
-        const createNameInput = document.getElementById('createNameInput');
-        const confirmCreateBtn = document.getElementById('confirmCreateBtn');
-        const createError = document.getElementById('createError');
-        const backFromCreate = document.getElementById('backFromCreate');
-        const joinNameInput = document.getElementById('joinNameInput');
-        const nextToCodeBtn = document.getElementById('nextToCodeBtn');
-        const joinNameError = document.getElementById('joinNameError');
-        const backFromJoinName = document.getElementById('backFromJoinName');
-        const joinCodeInput = document.getElementById('joinCodeInput');
-        const submitJoinBtn = document.getElementById('submitJoinBtn');
-        const joinCodeError = document.getElementById('joinCodeError');
-        const backFromJoinCode = document.getElementById('backFromJoinCode');
-        const roomCodeSpanWait = document.getElementById('roomCodeSpanWait');
+        const createNameInput    = document.getElementById('createNameInput');
+        const confirmCreateBtn   = document.getElementById('confirmCreateBtn');
+        const createError        = document.getElementById('createError');
+        const backFromCreate     = document.getElementById('backFromCreate');
+        const joinNameInput      = document.getElementById('joinNameInput');
+        const nextToCodeBtn      = document.getElementById('nextToCodeBtn');
+        const joinNameError      = document.getElementById('joinNameError');
+        const backFromJoinName   = document.getElementById('backFromJoinName');
+        const joinCodeInput      = document.getElementById('joinCodeInput');
+        const submitJoinBtn      = document.getElementById('submitJoinBtn');
+        const joinCodeError      = document.getElementById('joinCodeError');
+        const backFromJoinCode   = document.getElementById('backFromJoinCode');
+        const roomCodeSpanWait   = document.getElementById('roomCodeSpanWait');
         const copyWaitingCodeBtn = document.getElementById('copyWaitingCodeBtn');
-        const cancelWaitingBtn = document.getElementById('cancelWaitingBtn');
-        const waitingError = document.getElementById('waitingError');
-        const roomCodeDisplay = document.getElementById('roomCodeDisplay');
-        const peerStatus = document.getElementById('peerStatus');
-        const messagesList = document.getElementById('messagesList');
-        const chatInput = document.getElementById('chatInput');
-        const sendMsgBtn = document.getElementById('sendMsgBtn');
-        const penTool = document.getElementById('penTool');
-        const eraserTool = document.getElementById('eraserTool');
-        const clearCanvas = document.getElementById('clearCanvasBtn');
-        const canvas = document.getElementById('drawCanvas');
+        const cancelWaitingBtn   = document.getElementById('cancelWaitingBtn');
+        const waitingError       = document.getElementById('waitingError');
+        const roomCodeDisplay    = document.getElementById('roomCodeDisplay');
+        const peerStatus         = document.getElementById('peerStatus');
+        const messagesList       = document.getElementById('messagesList');
+        const chatInput          = document.getElementById('chatInput');
+        const sendMsgBtn         = document.getElementById('sendMsgBtn');
+        const penTool            = document.getElementById('penTool');
+        const eraserTool         = document.getElementById('eraserTool');
+        const clearCanvas        = document.getElementById('clearCanvasBtn');
+        const canvas             = document.getElementById('drawCanvas');
+        const paperclipBtn       = document.getElementById('paperclipBtn');
+        const photoFileInput     = document.getElementById('photoFileInput');
+        const photoPreviewQueue  = document.getElementById('photoPreviewQueue');
+        const dragOverlay        = document.getElementById('dragOverlay');
+        const chatDrawRoom       = document.getElementById('chatDrawRoom');
+        const lightbox           = document.getElementById('lightbox');
+        const lightboxImg        = document.getElementById('lightboxImg');
+        const lightboxClose      = document.getElementById('lightboxClose');
+        const lightboxPrev       = document.getElementById('lightboxPrev');
+        const lightboxNext       = document.getElementById('lightboxNext');
         let ctx = canvas.getContext('2d');
 
-        // State
-        let currentRoomId = null;
-        let myName = "";
-        let isCreator = false;
-        let roomRef = null;
-        let peerJoined = false;
-        let isDrawing = false;
+        // ─── State ───────────────────────────────────────────────────────────────
+        let currentRoomId        = null;
+        let myName               = "";
+        let isCreator            = false;
+        let roomRef              = null;
+        let peerJoined           = false;
+        let isDrawing            = false;
         let lastX = 0, lastY = 0;
-        let currentTool = "pen";
-        let terminationListener = null;
+        let currentTool          = "pen";
+        let terminationListener  = null;
 
+        // Staged photos (FileReader data URLs, waiting to be sent)
+        let stagedPhotos = [];   // array of { dataUrl, name }
+
+        // Lightbox photo list for the current open batch
+        let lightboxPhotos = [];
+        let lightboxIndex  = 0;
+
+        // ─── Screen switching ─────────────────────────────────────────────────────
         function showScreen(screenName) {
-            Object.values(screens).forEach(s => {
-                if (s) s.classList.remove('active');
-            });
+            Object.values(screens).forEach(s => { if (s) s.classList.remove('active'); });
             if (screens[screenName]) screens[screenName].classList.add('active');
-            
             if (screenName === 'chat') {
                 gameContainer.style.minHeight = '600px';
                 terminateBtn.classList.add('visible');
@@ -571,6 +453,7 @@
             }
         }
 
+        // ─── Cleanup ──────────────────────────────────────────────────────────────
         function cleanupRoom() {
             if (roomRef) {
                 if (terminationListener) roomRef.child('termination').off('value', terminationListener);
@@ -588,12 +471,9 @@
             cleanupRoom();
             showScreen('intro');
             if (terminatorName && terminatorName !== myName) alert(`${terminatorName} has terminated the session.`);
-            if (ctx) { 
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#111'; 
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-            }
+            if (ctx) { ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, canvas.width, canvas.height); }
             messagesList.innerHTML = "";
+            clearStagedPhotos();
         }
 
         function setupTerminationListener() {
@@ -601,14 +481,12 @@
             if (terminationListener) roomRef.child('termination').off('value', terminationListener);
             terminationListener = (snap) => {
                 const data = snap.val();
-                if (data && data.terminatedBy && data.terminatedBy !== myName) {
-                    terminateSession(true, data.terminatedBy);
-                }
+                if (data && data.terminatedBy && data.terminatedBy !== myName) terminateSession(true, data.terminatedBy);
             };
             roomRef.child('termination').on('value', terminationListener);
         }
 
-        // INSTANT code generation - no delay, runs synchronously
+        // ─── Room code ───────────────────────────────────────────────────────────
         function generateRoomCode() {
             const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
             let code = "";
@@ -616,83 +494,44 @@
             return code;
         }
 
-        // CREATE ROOM - INSTANT code generation
+        // ─── Create room ─────────────────────────────────────────────────────────
         confirmCreateBtn.addEventListener('click', async () => {
             const name = createNameInput.value.trim();
-            if (!name) { 
-                createError.innerText = "Please enter your name"; 
-                return; 
-            }
-            myName = name;
-            createError.innerText = "";
-            
-            // Generate code instantly (synchronous)
+            if (!name) { createError.innerText = "Please enter your name"; return; }
+            myName = name; createError.innerText = "";
             const roomCode = generateRoomCode();
-            currentRoomId = roomCode;
-            isCreator = true;
-            
-            // Show waiting screen immediately with the code
+            currentRoomId = roomCode; isCreator = true;
             roomCodeSpanWait.textContent = roomCode;
             showScreen('waiting');
-            
-            // Create room in Firebase in the background (doesn't block UI)
             roomRef = db.ref(`chat_tabs/${roomCode}`);
-            const roomData = {
-                creator: myName, 
-                created: Date.now(), 
-                peerJoined: false,
-                activeUsers: { [myName]: true }, 
-                messages: [], 
-                drawing: { strokes: [] }
-            };
-            
-            try {
-                await roomRef.set(roomData);
-                setupRoomListeners();
-            } catch(e) { 
-                console.error("Firebase error:", e);
-                waitingError.innerText = "Failed to save room, but your code is ready. Share it!";
-            }
+            const roomData = { creator: myName, created: Date.now(), peerJoined: false, activeUsers: { [myName]: true }, messages: [], drawing: { strokes: [] } };
+            try { await roomRef.set(roomData); setupRoomListeners(); }
+            catch(e) { console.error("Firebase error:", e); waitingError.innerText = "Failed to save room, but your code is ready. Share it!"; }
         });
 
-        // JOIN FLOW
+        // ─── Join flow ───────────────────────────────────────────────────────────
         nextToCodeBtn.addEventListener('click', () => {
             const name = joinNameInput.value.trim();
-            if (!name) { 
-                joinNameError.innerText = "Please enter your name"; 
-                return; 
-            }
-            myName = name;
-            joinNameError.innerText = "";
-            showScreen('joinCode');
+            if (!name) { joinNameError.innerText = "Please enter your name"; return; }
+            myName = name; joinNameError.innerText = ""; showScreen('joinCode');
         });
 
         submitJoinBtn.addEventListener('click', async () => {
             const code = joinCodeInput.value.trim().toUpperCase();
-            if (code.length !== 6) { 
-                joinCodeError.innerText = "Enter 6-digit code"; 
-                return; 
-            }
+            if (code.length !== 6) { joinCodeError.innerText = "Enter 6-digit code"; return; }
             const roomCheck = db.ref(`chat_tabs/${code}`);
             const snap = await roomCheck.once('value');
-            if (!snap.exists()) { 
-                joinCodeError.innerText = "Room not found"; 
-                return; 
-            }
+            if (!snap.exists()) { joinCodeError.innerText = "Room not found"; return; }
             const data = snap.val();
-            if (data.peerJoined && Object.keys(data.activeUsers || {}).length >= 2) {
-                joinCodeError.innerText = "Room is full (2 players max)";
-                return;
-            }
-            currentRoomId = code;
-            isCreator = false;
-            roomRef = roomCheck;
+            if (data.peerJoined && Object.keys(data.activeUsers || {}).length >= 2) { joinCodeError.innerText = "Room is full (2 players max)"; return; }
+            currentRoomId = code; isCreator = false; roomRef = roomCheck;
             await roomRef.child('peerJoined').set(true);
             await roomRef.child('activeUsers').update({ [myName]: true });
             setupRoomListeners();
             enterChatRoom();
         });
 
+        // ─── Room listeners ──────────────────────────────────────────────────────
         function setupRoomListeners() {
             if (!roomRef) return;
             roomRef.child('peerJoined').on('value', (snap) => {
@@ -701,25 +540,29 @@
                     if (screens.waiting.classList.contains('active')) enterChatRoom();
                 }
             });
-            
-            roomRef.child('messages').on('child_added', (snap) => {
-                const newMsg = snap.val();
-                if (newMsg) appendSingleMessage(newMsg);
-            });
-            
+
+            // Listen for NEW messages (child_added fires for all existing + new ones)
+            // We track IDs we've already rendered to avoid duplicates from the initial load pass
+            const renderedKeys = new Set();
             roomRef.child('messages').once('value', (snap) => {
-                const msgs = snap.val() || [];
+                const msgs = snap.val() || {};
                 const arr = Array.isArray(msgs) ? msgs : Object.values(msgs);
                 messagesList.innerHTML = "";
-                arr.forEach(m => {
-                    const div = document.createElement('div');
-                    div.className = `message-bubble ${m.sender === myName ? 'message-own' : ''}`;
-                    div.innerHTML = `<div class="msg-name">${escapeHtml(m.sender)}</div><div class="msg-text">${escapeHtml(m.text)}</div>`;
-                    messagesList.appendChild(div);
-                });
-                messagesList.scrollTop = messagesList.scrollHeight;
+                // Get keys so we can mark them as rendered
+                const rawObj = snap.val();
+                if (rawObj && !Array.isArray(rawObj)) {
+                    Object.keys(rawObj).forEach(k => renderedKeys.add(k));
+                }
+                arr.forEach(m => appendSingleMessage(m, false));
             });
-            
+
+            roomRef.child('messages').on('child_added', (snap) => {
+                if (renderedKeys.has(snap.key)) return; // already rendered on initial load
+                renderedKeys.add(snap.key);
+                const newMsg = snap.val();
+                if (newMsg) appendSingleMessage(newMsg, true);
+            });
+
             roomRef.child('drawing/strokes').on('child_added', (snap) => {
                 if (!ctx) return;
                 const s = snap.val();
@@ -739,15 +582,52 @@
             setupTerminationListener();
         }
 
-        function appendSingleMessage(msg) {
+        // ─── Append message ───────────────────────────────────────────────────────
+        function appendSingleMessage(msg, animate) {
+            const isOwn = msg.sender === myName;
             const div = document.createElement('div');
-            div.className = `message-bubble ${msg.sender === myName ? 'message-own' : ''}`;
-            div.innerHTML = `<div class="msg-name">${escapeHtml(msg.sender)}</div><div class="msg-text">${escapeHtml(msg.text)}</div>`;
-            div.style.animation = 'chatMessageIn 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards';
+            div.className = `message-bubble ${isOwn ? 'message-own' : ''}`;
+            if (animate) div.style.animation = 'chatMessageIn 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards';
+
+            // Sender name
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'msg-name';
+            nameDiv.textContent = msg.sender;
+            div.appendChild(nameDiv);
+
+            // Text (if any)
+            if (msg.text && msg.text.trim()) {
+                const textDiv = document.createElement('div');
+                textDiv.className = 'msg-text';
+                textDiv.textContent = msg.text;
+                div.appendChild(textDiv);
+            }
+
+            // Photos (if any)
+            if (msg.photos && msg.photos.length > 0) {
+                const photosDiv = document.createElement('div');
+                photosDiv.className = 'msg-photos';
+
+                // Build list of URLs for lightbox navigation within this message
+                const photoUrls = msg.photos.map(p => p.dataUrl);
+
+                msg.photos.forEach((photo, idx) => {
+                    const img = document.createElement('img');
+                    img.className = 'msg-photo';
+                    img.src = photo.dataUrl;
+                    img.alt = photo.name || 'photo';
+                    img.title = photo.name || 'photo';
+                    img.addEventListener('click', () => openLightbox(photoUrls, idx));
+                    photosDiv.appendChild(img);
+                });
+                div.appendChild(photosDiv);
+            }
+
             messagesList.appendChild(div);
             messagesList.scrollTop = messagesList.scrollHeight;
         }
 
+        // ─── Enter chat room ──────────────────────────────────────────────────────
         async function enterChatRoom() {
             showScreen('chat');
             roomCodeDisplay.innerText = `Room: ${currentRoomId}`;
@@ -755,6 +635,7 @@
             await loadCanvasFromDb();
         }
 
+        // ─── Canvas ───────────────────────────────────────────────────────────────
         async function loadCanvasFromDb() {
             if (!roomRef) return;
             const strokesSnap = await roomRef.child('drawing/strokes').once('value');
@@ -768,19 +649,10 @@
 
         function drawRemoteStroke(s) {
             if (!ctx) return;
-            ctx.beginPath();
-            ctx.lineWidth = s.lineWidth || 3;
-            ctx.lineCap = 'round';
-            if (s.tool === 'eraser') { 
-                ctx.globalCompositeOperation = 'destination-out'; 
-                ctx.strokeStyle = 'rgba(0,0,0,1)'; 
-            } else { 
-                ctx.globalCompositeOperation = 'source-over'; 
-                ctx.strokeStyle = s.color || '#FFF'; 
-            }
-            ctx.moveTo(s.x0, s.y0); 
-            ctx.lineTo(s.x1, s.y1); 
-            ctx.stroke();
+            ctx.beginPath(); ctx.lineWidth = s.lineWidth || 3; ctx.lineCap = 'round';
+            if (s.tool === 'eraser') { ctx.globalCompositeOperation = 'destination-out'; ctx.strokeStyle = 'rgba(0,0,0,1)'; }
+            else { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = s.color || '#FFF'; }
+            ctx.moveTo(s.x0, s.y0); ctx.lineTo(s.x1, s.y1); ctx.stroke();
             ctx.globalCompositeOperation = 'source-over';
         }
 
@@ -792,11 +664,8 @@
                 canvas.width = w; canvas.height = h;
                 canvas.style.width = `${w}px`; canvas.style.height = `${h}px`;
                 ctx = canvas.getContext('2d');
-                ctx.fillStyle = '#111'; 
-                ctx.fillRect(0, 0, w, h);
-                ctx.strokeStyle = '#FFF'; 
-                ctx.lineWidth = 3; 
-                ctx.lineCap = 'round';
+                ctx.fillStyle = '#111'; ctx.fillRect(0, 0, w, h);
+                ctx.strokeStyle = '#FFF'; ctx.lineWidth = 3; ctx.lineCap = 'round';
                 loadCanvasFromDb();
             };
             resize();
@@ -809,121 +678,192 @@
                 const rect = canvas.getBoundingClientRect();
                 const sx = canvas.width / rect.width, sy = canvas.height / rect.height;
                 let cx, cy;
-                if (e.touches) { 
-                    cx = e.touches[0].clientX; 
-                    cy = e.touches[0].clientY; 
-                } else { 
-                    cx = e.clientX; 
-                    cy = e.clientY; 
-                }
-                return { 
-                    x: Math.min(Math.max(0, (cx - rect.left) * sx), canvas.width), 
-                    y: Math.min(Math.max(0, (cy - rect.top) * sy), canvas.height) 
-                };
+                if (e.touches) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
+                else { cx = e.clientX; cy = e.clientY; }
+                return { x: Math.min(Math.max(0, (cx - rect.left) * sx), canvas.width), y: Math.min(Math.max(0, (cy - rect.top) * sy), canvas.height) };
             };
-            const start = (e) => { 
-                e.preventDefault(); 
-                isDrawing = true; 
-                const { x, y } = getCoords(e); 
-                lastX = x; 
-                lastY = y; 
-                ctx.beginPath(); 
-                ctx.moveTo(x, y); 
-                ctx.lineTo(x, y); 
-                ctx.stroke(); 
-            };
-            const draw = (e) => {
-                if (!isDrawing) return; 
-                e.preventDefault();
-                const { x, y } = getCoords(e);
-                ctx.beginPath(); 
-                ctx.moveTo(lastX, lastY); 
-                ctx.lineTo(x, y); 
-                ctx.stroke();
-                if (roomRef) roomRef.child('drawing/strokes').push({
-                    x0: lastX, y0: lastY, x1: x, y1: y, tool: currentTool,
-                    color: currentTool === 'eraser' ? '#000' : '#FFF',
-                    lineWidth: currentTool === 'eraser' ? 15 : 3,
-                    sender: myName, timestamp: Date.now()
-                });
-                lastX = x; lastY = y;
+            const start = (e) => { e.preventDefault(); isDrawing = true; const {x,y} = getCoords(e); lastX=x; lastY=y; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x,y); ctx.stroke(); };
+            const draw  = (e) => {
+                if (!isDrawing) return; e.preventDefault();
+                const {x,y} = getCoords(e);
+                ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke();
+                if (roomRef) roomRef.child('drawing/strokes').push({ x0:lastX, y0:lastY, x1:x, y1:y, tool:currentTool, color: currentTool==='eraser'?'#000':'#FFF', lineWidth: currentTool==='eraser'?15:3, sender:myName, timestamp:Date.now() });
+                lastX=x; lastY=y;
             };
             const end = () => { isDrawing = false; };
-            canvas.addEventListener('mousedown', start); 
-            canvas.addEventListener('mousemove', draw); 
-            canvas.addEventListener('mouseup', end);
-            canvas.addEventListener('touchstart', start); 
-            canvas.addEventListener('touchmove', draw); 
-            canvas.addEventListener('touchend', end);
+            canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', end);
+            canvas.addEventListener('touchstart', start); canvas.addEventListener('touchmove', draw); canvas.addEventListener('touchend', end);
         }
 
-        function setPen() { 
-            currentTool = 'pen'; 
-            if (ctx) { 
-                ctx.globalCompositeOperation = 'source-over'; 
-                ctx.strokeStyle = '#FFF'; 
-                ctx.lineWidth = 3; 
-            } 
-        }
-        function setEraser() { 
-            currentTool = 'eraser'; 
-            if (ctx) { 
-                ctx.globalCompositeOperation = 'destination-out'; 
-                ctx.lineWidth = 15; 
-            } 
-        }
+        function setPen()   { currentTool='pen';    if(ctx){ ctx.globalCompositeOperation='source-over'; ctx.strokeStyle='#FFF'; ctx.lineWidth=3; } }
+        function setEraser(){ currentTool='eraser'; if(ctx){ ctx.globalCompositeOperation='destination-out'; ctx.lineWidth=15; } }
         penTool.addEventListener('click', setPen);
         eraserTool.addEventListener('click', setEraser);
         clearCanvas.addEventListener('click', async () => {
             if (!ctx) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#111'; 
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            if (roomRef) { 
-                await roomRef.child('drawing/clearFlag').set(true); 
-                await roomRef.child('drawing/strokes').remove(); 
-            }
+            ctx.fillStyle = '#111'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            if (roomRef) { await roomRef.child('drawing/clearFlag').set(true); await roomRef.child('drawing/strokes').remove(); }
             setPen();
         });
 
+        // ─── SEND MESSAGE ─────────────────────────────────────────────────────────
         function sendMessage() {
             const txt = chatInput.value.trim();
-            if (!txt || !roomRef) return;
-            roomRef.child('messages').push({ 
-                sender: myName, 
-                text: txt, 
-                timestamp: Date.now() 
-            });
+            if (!txt && stagedPhotos.length === 0) return;
+            if (!roomRef) return;
+
+            const payload = { sender: myName, text: txt, timestamp: Date.now() };
+            if (stagedPhotos.length > 0) payload.photos = stagedPhotos.map(p => ({ dataUrl: p.dataUrl, name: p.name }));
+
+            roomRef.child('messages').push(payload);
             chatInput.value = "";
+            clearStagedPhotos();
         }
 
-        function escapeHtml(s) { 
-            return s.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); 
+        function escapeHtml(s) { return String(s).replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' }[m])); }
+
+        // ─── PHOTO STAGING ────────────────────────────────────────────────────────
+        function readFileAsDataUrl(file) {
+            return new Promise((resolve, reject) => {
+                // Compress/resize to a reasonable size before sending (max 800px wide)
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const MAX = 800;
+                        let w = img.width, h = img.height;
+                        if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+                        const offscreen = document.createElement('canvas');
+                        offscreen.width = w; offscreen.height = h;
+                        const octx = offscreen.getContext('2d');
+                        octx.drawImage(img, 0, 0, w, h);
+                        resolve({ dataUrl: offscreen.toDataURL('image/jpeg', 0.82), name: file.name });
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
         }
 
-        // Copy waiting code
-        copyWaitingCodeBtn.addEventListener('click', () => {
-            if (currentRoomId) {
-                navigator.clipboard.writeText(currentRoomId).then(() => {
-                    copyWaitingCodeBtn.textContent = "Copied!";
-                    setTimeout(() => copyWaitingCodeBtn.textContent = "Copy", 1500);
-                });
+        async function stageFiles(files) {
+            const imageFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+            if (imageFiles.length === 0) return;
+            for (const file of imageFiles) {
+                try {
+                    const result = await readFileAsDataUrl(file);
+                    stagedPhotos.push(result);
+                } catch(e) { console.error("Failed to read file:", e); }
             }
+            renderPhotoQueue();
+        }
+
+        function renderPhotoQueue() {
+            photoPreviewQueue.innerHTML = "";
+            if (stagedPhotos.length === 0) {
+                photoPreviewQueue.classList.remove('has-photos');
+                return;
+            }
+            photoPreviewQueue.classList.add('has-photos');
+            stagedPhotos.forEach((photo, idx) => {
+                const wrap = document.createElement('div');
+                wrap.className = 'preview-thumb-wrap';
+
+                const img = document.createElement('img');
+                img.className = 'preview-thumb';
+                img.src = photo.dataUrl;
+                img.alt = photo.name;
+
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'preview-thumb-remove';
+                removeBtn.textContent = '×';
+                removeBtn.addEventListener('click', () => removeStagedPhoto(idx));
+
+                wrap.appendChild(img);
+                wrap.appendChild(removeBtn);
+                photoPreviewQueue.appendChild(wrap);
+            });
+        }
+
+        function removeStagedPhoto(idx) {
+            stagedPhotos.splice(idx, 1);
+            renderPhotoQueue();
+        }
+
+        function clearStagedPhotos() {
+            stagedPhotos = [];
+            renderPhotoQueue();
+            photoFileInput.value = "";
+        }
+
+        // ─── Paperclip button ─────────────────────────────────────────────────────
+        paperclipBtn.addEventListener('click', () => photoFileInput.click());
+        photoFileInput.addEventListener('change', (e) => { if (e.target.files.length) stageFiles(e.target.files); });
+
+        // ─── Drag & Drop onto the chat room ──────────────────────────────────────
+        let dragCounter = 0;
+        chatDrawRoom.addEventListener('dragenter', (e) => {
+            e.preventDefault();
+            dragCounter++;
+            if (e.dataTransfer.types.includes('Files')) dragOverlay.classList.add('active');
+        });
+        chatDrawRoom.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dragCounter--;
+            if (dragCounter <= 0) { dragCounter = 0; dragOverlay.classList.remove('active'); }
+        });
+        chatDrawRoom.addEventListener('dragover', (e) => { e.preventDefault(); });
+        chatDrawRoom.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dragCounter = 0;
+            dragOverlay.classList.remove('active');
+            if (e.dataTransfer.files.length) stageFiles(e.dataTransfer.files);
         });
 
-        // Back buttons
-        backFromCreate.addEventListener('click', () => showScreen('intro'));
+        // ─── Lightbox ─────────────────────────────────────────────────────────────
+        function openLightbox(photos, startIndex) {
+            lightboxPhotos = photos;
+            lightboxIndex  = startIndex;
+            showLightboxImage();
+            lightbox.classList.add('open');
+        }
+
+        function showLightboxImage() {
+            lightboxImg.src = lightboxPhotos[lightboxIndex];
+            lightboxPrev.style.display = lightboxPhotos.length > 1 ? 'flex' : 'none';
+            lightboxNext.style.display = lightboxPhotos.length > 1 ? 'flex' : 'none';
+        }
+
+        function closeLightbox() { lightbox.classList.remove('open'); lightboxImg.src = ''; lightboxPhotos = []; }
+
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+        lightboxPrev.addEventListener('click', (e) => { e.stopPropagation(); lightboxIndex = (lightboxIndex - 1 + lightboxPhotos.length) % lightboxPhotos.length; showLightboxImage(); });
+        lightboxNext.addEventListener('click', (e) => { e.stopPropagation(); lightboxIndex = (lightboxIndex + 1) % lightboxPhotos.length; showLightboxImage(); });
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('open')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft')  { lightboxIndex = (lightboxIndex - 1 + lightboxPhotos.length) % lightboxPhotos.length; showLightboxImage(); }
+            if (e.key === 'ArrowRight') { lightboxIndex = (lightboxIndex + 1) % lightboxPhotos.length; showLightboxImage(); }
+        });
+
+        // ─── Misc buttons ─────────────────────────────────────────────────────────
+        copyWaitingCodeBtn.addEventListener('click', () => {
+            if (currentRoomId) navigator.clipboard.writeText(currentRoomId).then(() => { copyWaitingCodeBtn.textContent = "Copied!"; setTimeout(() => copyWaitingCodeBtn.textContent = "Copy", 1500); });
+        });
+        backFromCreate.addEventListener('click',   () => showScreen('intro'));
         backFromJoinName.addEventListener('click', () => showScreen('intro'));
         backFromJoinCode.addEventListener('click', () => showScreen('joinName'));
         cancelWaitingBtn.addEventListener('click', () => terminateSession(false, null));
         sendMsgBtn.addEventListener('click', sendMessage);
         chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
         terminateBtn.addEventListener('click', () => terminateSession(false, null));
-
-        // Intro buttons
         document.getElementById('createBtn').addEventListener('click', () => showScreen('create'));
-        document.getElementById('joinBtn').addEventListener('click', () => showScreen('joinName'));
+        document.getElementById('joinBtn').addEventListener('click',   () => showScreen('joinName'));
 
+        // ─── Init ─────────────────────────────────────────────────────────────────
         showScreen('intro');
         setPen();
     </script>
