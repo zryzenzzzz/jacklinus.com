@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -651,4 +651,274 @@
                 div.appendChild(textEl);
             }
 
-            if (
+            if (msg.photos && msg.photos.length > 0) {
+                injectPhotosIntoBubble(div, msg.photos);
+            }
+
+            messagesList.appendChild(div);
+            scrollToBottom();
+        }
+
+        function injectPhotosIntoBubble(bubble, photosArr) {
+            if (!photosArr || photosArr.length === 0) return;
+            if (bubble.querySelector('.msg-photos')) return;
+
+            const wrap = document.createElement('div');
+            wrap.className = 'msg-photos';
+
+            const urls = photosArr.map(p => p.dataUrl).filter(Boolean);
+
+            photosArr.forEach((photo, idx) => {
+                if (!photo || !photo.dataUrl) return;
+                const img = document.createElement('img');
+                img.className = 'msg-photo';
+                img.alt = photo.name || 'photo';
+                img.loading = 'lazy';
+                img.addEventListener('load', scrollToBottom, { once: true });
+                img.addEventListener('click', () => openLightbox(urls, idx));
+                img.src = photo.dataUrl;
+                wrap.appendChild(img);
+            });
+
+            bubble.appendChild(wrap);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            requestAnimationFrame(() => {
+                messagesList.scrollTop = messagesList.scrollHeight;
+            });
+        }
+
+        async function enterChatRoom() {
+            showScreen('chat');
+            roomCodeDisplay.innerText = `Room: ${currentRoomId}`;
+            initCanvas();
+            await loadCanvasFromDb();
+        }
+
+        async function loadCanvasFromDb() {
+            if (!roomRef) return;
+            const snap = await roomRef.child('drawing/strokes').once('value');
+            const strokes = snap.val();
+            if (strokes && ctx) {
+                ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+                ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
+                Object.values(strokes).sort((a,b) => a.timestamp - b.timestamp).forEach(drawRemoteStroke);
+            }
+        }
+
+        function drawRemoteStroke(s) {
+            if (!ctx) return;
+            ctx.beginPath(); ctx.lineWidth = s.lineWidth || 3; ctx.lineCap = 'round';
+            if (s.tool === 'eraser') { ctx.globalCompositeOperation = 'destination-out'; ctx.strokeStyle = 'rgba(0,0,0,1)'; }
+            else { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = s.color || '#FFF'; }
+            ctx.moveTo(s.x0, s.y0); ctx.lineTo(s.x1, s.y1); ctx.stroke();
+            ctx.globalCompositeOperation = 'source-over';
+        }
+
+        let resizeObserver = null;
+        function initCanvas() {
+            const doResize = () => {
+                const container = drawCanvas.parentElement;
+                const w = Math.max(container.clientWidth - 2, 10);
+                const h = isMobile ? 220 : 280;
+                drawCanvas.width = w; drawCanvas.height = h;
+                ctx = drawCanvas.getContext('2d');
+                ctx.fillStyle = '#111'; ctx.fillRect(0, 0, w, h);
+                ctx.strokeStyle = '#FFF'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+                loadCanvasFromDb();
+            };
+            doResize();
+            if (window.ResizeObserver) {
+                if (resizeObserver) resizeObserver.disconnect();
+                resizeObserver = new ResizeObserver(doResize);
+                resizeObserver.observe(drawCanvas.parentElement);
+            } else {
+                window.addEventListener('resize', doResize);
+            }
+            attachDrawingEvents();
+        }
+
+        function attachDrawingEvents() {
+            const getXY = e => {
+                const rect = drawCanvas.getBoundingClientRect();
+                const sx = drawCanvas.width / rect.width;
+                const sy = drawCanvas.height / rect.height;
+                const src = e.touches ? e.touches[0] : e;
+                return {
+                    x: Math.min(Math.max(0, (src.clientX - rect.left) * sx), drawCanvas.width),
+                    y: Math.min(Math.max(0, (src.clientY - rect.top)  * sy), drawCanvas.height)
+                };
+            };
+            const onStart = e => { e.preventDefault(); isDrawing = true; const {x,y} = getXY(e); lastX=x; lastY=y; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+0.1,y+0.1); ctx.stroke(); };
+            const onMove  = e => {
+                if (!isDrawing) return; e.preventDefault();
+                const {x,y} = getXY(e);
+                ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke();
+                if (roomRef) roomRef.child('drawing/strokes').push({ x0:lastX,y0:lastY,x1:x,y1:y, tool:currentTool, color: currentTool==='eraser'?'#000':'#FFF', lineWidth: currentTool==='eraser'?15:3, sender:myName, timestamp:Date.now() });
+                lastX=x; lastY=y;
+            };
+            const onEnd = () => { isDrawing = false; };
+            drawCanvas.addEventListener('mousedown', onStart);
+            drawCanvas.addEventListener('mousemove', onMove);
+            drawCanvas.addEventListener('mouseup',   onEnd);
+            drawCanvas.addEventListener('mouseleave',onEnd);
+            drawCanvas.addEventListener('touchstart',onStart, { passive: false });
+            drawCanvas.addEventListener('touchmove', onMove,  { passive: false });
+            drawCanvas.addEventListener('touchend',  onEnd);
+        }
+
+        function setPen()    { currentTool='pen';    if(ctx){ ctx.globalCompositeOperation='source-over'; ctx.strokeStyle='#FFF'; ctx.lineWidth=3; } }
+        function setEraser() { currentTool='eraser'; if(ctx){ ctx.globalCompositeOperation='destination-out'; ctx.lineWidth=15; } }
+        penTool.addEventListener('click', setPen);
+        eraserTool.addEventListener('click', setEraser);
+        clearCanvasBtn.addEventListener('click', async () => {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+            ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
+            if (roomRef) { await roomRef.child('drawing/clearFlag').set(true); await roomRef.child('drawing/strokes').remove(); }
+            setPen();
+        });
+
+        async function sendMessage() {
+            const txt = chatInput.value.trim();
+            if (!txt && stagedPhotos.length === 0) return;
+            if (!roomRef) return;
+
+            const photosToSend = [...stagedPhotos];
+            chatInput.value = '';
+            clearStagedPhotos();
+
+            const msgRef = roomRef.child('messages').push();
+            const msgKey = msgRef.key;
+            const payload = {
+                msgKey,
+                sender:    myName,
+                text:      txt,
+                timestamp: Date.now(),
+                hasPhotos: photosToSend.length > 0
+            };
+            await msgRef.set(payload);
+
+            if (photosToSend.length > 0) {
+                const photoUpdates = {};
+                photosToSend.forEach((p, i) => {
+                    photoUpdates[`photos/${msgKey}/${i}`] = { dataUrl: p.dataUrl, name: p.name };
+                });
+                await roomRef.update(photoUpdates);
+
+                const ownBubble = document.querySelector(`[data-msgkey="${msgKey}"]`);
+                if (ownBubble) injectPhotosIntoBubble(ownBubble, photosToSend);
+            }
+        }
+
+        function compressImage(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onerror = reject;
+                reader.onload = ev => {
+                    resolve({ dataUrl: ev.target.result, name: file.name });
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function stageFiles(files) {
+            const imgs = Array.from(files).filter(f => f.type.startsWith('image/'));
+            if (!imgs.length) return;
+            for (const f of imgs) {
+                try { stagedPhotos.push(await compressImage(f)); }
+                catch(e) { console.error('compress error', e); }
+            }
+            renderPhotoQueue();
+        }
+
+        function renderPhotoQueue() {
+            photoPreviewQueue.innerHTML = '';
+            if (!stagedPhotos.length) { photoPreviewQueue.classList.remove('has-photos'); return; }
+            photoPreviewQueue.classList.add('has-photos');
+            stagedPhotos.forEach((p, i) => {
+                const wrap = document.createElement('div');
+                wrap.className = 'preview-thumb-wrap';
+                const img = document.createElement('img');
+                img.className = 'preview-thumb'; img.src = p.dataUrl; img.alt = p.name;
+                const rm = document.createElement('button');
+                rm.className = 'preview-thumb-remove'; rm.textContent = '×';
+                rm.addEventListener('click', () => { stagedPhotos.splice(i, 1); renderPhotoQueue(); });
+                wrap.appendChild(img); wrap.appendChild(rm);
+                photoPreviewQueue.appendChild(wrap);
+            });
+        }
+
+        function clearStagedPhotos() { stagedPhotos = []; renderPhotoQueue(); photoFileInput.value = ''; }
+
+        paperclipBtn.addEventListener('click', () => photoFileInput.click());
+        photoFileInput.addEventListener('change', e => { if (e.target.files.length) stageFiles(e.target.files); });
+
+        let dragCnt = 0;
+        chatDrawRoom.addEventListener('dragenter', e => { e.preventDefault(); dragCnt++; if (e.dataTransfer.types.includes('Files')) dragOverlay.classList.add('active'); });
+        chatDrawRoom.addEventListener('dragleave', e => { e.preventDefault(); dragCnt--; if (dragCnt <= 0) { dragCnt=0; dragOverlay.classList.remove('active'); } });
+        chatDrawRoom.addEventListener('dragover',  e => e.preventDefault());
+        chatDrawRoom.addEventListener('drop',      e => { e.preventDefault(); dragCnt=0; dragOverlay.classList.remove('active'); if (e.dataTransfer.files.length) stageFiles(e.dataTransfer.files); });
+
+        sendMsgBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendMessage(); });
+
+        function openLightbox(photos, idx) {
+            lightboxPhotos = photos; lightboxIndex = idx;
+            showLightboxSlide();
+            lightbox.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function showLightboxSlide() {
+            lightboxImg.src = lightboxPhotos[lightboxIndex] || '';
+            const multi = lightboxPhotos.length > 1;
+            lightboxPrev.classList.toggle('show', multi);
+            lightboxNext.classList.toggle('show', multi);
+        }
+        function closeLightbox() {
+            lightbox.classList.remove('open');
+            lightboxImg.src = ''; lightboxPhotos = [];
+            document.body.style.overflow = '';
+        }
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', e => { if (e.target === lightbox || e.target === lightboxImg) closeLightbox(); });
+        lightboxPrev.addEventListener('click', e => { e.stopPropagation(); lightboxIndex = (lightboxIndex - 1 + lightboxPhotos.length) % lightboxPhotos.length; showLightboxSlide(); });
+        lightboxNext.addEventListener('click', e => { e.stopPropagation(); lightboxIndex = (lightboxIndex + 1) % lightboxPhotos.length; showLightboxSlide(); });
+        document.addEventListener('keydown', e => {
+            if (!lightbox.classList.contains('open')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft')  { lightboxIndex = (lightboxIndex-1+lightboxPhotos.length)%lightboxPhotos.length; showLightboxSlide(); }
+            if (e.key === 'ArrowRight') { lightboxIndex = (lightboxIndex+1)%lightboxPhotos.length; showLightboxSlide(); }
+        });
+
+        let lbTouchX = 0;
+        lightbox.addEventListener('touchstart', e => { lbTouchX = e.touches[0].clientX; }, { passive: true });
+        lightbox.addEventListener('touchend', e => {
+            const dx = e.changedTouches[0].clientX - lbTouchX;
+            if (Math.abs(dx) < 40) return;
+            if (dx < 0) { lightboxIndex = (lightboxIndex+1)%lightboxPhotos.length; showLightboxSlide(); }
+            else        { lightboxIndex = (lightboxIndex-1+lightboxPhotos.length)%lightboxPhotos.length; showLightboxSlide(); }
+        }, { passive: true });
+
+        copyWaitingCodeBtn.addEventListener('click', () => {
+            if (!currentRoomId) return;
+            navigator.clipboard.writeText(currentRoomId).then(() => {
+                copyWaitingCodeBtn.textContent = 'Copied!';
+                setTimeout(() => copyWaitingCodeBtn.textContent = 'Copy', 1500);
+            });
+        });
+        document.getElementById('backFromCreate').addEventListener('click',   () => showScreen('intro'));
+        document.getElementById('backFromJoinName').addEventListener('click', () => showScreen('intro'));
+        document.getElementById('backFromJoinCode').addEventListener('click', () => showScreen('joinName'));
+        cancelWaitingBtn.addEventListener('click', () => terminateSession(false));
+        terminateBtn.addEventListener('click',     () => terminateSession(false));
+        document.getElementById('createBtn').addEventListener('click', () => showScreen('create'));
+        document.getElementById('joinBtn').addEventListener('click',   () => showScreen('joinName'));
+
+        showScreen('intro');
+        setPen();
+    </script>
+</body>
+</html>
