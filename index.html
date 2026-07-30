@@ -3,61 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    
-    <!-- ===== SEO & SOCIAL TAGS ===== -->
-    <title>Jacklinus · End-to-End Encrypted Chat · Secure & Private</title>
-    <meta name="description" content="Jacklinus offers end-to-end encrypted chat rooms with live drawing, photo sharing, and no metadata tracking. Private, secure, and open source.">
-    <meta name="keywords" content="encrypted chat, end-to-end encryption, secure messaging, private chat, jacklinus, chat tab, secure video, no metadata, encrypted messaging app">
-    <link rel="canonical" href="https://jacklinus.com/">
-    
-    <!-- Open Graph / Social Sharing -->
-    <meta property="og:title" content="Jacklinus · Encrypted Chat · Private & Secure Messaging">
-    <meta property="og:description" content="End-to-end encrypted chat rooms with live drawing, photo sharing, and zero metadata. Stay private with Jacklinus.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://jacklinus.com/">
-    <meta property="og:image" content="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20black.png?raw=true">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Jacklinus · Encrypted Chat · Private & Secure Messaging">
-    <meta name="twitter:description" content="End-to-end encrypted chat rooms with live drawing, photo sharing, and zero metadata.">
-    <meta name="twitter:image" content="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20black.png?raw=true">
-    
-    <!-- JSON-LD Structured Data for Google Rich Results -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Jacklinus Encrypted Chat",
-      "description": "End-to-end encrypted chat rooms with live drawing, photo sharing, and zero metadata. Private and secure.",
-      "applicationCategory": "Communication",
-      "operatingSystem": "Web",
-      "browserRequirements": "Modern browser",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "featureList": "End-to-end encryption, Live drawing, Photo sharing, No metadata tracking, Anonymous rooms"
-    }
-    </script>
-
-    <link rel="icon" type="image/png" href="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/JACK%20favicon.png?raw=true">
-
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-
+    <title>Jacklinus · Encrypted Chat</title>
+    <!-- Font Awesome for envelope icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-        html, body {
-            height: 100%;
-            overflow-x: hidden;
-        }
-
+        html, body { height: 100%; overflow-x: hidden; }
         body {
             background: #f0f0f0;
             font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
@@ -68,47 +19,133 @@
             padding: 40px 24px;
             position: relative;
         }
+        /* TOP-RIGHT EMAIL — pure black icon + text, no background, no rounded container */
+        .top-right-email {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            background: transparent;
+            padding: 0;
+            border: none;
+            box-shadow: none;
+            backdrop-filter: none;
+            transition: opacity 0.2s;
+        }
+        .top-right-email i {
+            font-size: 22px;
+            color: #000;
+            -webkit-text-stroke: 0;
+            -webkit-text-fill-color: #000;
+            display: inline-block;
+            line-height: 1;
+        }
+        .top-right-email span {
+            font-size: 16px;
+            font-weight: 500;
+            color: #000;
+            letter-spacing: 0.2px;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+        .top-right-email:hover {
+            opacity: 0.7;
+        }
 
+        /* Mobile inline: hidden on desktop, shown above video */
+        .mobile-email-inline {
+            display: none;
+            width: 100%;
+            max-width: 1000px;
+            margin-top: 24px;
+            margin-bottom: 4px;
+            text-align: left;
+            padding-left: 4px;
+            text-decoration: none;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            border: none;
+        }
+        .mobile-email-inline i {
+            font-size: 20px;
+            color: #000;
+            -webkit-text-stroke: 0;
+            -webkit-text-fill-color: #000;
+        }
+        .mobile-email-inline span {
+            font-size: 15px;
+            font-weight: 500;
+            color: #000;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+        .mobile-email-inline:hover {
+            opacity: 0.7;
+        }
+
+        @media (max-width: 700px) {
+            body { padding: 16px 12px 20px; justify-content: flex-start; }
+            .top-right-email {
+                display: none !important;
+            }
+            .mobile-email-inline {
+                display: flex !important;
+            }
+            .page-logo { top: 16px; left: 14px; }
+            .page-logo img { width: 50px; height: 50px; }
+            .linkedin-image { max-width: 300px; }
+            .above-tagline { font-size: 13px; }
+            .action-buttons { gap: 12px; }
+            .intro-screen { padding: 20px 24px 36px; }
+            .intro-title-img { max-width: 200px; }
+            .game-container { border-radius: 20px; min-height: 400px; }
+            .chat-draw-room { position: relative !important; inset: auto !important; flex-direction: column; height: auto !important; min-height: 0; }
+            .chat-section { height: 50vh; min-height: 300px; overflow: hidden; border-right: none; border-bottom: 1px solid #222; }
+            .draw-section { height: 200px; border-left: none; border-top: 1px solid #222; flex-shrink: 0; }
+            .msg-photo { width: 80px; height: 80px; }
+            .send-btn { padding: 0 16px; font-size: 15px; }
+            .chat-input { font-size: 16px; }
+            .video-section { border-radius: 0; margin-top: 20px; }
+            .video-wrapper video { min-height: 250px; max-height: 50vh; }
+            .video-label { font-size: 17px; margin-bottom: 10px; margin-top: 6px; }
+            .custom-play-btn { width: 70px; height: 70px; }
+            .play-icon { border-top-width: 18px; border-bottom-width: 18px; border-left-width: 28px; margin-left: 5px; }
+            .glass-btn { bottom: 16px; right: 16px; padding: 8px 18px; font-size: 12px; }
+            .video-controls .controls-row { gap: 8px; }
+            .control-btn { font-size: 15px; min-width: 28px; min-height: 28px; }
+            .time-display { font-size: 11px; min-width: 70px; }
+            .volume-container:hover .volume-slider, .volume-slider.active { width: 40px; }
+        }
+
+        /* All original styles (unchanged) */
         .page-logo { position: fixed; top: 30px; left: 30px; z-index: 100; }
         .page-logo img { width: 80px; height: 80px; object-fit: contain; display: block; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1)); }
-
-        .linkedin-link { display: block; text-align: center; margin-bottom: 20px; cursor: pointer; transition: transform 0.2s ease; text-decoration: none; }
-        .linkedin-link:hover { transform: scale(1.02); }
-        .linkedin-link:active { transform: scale(0.98); }
-        .linkedin-image { max-width: 500px; width: 90%; height: auto; display: inline-block; }
-
+        /* LinkedIn image — now just a static image, no link */
+        .linkedin-image-wrapper {
+            display: block;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: default;
+        }
+        .linkedin-image {
+            max-width: 500px;
+            width: 90%;
+            height: auto;
+            display: inline-block;
+            pointer-events: none; /* disables any click interaction */
+        }
         .above-tagline { text-align: center; margin-bottom: 20px; font-size: 16px; font-weight: 500; color: #333; letter-spacing: 0.3px; }
-
-        .game-container {
-            width: 100%; max-width: 1000px; min-width: 320px;
-            background: #000; border-radius: 28px;
-            box-shadow: 0px 4px 16px rgba(0,0,0,0.35), 0px 34px 44px rgba(0,0,0,0.17);
-            overflow: hidden; position: relative;
-            min-height: 480px;
-            transition: min-height 0.2s ease;
-            flex-shrink: 0;
-        }
-
-        .screen-base {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            transition: opacity 0.3s ease; opacity: 0; pointer-events: none;
-        }
+        .game-container { width: 100%; max-width: 1000px; min-width: 320px; background: #000; border-radius: 28px; box-shadow: 0px 4px 16px rgba(0,0,0,0.35), 0px 34px 44px rgba(0,0,0,0.17); overflow: hidden; position: relative; min-height: 480px; transition: min-height 0.2s ease; flex-shrink: 0; }
+        .screen-base { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.3s ease; opacity: 0; pointer-events: none; }
         .screen-base.active { opacity: 1; pointer-events: auto; z-index: 5; }
-
         .intro-screen { padding: 30px 40px 50px; }
         .intro-title-img { max-width: 320px; width: 75%; height: auto; display: block; margin: 0 auto 12px; pointer-events: none; }
         .action-buttons { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 320px; margin: 0 auto; }
-        .action-btn {
-            background: rgba(255,255,255,0.08); backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.2); border-radius: 60px;
-            padding: 14px 28px; font-size: 18px; font-weight: 600; color: #fff;
-            font-family: inherit; cursor: pointer; transition: all 0.2s ease; text-align: center;
-        }
+        .action-btn { background: rgba(255,255,255,0.08); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.2); border-radius: 60px; padding: 14px 28px; font-size: 18px; font-weight: 600; color: #fff; font-family: inherit; cursor: pointer; transition: all 0.2s ease; text-align: center; }
         .action-btn:hover { background: rgba(255,255,255,0.18); transform: scale(1.01); border-color: rgba(255,255,255,0.5); }
-        .action-btn:active { transform: scale(0.98); }
-
         .flow-container { padding: 40px 20px; }
         .flow-input-group { display: flex; gap: 10px; background: #111; border-radius: 60px; padding: 4px; border: 1px solid #2a2a2a; width: 100%; max-width: 280px; }
         .flow-input { flex: 1; background: transparent; border: none; padding: 12px 16px; color: #fff; font-size: 14px; outline: none; font-family: inherit; }
@@ -118,142 +155,39 @@
         .error-msg { color: #ff8a7a; font-size: 12px; margin-top: 10px; text-align: center; }
         .back-link { margin-top: 24px; color: #888; font-size: 13px; cursor: pointer; background: none; border: none; font-family: inherit; }
         .waiting-msg { color: #ccc; margin-top: 20px; font-size: 14px; }
-
-        .chat-draw-room {
-            display: none;
-            position: absolute;
-            inset: 0;
-            flex-direction: row;
-            z-index: 10;
-            background: #0f0f12;
-        }
+        .chat-draw-room { display: none; position: absolute; inset: 0; flex-direction: row; z-index: 10; background: #0f0f12; }
         .chat-draw-room.active { display: flex; }
-
-        .chat-section {
-            flex: 3;
-            display: flex;
-            flex-direction: column;
-            background: #000;
-            border-right: 1px solid #222;
-            min-height: 0;
-            overflow: hidden;
-        }
-
-        .chat-header {
-            flex-shrink: 0;
-            padding: 14px 20px;
-            border-bottom: 1px solid #1e1e1e;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
+        .chat-section { flex: 3; display: flex; flex-direction: column; background: #000; border-right: 1px solid #222; min-height: 0; overflow: hidden; }
+        .chat-header { flex-shrink: 0; padding: 14px 20px; border-bottom: 1px solid #1e1e1e; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
         .room-code-badge { background: #1a1a1a; border-radius: 40px; padding: 6px 16px; font-size: 12px; font-family: monospace; color: #aaa; }
         .online-badge { font-size: 12px; color: #4cd964; background: #1a1a1a; padding: 4px 12px; border-radius: 20px; }
-
-        .messages-area {
-            flex: 1;
-            min-height: 0;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .messages-area { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
         .messages-area::-webkit-scrollbar { width: 5px; }
         .messages-area::-webkit-scrollbar-track { background: #111; }
         .messages-area::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
-
-        @keyframes chatMessageIn {
-            0%   { opacity: 0; transform: translateY(16px) scale(0.96); }
-            70%  { opacity: 1; transform: translateY(-2px) scale(1.01); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .message-bubble {
-            max-width: 78%;
-            background: #1c1c1e;
-            border-radius: 20px;
-            padding: 9px 14px;
-            align-self: flex-start;
-            word-wrap: break-word;
-            flex-shrink: 0;
-        }
+        @keyframes chatMessageIn { 0% { opacity: 0; transform: translateY(16px) scale(0.96); } 70% { opacity: 1; transform: translateY(-2px) scale(1.01); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        .message-bubble { max-width: 78%; background: #1c1c1e; border-radius: 20px; padding: 9px 14px; align-self: flex-start; word-wrap: break-word; flex-shrink: 0; }
         .message-own { background: #2c2c2e; align-self: flex-end; border: 1px solid #3a3a3c; }
         .msg-name { font-size: 11px; font-weight: 600; color: #9090ff; margin-bottom: 3px; }
         .msg-text { font-size: 14px; color: #fff; word-break: break-word; line-height: 1.45; }
-
         .msg-photos { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
-        .msg-photo {
-            width: 100px; height: 100px;
-            border-radius: 10px; object-fit: cover;
-            cursor: zoom-in; display: block;
-            border: 1px solid rgba(255,255,255,0.07);
-            transition: transform 0.15s, box-shadow 0.15s;
-            flex-shrink: 0;
-        }
+        .msg-photo { width: 100px; height: 100px; border-radius: 10px; object-fit: cover; cursor: zoom-in; display: block; border: 1px solid rgba(255,255,255,0.07); transition: transform 0.15s, box-shadow 0.15s; flex-shrink: 0; }
         .msg-photo:hover { transform: scale(1.04); box-shadow: 0 4px 18px rgba(0,0,0,0.5); }
-
-        .chat-input-area {
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            padding: 10px 14px 14px;
-            background: #000;
-            border-top: 1px solid #1c1c1e;
-        }
-
+        .chat-input-area { flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; padding: 10px 14px 14px; background: #000; border-top: 1px solid #1c1c1e; }
         .photo-preview-queue { display: none; flex-wrap: wrap; gap: 7px; padding: 4px 0 2px; }
         .photo-preview-queue.has-photos { display: flex; }
         .preview-thumb-wrap { position: relative; width: 56px; height: 56px; flex-shrink: 0; }
         .preview-thumb { width: 56px; height: 56px; object-fit: cover; border-radius: 9px; border: 1px solid #333; display: block; }
-        .preview-thumb-remove {
-            position: absolute; top: -5px; right: -5px;
-            background: #ff453a; border: none; border-radius: 50%;
-            width: 18px; height: 18px; color: #fff;
-            font-size: 12px; font-weight: 700; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            line-height: 1;
-        }
-
+        .preview-thumb-remove { position: absolute; top: -5px; right: -5px; background: #ff453a; border: none; border-radius: 50%; width: 18px; height: 18px; color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; }
         .chat-input-row { display: flex; gap: 7px; align-items: center; }
-
-        .drag-overlay {
-            position: absolute; inset: 0;
-            background: rgba(80,120,255,0.16);
-            border: 3px dashed rgba(130,160,255,0.65);
-            display: none; align-items: center; justify-content: center;
-            z-index: 50; pointer-events: none;
-        }
+        .drag-overlay { position: absolute; inset: 0; background: rgba(80,120,255,0.16); border: 3px dashed rgba(130,160,255,0.65); display: none; align-items: center; justify-content: center; z-index: 50; pointer-events: none; }
         .drag-overlay.active { display: flex; }
         .drag-overlay-label { color: rgba(190,210,255,0.95); font-size: 17px; font-weight: 600; }
-
-        .paperclip-btn {
-            background: #1c1c1e; border: none; border-radius: 50%;
-            width: 40px; height: 40px; display: flex; align-items: center;
-            justify-content: center; cursor: pointer; flex-shrink: 0;
-            transition: background 0.15s; position: relative;
-            -webkit-tap-highlight-color: transparent;
-        }
+        .paperclip-btn { background: #1c1c1e; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: background 0.15s; -webkit-tap-highlight-color: transparent; }
         .paperclip-btn:hover { background: #2c2c2e; }
         .paperclip-btn svg { width: 19px; height: 19px; }
-
-        .chat-input {
-            flex: 1; background: #1c1c1e; border: none; border-radius: 30px;
-            padding: 11px 16px; color: #fff; font-size: 14px; outline: none;
-            font-family: inherit;
-            font-size: 16px;
-        }
-        .send-btn {
-            background: #fff; border: none; border-radius: 30px;
-            padding: 0 20px; font-weight: 600; cursor: pointer;
-            height: 40px; font-family: inherit; flex-shrink: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        .chat-input { flex: 1; background: #1c1c1e; border: none; border-radius: 30px; padding: 11px 16px; color: #fff; font-size: 14px; outline: none; font-family: inherit; font-size: 16px; }
+        .send-btn { background: #fff; border: none; border-radius: 30px; padding: 0 20px; font-weight: 600; cursor: pointer; height: 40px; font-family: inherit; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
         .draw-section { flex: 2; background: #0a0a0c; display: flex; flex-direction: column; border-left: 1px solid #222; min-height: 0; }
         .draw-header { flex-shrink: 0; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
         .draw-header span { font-size: 13px; font-weight: 500; color: #ddd; }
@@ -261,418 +195,68 @@
         .tool-btn { background: #1c1c1e; border: none; border-radius: 30px; padding: 6px 14px; color: #fff; font-size: 12px; cursor: pointer; font-family: inherit; -webkit-tap-highlight-color: transparent; }
         .tool-btn:active { opacity: 0.65; }
         canvas { flex: 1; width: 100%; background: #111; cursor: crosshair; touch-action: none; display: block; }
-
-        .glass-btn {
-            position: fixed; bottom: 24px; right: 24px; padding: 11px 24px;
-            font-size: 14px; color: #fff; border: none; background: rgba(0,0,0,0.78);
-            border-radius: 40px; backdrop-filter: blur(12px); cursor: pointer;
-            z-index: 200; display: none; font-family: inherit;
-            font-weight: 500; letter-spacing: 0.4px; box-shadow: 0 4px 14px rgba(0,0,0,0.35);
-            -webkit-tap-highlight-color: transparent;
-        }
+        .glass-btn { position: fixed; bottom: 24px; right: 24px; padding: 11px 24px; font-size: 14px; color: #fff; border: none; background: rgba(0,0,0,0.78); border-radius: 40px; backdrop-filter: blur(12px); cursor: pointer; z-index: 200; display: none; font-family: inherit; font-weight: 500; letter-spacing: 0.4px; box-shadow: 0 4px 14px rgba(0,0,0,0.35); -webkit-tap-highlight-color: transparent; }
         .glass-btn.visible { display: block; }
-
-        .lightbox {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.93);
-            display: none; align-items: center; justify-content: center;
-            z-index: 9999; padding: 20px;
-            touch-action: manipulation;
-        }
+        .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.93); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px; touch-action: manipulation; }
         .lightbox.open { display: flex; }
         .lightbox-img-wrap { position: relative; max-width: 92vw; max-height: 86vh; }
         .lightbox img { max-width: 92vw; max-height: 86vh; border-radius: 12px; object-fit: contain; box-shadow: 0 8px 40px rgba(0,0,0,0.7); display: block; }
-        .lightbox-close {
-            position: fixed; top: 18px; right: 22px; color: #fff; font-size: 28px;
-            cursor: pointer; background: rgba(255,255,255,0.1); border: none;
-            border-radius: 50%; width: 44px; height: 44px;
-            display: flex; align-items: center; justify-content: center;
-            transition: background 0.15s; z-index: 10000;
-        }
+        .lightbox-close { position: fixed; top: 18px; right: 22px; color: #fff; font-size: 28px; cursor: pointer; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; transition: background 0.15s; z-index: 10000; }
         .lightbox-close:hover { background: rgba(255,255,255,0.25); }
-        .lightbox-nav {
-            position: fixed; top: 50%; transform: translateY(-50%);
-            color: #fff; font-size: 32px; cursor: pointer;
-            background: rgba(255,255,255,0.08); border: none;
-            border-radius: 50%; width: 48px; height: 48px;
-            display: none; align-items: center; justify-content: center;
-            transition: background 0.15s; z-index: 10000;
-            -webkit-tap-highlight-color: transparent;
-        }
+        .lightbox-nav { position: fixed; top: 50%; transform: translateY(-50%); color: #fff; font-size: 32px; cursor: pointer; background: rgba(255,255,255,0.08); border: none; border-radius: 50%; width: 48px; height: 48px; display: none; align-items: center; justify-content: center; transition: background 0.15s; z-index: 10000; -webkit-tap-highlight-color: transparent; }
         .lightbox-nav.show { display: flex; }
         .lightbox-nav:hover { background: rgba(255,255,255,0.22); }
         #lightboxPrev { left: 12px; }
         #lightboxNext { right: 12px; }
-
-        /* Video Player Styles - CUSTOM CONTROLS */
-        .video-section {
-            width: 100%;
-            max-width: 1000px;
-            margin-top: 30px;
-            background: #000;
-            overflow: hidden;
-            box-shadow: 0px 4px 16px rgba(0,0,0,0.35), 0px 34px 44px rgba(0,0,0,0.17);
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .video-wrapper {
-            position: relative;
-            width: 100%;
-            background: #000;
-        }
-
-        .video-wrapper video {
-            width: 100%;
-            display: block;
-            min-height: 400px;
-            max-height: 70vh;
-            object-fit: contain;
-            cursor: pointer;
-        }
-
-        /* Custom play button */
-        .custom-play-btn {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100px;
-            height: 100px;
-            background: rgba(255, 255, 255, 0.85);
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.25s ease;
-            box-shadow: 0 4px 30px rgba(0,0,0,0.6);
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .custom-play-btn:hover {
-            transform: translate(-50%, -50%) scale(1.08);
-            background: rgba(255, 255, 255, 0.95);
-        }
-
-        .custom-play-btn:active {
-            transform: translate(-50%, -50%) scale(0.92);
-        }
-
-        .play-icon {
-            display: inline-block;
-            width: 0;
-            height: 0;
-            border-top: 25px solid transparent;
-            border-bottom: 25px solid transparent;
-            border-left: 38px solid #1a1a1a;
-            margin-left: 8px;
-        }
-
-        /* Custom video controls */
-        .video-controls {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.75));
-            padding: 40px 16px 14px 16px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 20;
-        }
-
-        .video-controls.visible {
-            opacity: 1;
-        }
-
-        .video-controls .controls-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .progress-bar-container {
-            flex: 1;
-            min-width: 80px;
-            height: 4px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 2px;
-            cursor: pointer;
-            position: relative;
-            transition: height 0.2s ease;
-        }
-
-        .progress-bar-container:hover {
-            height: 6px;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: #fff;
-            border-radius: 2px;
-            width: 0%;
-            position: relative;
-        }
-
-        .progress-bar::after {
-            content: '';
-            position: absolute;
-            right: -6px;
-            top: -4px;
-            width: 12px;
-            height: 12px;
-            background: #fff;
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-
-        .progress-bar-container:hover .progress-bar::after {
-            opacity: 1;
-        }
-
-        .control-btn {
-            background: none;
-            border: none;
-            color: #fff;
-            cursor: pointer;
-            padding: 4px 6px;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.15s ease;
-            -webkit-tap-highlight-color: transparent;
-            min-width: 32px;
-            min-height: 32px;
-            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-            font-weight: 600;
-        }
-
-        .control-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .control-btn:active {
-            transform: scale(0.9);
-        }
-
-        .time-display {
-            color: #fff;
-            font-size: 13px;
-            font-family: monospace;
-            min-width: 100px;
-            text-align: center;
-            user-select: none;
-        }
-
-        .volume-container {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            position: relative;
-        }
-
-        .volume-slider {
-            width: 0;
-            overflow: hidden;
-            transition: width 0.25s ease;
-            height: 4px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 2px;
-            cursor: pointer;
-        }
-
-        .volume-container:hover .volume-slider,
-        .volume-slider.active {
-            width: 60px;
-        }
-
-        .volume-fill {
-            height: 100%;
-            background: #fff;
-            border-radius: 2px;
-            width: 100%;
-        }
-
-        /* Volume icon - using SVG speaker icon */
-        .volume-icon {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            position: relative;
-            font-size: 0;
-            line-height: 1;
-        }
-
-        .volume-icon svg {
-            width: 100%;
-            height: 100%;
-            fill: white;
-            display: block;
-        }
-
-        .video-label {
-            text-align: center;
-            color: #000;
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            margin-top: 10px;
-            letter-spacing: 1px;
-        }
-
-        .video-label .arrow-down {
-            display: inline-block;
-            margin-left: 6px;
-            font-size: 24px;
-        }
-
-        /* Fullscreen styles */
-        .video-section.fullscreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            max-width: 100vw;
-            max-height: 100vh;
-            margin: 0;
-            border-radius: 0;
-            z-index: 9998;
-            background: #000;
-        }
-
-        .video-section.fullscreen .video-wrapper video {
-            min-height: 100vh;
-            max-height: 100vh;
-            object-fit: contain;
-        }
-
-        .video-section.fullscreen .video-controls {
-            padding: 50px 24px 20px 24px;
-        }
-
-        @media (max-width: 700px) {
-            body { padding: 16px 12px 20px; justify-content: flex-start; }
-
-            .page-logo { top: 16px; left: 14px; }
-            .page-logo img { width: 50px; height: 50px; }
-
-            .linkedin-image { max-width: 300px; }
-            .above-tagline { font-size: 13px; }
-            .action-buttons { gap: 12px; }
-            .intro-screen { padding: 20px 24px 36px; }
-            .intro-title-img { max-width: 200px; }
-
-            .game-container {
-                border-radius: 20px;
-                min-height: 400px;
-            }
-
-            .chat-draw-room {
-                position: relative !important;
-                inset: auto !important;
-                flex-direction: column;
-                height: auto !important;
-                min-height: 0;
-            }
-
-            .chat-section {
-                height: 50vh;
-                min-height: 300px;
-                overflow: hidden;
-                border-right: none;
-                border-bottom: 1px solid #222;
-            }
-
-            .draw-section {
-                height: 200px;
-                border-left: none;
-                border-top: 1px solid #222;
-                flex-shrink: 0;
-            }
-
-            .msg-photo { width: 80px; height: 80px; }
-
-            .send-btn { padding: 0 16px; font-size: 15px; }
-            .chat-input { font-size: 16px; }
-
-            .video-section {
-                border-radius: 0;
-                margin-top: 20px;
-            }
-
-            .video-wrapper video {
-                min-height: 250px;
-                max-height: 50vh;
-            }
-
-            .video-label {
-                font-size: 17px;
-                margin-bottom: 10px;
-                margin-top: 6px;
-            }
-
-            .custom-play-btn {
-                width: 70px;
-                height: 70px;
-            }
-
-            .play-icon {
-                border-top-width: 18px;
-                border-bottom-width: 18px;
-                border-left-width: 28px;
-                margin-left: 5px;
-            }
-
-            .glass-btn {
-                bottom: 16px;
-                right: 16px;
-                padding: 8px 18px;
-                font-size: 12px;
-            }
-
-            .video-controls .controls-row {
-                gap: 8px;
-            }
-
-            .control-btn {
-                font-size: 15px;
-                min-width: 28px;
-                min-height: 28px;
-            }
-
-            .time-display {
-                font-size: 11px;
-                min-width: 70px;
-            }
-
-            .volume-container:hover .volume-slider,
-            .volume-slider.active {
-                width: 40px;
-            }
-        }
+        .video-section { width: 100%; max-width: 1000px; margin-top: 30px; background: #000; overflow: hidden; box-shadow: 0px 4px 16px rgba(0,0,0,0.35), 0px 34px 44px rgba(0,0,0,0.17); position: relative; flex-shrink: 0; }
+        .video-wrapper { position: relative; width: 100%; background: #000; }
+        .video-wrapper video { width: 100%; display: block; min-height: 400px; max-height: 70vh; object-fit: contain; cursor: pointer; }
+        .custom-play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; background: rgba(255,255,255,0.85); border: none; border-radius: 50%; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; transition: all 0.25s ease; box-shadow: 0 4px 30px rgba(0,0,0,0.6); padding: 0; -webkit-tap-highlight-color: transparent; }
+        .custom-play-btn:hover { transform: translate(-50%, -50%) scale(1.08); background: rgba(255,255,255,0.95); }
+        .play-icon { display: inline-block; width: 0; height: 0; border-top: 25px solid transparent; border-bottom: 25px solid transparent; border-left: 38px solid #1a1a1a; margin-left: 8px; }
+        .video-controls { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.75)); padding: 40px 16px 14px 16px; opacity: 0; transition: opacity 0.3s ease; z-index: 20; }
+        .video-controls.visible { opacity: 1; }
+        .video-controls .controls-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .progress-bar-container { flex: 1; min-width: 80px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; cursor: pointer; position: relative; transition: height 0.2s ease; }
+        .progress-bar-container:hover { height: 6px; }
+        .progress-bar { height: 100%; background: #fff; border-radius: 2px; width: 0%; position: relative; }
+        .progress-bar::after { content: ''; position: absolute; right: -6px; top: -4px; width: 12px; height: 12px; background: #fff; border-radius: 50%; opacity: 0; transition: opacity 0.2s ease; }
+        .progress-bar-container:hover .progress-bar::after { opacity: 1; }
+        .control-btn { background: none; border: none; color: #fff; cursor: pointer; padding: 4px 6px; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: transform 0.15s ease; -webkit-tap-highlight-color: transparent; min-width: 32px; min-height: 32px; font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; }
+        .control-btn:hover { transform: scale(1.1); }
+        .time-display { color: #fff; font-size: 13px; font-family: monospace; min-width: 100px; text-align: center; user-select: none; }
+        .volume-container { display: flex; align-items: center; gap: 6px; position: relative; }
+        .volume-slider { width: 0; overflow: hidden; transition: width 0.25s ease; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; cursor: pointer; }
+        .volume-container:hover .volume-slider, .volume-slider.active { width: 60px; }
+        .volume-fill { height: 100%; background: #fff; border-radius: 2px; width: 100%; }
+        .volume-icon { display: inline-block; width: 20px; height: 20px; position: relative; font-size: 0; line-height: 1; }
+        .volume-icon svg { width: 100%; height: 100%; fill: white; display: block; }
+        .video-label { text-align: center; color: #000; font-size: 20px; font-weight: 700; margin-bottom: 16px; margin-top: 10px; letter-spacing: 1px; }
+        .video-label .arrow-down { display: inline-block; margin-left: 6px; font-size: 24px; }
+        .video-section.fullscreen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh; margin: 0; border-radius: 0; z-index: 9998; background: #000; }
+        .video-section.fullscreen .video-wrapper video { min-height: 100vh; max-height: 100vh; object-fit: contain; }
+        .video-section.fullscreen .video-controls { padding: 50px 24px 20px 24px; }
     </style>
 </head>
 <body>
+    <!-- TOP-RIGHT EMAIL: pure black icon + text -->
+    <a href="mailto:service@jacklinus.com" class="top-right-email" aria-label="Email service@jacklinus.com">
+        <i class="fas fa-envelope"></i>
+        <span>service@jacklinus.com</span>
+    </a>
 
     <div class="page-logo">
         <img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20black.png?raw=true" alt="Jacklinus">
     </div>
 
-    <a href="https://www.linkedin.com/company/jacklinus/" target="_blank" rel="noopener noreferrer" class="linkedin-link">
-        <img class="linkedin-image" src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Linked%20In%20Redirect.png?raw=true" alt="Follow Jacklinus on LinkedIn">
-    </a>
+    <!-- LinkedIn image — static, no link, just the image -->
+    <div class="linkedin-image-wrapper">
+        <img class="linkedin-image" src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Linked%20In%20Redirect.png?raw=true" alt="Jacklinus LinkedIn">
+    </div>
 
     <div class="above-tagline">Chat securely with Chat Tab by jacklinus</div>
 
     <div class="game-container" id="gameContainer">
-
         <div id="introScreen" class="screen-base intro-screen active">
             <img class="intro-title-img" src="https://raw.githubusercontent.com/zryzenzzzz/jacklinus.com/main/Photos/smallersecure.png" alt="Secure Encrypted Chats">
             <div class="action-buttons">
@@ -680,7 +264,6 @@
                 <button class="action-btn" id="joinBtn">Join a Chat Tab</button>
             </div>
         </div>
-
         <div id="createFlow" class="screen-base flow-container">
             <div class="flow-input-group">
                 <input type="text" id="createNameInput" class="flow-input" placeholder="Your name" maxlength="20" autocomplete="off">
@@ -689,7 +272,6 @@
             <div id="createError" class="error-msg"></div>
             <button class="back-link" id="backFromCreate">← Back</button>
         </div>
-
         <div id="joinFlowName" class="screen-base flow-container">
             <div class="flow-input-group">
                 <input type="text" id="joinNameInput" class="flow-input" placeholder="Your name" maxlength="20" autocomplete="off">
@@ -698,7 +280,6 @@
             <div id="joinNameError" class="error-msg"></div>
             <button class="back-link" id="backFromJoinName">← Back</button>
         </div>
-
         <div id="joinFlowCode" class="screen-base flow-container">
             <div class="flow-input-group">
                 <input type="text" id="joinCodeInput" class="flow-input" placeholder="Enter 6-digit code" maxlength="6" style="text-transform:uppercase" autocomplete="off">
@@ -707,7 +288,6 @@
             <div id="joinCodeError" class="error-msg"></div>
             <button class="back-link" id="backFromJoinCode">← Back</button>
         </div>
-
         <div id="waitingFlow" class="screen-base flow-container">
             <div class="waiting-msg">⏳ Waiting for other person to join...</div>
             <div class="code-display">
@@ -717,13 +297,10 @@
             <div id="waitingError" class="error-msg"></div>
             <button class="back-link" id="cancelWaitingBtn">← Cancel</button>
         </div>
-
         <div id="chatDrawRoom" class="chat-draw-room">
-
             <div class="drag-overlay" id="dragOverlay">
                 <div class="drag-overlay-label">📎 Drop photos to attach</div>
             </div>
-
             <div class="chat-section">
                 <div class="chat-header">
                     <span class="room-code-badge" id="roomCodeDisplay"></span>
@@ -744,7 +321,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="draw-section">
                 <div class="draw-header">
                     <span>Live drawing</span>
@@ -759,56 +335,36 @@
         </div>
     </div>
 
-    <!-- Video Section with Custom Controls -->
+    <!-- MOBILE INLINE EMAIL (hidden on desktop, shown above video) -->
+    <a href="mailto:service@jacklinus.com" class="mobile-email-inline" aria-label="Email service@jacklinus.com">
+        <i class="fas fa-envelope"></i>
+        <span>service@jacklinus.com</span>
+    </a>
+
     <div class="video-label">
         Watch Video <span class="arrow-down">↓</span>
     </div>
-
     <div class="video-section" id="videoSection">
         <div class="video-wrapper">
             <video id="promoVideo" playsinline preload="metadata">
                 <source src="https://www.dropbox.com/scl/fi/h3wwurrlgc5wiwje7o687/0721-3.mp4?rlkey=ifeutllme14ihnbxoyw4hg7zd&st=ohcuh3sm&raw=1" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
-            
             <button class="custom-play-btn" id="customPlayBtn" aria-label="Play video">
                 <span class="play-icon"></span>
             </button>
-
-            <!-- Custom Controls -->
             <div class="video-controls" id="videoControls">
                 <div class="controls-row">
-                    <!-- Play/Pause -->
-                    <button class="control-btn" id="playPauseBtn" aria-label="Play/Pause">
-                        <span id="playPauseIcon">▶</span>
-                    </button>
-
-                    <!-- Progress Bar -->
-                    <div class="progress-bar-container" id="progressContainer">
-                        <div class="progress-bar" id="progressBar"></div>
-                    </div>
-
-                    <!-- Time Display -->
+                    <button class="control-btn" id="playPauseBtn" aria-label="Play/Pause"><span id="playPauseIcon">▶</span></button>
+                    <div class="progress-bar-container" id="progressContainer"><div class="progress-bar" id="progressBar"></div></div>
                     <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
-
-                    <!-- Volume - Normal SVG speaker icon -->
                     <div class="volume-container">
                         <button class="control-btn" id="volumeBtn" aria-label="Mute/Unmute" style="font-size:0; padding:4px 6px; min-width:32px; min-height:32px;">
-                            <span id="volumeIcon" class="volume-icon">
-                                <svg viewBox="0 0 24 24" id="volumeSvg">
-                                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-                                </svg>
-                            </span>
+                            <span id="volumeIcon" class="volume-icon"><svg viewBox="0 0 24 24" id="volumeSvg"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></span>
                         </button>
-                        <div class="volume-slider" id="volumeSlider">
-                            <div class="volume-fill" id="volumeFill"></div>
-                        </div>
+                        <div class="volume-slider" id="volumeSlider"><div class="volume-fill" id="volumeFill"></div></div>
                     </div>
-
-                    <!-- Fullscreen -->
-                    <button class="control-btn" id="fullscreenBtn" aria-label="Fullscreen" style="font-size:22px; line-height:1;">
-                        ⛶
-                    </button>
+                    <button class="control-btn" id="fullscreenBtn" aria-label="Fullscreen" style="font-size:22px; line-height:1;">⛶</button>
                 </div>
             </div>
         </div>
@@ -823,715 +379,151 @@
 
     <button class="glass-btn" id="terminateBtn">Terminate Session</button>
 
+    <!-- Firebase & script (unchanged) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
     <script>
         const firebaseConfig = { databaseURL: "https://games-5a163-default-rtdb.firebaseio.com/" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-
-        const gameContainer      = document.getElementById('gameContainer');
-        const terminateBtn       = document.getElementById('terminateBtn');
-        const messagesList       = document.getElementById('messagesList');
-        const chatInput          = document.getElementById('chatInput');
-        const sendMsgBtn         = document.getElementById('sendMsgBtn');
-        const penTool            = document.getElementById('penTool');
-        const eraserTool         = document.getElementById('eraserTool');
-        const clearCanvasBtn     = document.getElementById('clearCanvasBtn');
-        const drawCanvas         = document.getElementById('drawCanvas');
-        const paperclipBtn       = document.getElementById('paperclipBtn');
-        const photoFileInput     = document.getElementById('photoFileInput');
-        const photoPreviewQueue  = document.getElementById('photoPreviewQueue');
-        const dragOverlay        = document.getElementById('dragOverlay');
-        const chatDrawRoom       = document.getElementById('chatDrawRoom');
-        const roomCodeDisplay    = document.getElementById('roomCodeDisplay');
-        const peerStatus         = document.getElementById('peerStatus');
-        const lightbox           = document.getElementById('lightbox');
-        const lightboxImg        = document.getElementById('lightboxImg');
-        const lightboxClose      = document.getElementById('lightboxClose');
-        const lightboxPrev       = document.getElementById('lightboxPrev');
-        const lightboxNext       = document.getElementById('lightboxNext');
-        const roomCodeSpanWait   = document.getElementById('roomCodeSpanWait');
+        const gameContainer = document.getElementById('gameContainer');
+        const terminateBtn = document.getElementById('terminateBtn');
+        const messagesList = document.getElementById('messagesList');
+        const chatInput = document.getElementById('chatInput');
+        const sendMsgBtn = document.getElementById('sendMsgBtn');
+        const penTool = document.getElementById('penTool');
+        const eraserTool = document.getElementById('eraserTool');
+        const clearCanvasBtn = document.getElementById('clearCanvasBtn');
+        const drawCanvas = document.getElementById('drawCanvas');
+        const paperclipBtn = document.getElementById('paperclipBtn');
+        const photoFileInput = document.getElementById('photoFileInput');
+        const photoPreviewQueue = document.getElementById('photoPreviewQueue');
+        const dragOverlay = document.getElementById('dragOverlay');
+        const chatDrawRoom = document.getElementById('chatDrawRoom');
+        const roomCodeDisplay = document.getElementById('roomCodeDisplay');
+        const peerStatus = document.getElementById('peerStatus');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxClose = document.getElementById('lightboxClose');
+        const lightboxPrev = document.getElementById('lightboxPrev');
+        const lightboxNext = document.getElementById('lightboxNext');
+        const roomCodeSpanWait = document.getElementById('roomCodeSpanWait');
         const copyWaitingCodeBtn = document.getElementById('copyWaitingCodeBtn');
-        const cancelWaitingBtn   = document.getElementById('cancelWaitingBtn');
-        const waitingError       = document.getElementById('waitingError');
-        const createNameInput    = document.getElementById('createNameInput');
-        const confirmCreateBtn   = document.getElementById('confirmCreateBtn');
-        const createError        = document.getElementById('createError');
-        const joinNameInput      = document.getElementById('joinNameInput');
-        const nextToCodeBtn      = document.getElementById('nextToCodeBtn');
-        const joinNameError      = document.getElementById('joinNameError');
-        const joinCodeInput      = document.getElementById('joinCodeInput');
-        const submitJoinBtn      = document.getElementById('submitJoinBtn');
-        const joinCodeError      = document.getElementById('joinCodeError');
-        
-        // Video elements
-        const promoVideo         = document.getElementById('promoVideo');
-        const customPlayBtn      = document.getElementById('customPlayBtn');
-        const videoControls      = document.getElementById('videoControls');
-        const playPauseBtn       = document.getElementById('playPauseBtn');
-        const playPauseIcon      = document.getElementById('playPauseIcon');
-        const progressContainer  = document.getElementById('progressContainer');
-        const progressBar        = document.getElementById('progressBar');
-        const timeDisplay        = document.getElementById('timeDisplay');
-        const volumeBtn          = document.getElementById('volumeBtn');
-        const volumeIcon         = document.getElementById('volumeIcon');
-        const volumeSvg          = document.getElementById('volumeSvg');
-        const volumeSlider       = document.getElementById('volumeSlider');
-        const volumeFill         = document.getElementById('volumeFill');
-        const fullscreenBtn      = document.getElementById('fullscreenBtn');
-        const videoSection       = document.getElementById('videoSection');
-
-        const screens = {
-            intro:    document.getElementById('introScreen'),
-            create:   document.getElementById('createFlow'),
-            joinName: document.getElementById('joinFlowName'),
-            joinCode: document.getElementById('joinFlowCode'),
-            waiting:  document.getElementById('waitingFlow'),
-            chat:     chatDrawRoom
-        };
-
+        const cancelWaitingBtn = document.getElementById('cancelWaitingBtn');
+        const waitingError = document.getElementById('waitingError');
+        const createNameInput = document.getElementById('createNameInput');
+        const confirmCreateBtn = document.getElementById('confirmCreateBtn');
+        const createError = document.getElementById('createError');
+        const joinNameInput = document.getElementById('joinNameInput');
+        const nextToCodeBtn = document.getElementById('nextToCodeBtn');
+        const joinNameError = document.getElementById('joinNameError');
+        const joinCodeInput = document.getElementById('joinCodeInput');
+        const submitJoinBtn = document.getElementById('submitJoinBtn');
+        const joinCodeError = document.getElementById('joinCodeError');
+        const promoVideo = document.getElementById('promoVideo');
+        const customPlayBtn = document.getElementById('customPlayBtn');
+        const videoControls = document.getElementById('videoControls');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playPauseIcon = document.getElementById('playPauseIcon');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const volumeBtn = document.getElementById('volumeBtn');
+        const volumeIcon = document.getElementById('volumeIcon');
+        const volumeSvg = document.getElementById('volumeSvg');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeFill = document.getElementById('volumeFill');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const videoSection = document.getElementById('videoSection');
+        const screens = { intro: document.getElementById('introScreen'), create: document.getElementById('createFlow'), joinName: document.getElementById('joinFlowName'), joinCode: document.getElementById('joinFlowCode'), waiting: document.getElementById('waitingFlow'), chat: chatDrawRoom };
         let ctx = drawCanvas.getContext('2d');
-
-        let currentRoomId       = null;
-        let myName              = '';
-        let isCreator           = false;
-        let roomRef             = null;
-        let peerJoined          = false;
-        let isDrawing           = false;
-        let lastX = 0, lastY = 0;
-        let currentTool         = 'pen';
-        let terminationListener = null;
-        let stagedPhotos        = [];
-        let lightboxPhotos      = [];
-        let lightboxIndex       = 0;
-        const isMobile          = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-        let controlsTimeout     = null;
-
-        // --- Video Controls Logic ---
-        function togglePlay() {
-            if (promoVideo.paused) {
-                promoVideo.play().catch(() => {});
-                customPlayBtn.style.display = 'none';
-                playPauseIcon.textContent = '⏸';
-            } else {
-                promoVideo.pause();
-                customPlayBtn.style.display = 'flex';
-                playPauseIcon.textContent = '▶';
-            }
-        }
-
-        function updateProgress() {
-            if (promoVideo.duration) {
-                const percent = (promoVideo.currentTime / promoVideo.duration) * 100;
-                progressBar.style.width = percent + '%';
-                timeDisplay.textContent = formatTime(promoVideo.currentTime) + ' / ' + formatTime(promoVideo.duration);
-            }
-        }
-
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return '0:00';
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return mins + ':' + (secs < 10 ? '0' : '') + secs;
-        }
-
-        function setProgress(e) {
-            const rect = progressContainer.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width;
-            promoVideo.currentTime = x * promoVideo.duration;
-        }
-
-        function toggleMute() {
-            promoVideo.muted = !promoVideo.muted;
-            updateVolumeIcon();
-        }
-
-        function updateVolumeIcon() {
-            if (promoVideo.muted || promoVideo.volume === 0) {
-                // Muted - show speaker with X
-                volumeSvg.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/><path d="M19 11l2-2m0 4l-2-2" stroke="white" stroke-width="2" stroke-linecap="round"/>';
-            } else {
-                // Normal speaker
-                volumeSvg.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
-            }
-        }
-
-        function setVolume(e) {
-            const rect = volumeSlider.getBoundingClientRect();
-            let vol = (e.clientX - rect.left) / rect.width;
-            vol = Math.min(Math.max(vol, 0), 1);
-            promoVideo.volume = vol;
-            promoVideo.muted = false;
-            volumeFill.style.width = (vol * 100) + '%';
-            updateVolumeIcon();
-        }
-
-        function toggleFullscreen() {
-            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                const el = videoSection;
-                if (el.requestFullscreen) {
-                    el.requestFullscreen();
-                } else if (el.webkitRequestFullscreen) {
-                    el.webkitRequestFullscreen();
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
-            }
-        }
-
-        function showControls() {
-            videoControls.classList.add('visible');
-            clearTimeout(controlsTimeout);
-            if (!promoVideo.paused) {
-                controlsTimeout = setTimeout(() => {
-                    if (!isMobile) {
-                        videoControls.classList.remove('visible');
-                    }
-                }, 3000);
-            }
-        }
-
-        // Video event listeners
-        promoVideo.addEventListener('play', () => {
-            customPlayBtn.style.display = 'none';
-            playPauseIcon.textContent = '⏸';
-            showControls();
-        });
-
-        promoVideo.addEventListener('pause', () => {
-            customPlayBtn.style.display = 'flex';
-            playPauseIcon.textContent = '▶';
-            videoControls.classList.add('visible');
-        });
-
-        promoVideo.addEventListener('ended', () => {
-            customPlayBtn.style.display = 'flex';
-            playPauseIcon.textContent = '▶';
-            videoControls.classList.add('visible');
-        });
-
+        let currentRoomId = null, myName = '', isCreator = false, roomRef = null, peerJoined = false, isDrawing = false, lastX = 0, lastY = 0, currentTool = 'pen', terminationListener = null, stagedPhotos = [], lightboxPhotos = [], lightboxIndex = 0;
+        const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+        let controlsTimeout = null;
+        function togglePlay() { if (promoVideo.paused) { promoVideo.play().catch(()=>{}); customPlayBtn.style.display='none'; playPauseIcon.textContent='⏸'; } else { promoVideo.pause(); customPlayBtn.style.display='flex'; playPauseIcon.textContent='▶'; } }
+        function updateProgress() { if (promoVideo.duration) { const p = (promoVideo.currentTime / promoVideo.duration) * 100; progressBar.style.width = p + '%'; timeDisplay.textContent = formatTime(promoVideo.currentTime) + ' / ' + formatTime(promoVideo.duration); } }
+        function formatTime(seconds) { if (isNaN(seconds)) return '0:00'; const m = Math.floor(seconds / 60), s = Math.floor(seconds % 60); return m + ':' + (s < 10 ? '0' : '') + s; }
+        function setProgress(e) { const rect = progressContainer.getBoundingClientRect(); const x = (e.clientX - rect.left) / rect.width; promoVideo.currentTime = x * promoVideo.duration; }
+        function toggleMute() { promoVideo.muted = !promoVideo.muted; updateVolumeIcon(); }
+        function updateVolumeIcon() { if (promoVideo.muted || promoVideo.volume === 0) { volumeSvg.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/><path d="M19 11l2-2m0 4l-2-2" stroke="white" stroke-width="2" stroke-linecap="round"/>'; } else { volumeSvg.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>'; } }
+        function setVolume(e) { const rect = volumeSlider.getBoundingClientRect(); let vol = (e.clientX - rect.left) / rect.width; vol = Math.min(Math.max(vol, 0), 1); promoVideo.volume = vol; promoVideo.muted = false; volumeFill.style.width = (vol * 100) + '%'; updateVolumeIcon(); }
+        function toggleFullscreen() { if (!document.fullscreenElement && !document.webkitFullscreenElement) { const el = videoSection; if (el.requestFullscreen) el.requestFullscreen(); else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen(); } else { if (document.exitFullscreen) document.exitFullscreen(); else if (document.webkitExitFullscreen) document.webkitExitFullscreen(); } }
+        function showControls() { videoControls.classList.add('visible'); clearTimeout(controlsTimeout); if (!promoVideo.paused) { controlsTimeout = setTimeout(() => { if (!isMobile) videoControls.classList.remove('visible'); }, 3000); } }
+        promoVideo.addEventListener('play', () => { customPlayBtn.style.display='none'; playPauseIcon.textContent='⏸'; showControls(); });
+        promoVideo.addEventListener('pause', () => { customPlayBtn.style.display='flex'; playPauseIcon.textContent='▶'; videoControls.classList.add('visible'); });
+        promoVideo.addEventListener('ended', () => { customPlayBtn.style.display='flex'; playPauseIcon.textContent='▶'; videoControls.classList.add('visible'); });
         promoVideo.addEventListener('timeupdate', updateProgress);
         promoVideo.addEventListener('loadedmetadata', updateProgress);
-        promoVideo.addEventListener('volumechange', () => {
-            updateVolumeIcon();
-            if (!promoVideo.muted) {
-                volumeFill.style.width = (promoVideo.volume * 100) + '%';
-            } else {
-                volumeFill.style.width = '0%';
-            }
-        });
-
-        // Click on video toggles play
+        promoVideo.addEventListener('volumechange', () => { updateVolumeIcon(); if (!promoVideo.muted) volumeFill.style.width = (promoVideo.volume * 100) + '%'; else volumeFill.style.width = '0%'; });
         promoVideo.addEventListener('click', togglePlay);
-        customPlayBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            togglePlay();
-        });
-
-        // Controls show/hide
-        videoSection.addEventListener('mouseenter', () => {
-            videoControls.classList.add('visible');
-            clearTimeout(controlsTimeout);
-        });
-
-        videoSection.addEventListener('mouseleave', () => {
-            if (!promoVideo.paused && !isMobile) {
-                controlsTimeout = setTimeout(() => {
-                    videoControls.classList.remove('visible');
-                }, 2000);
-            }
-        });
-
-        // Touch events for mobile
+        customPlayBtn.addEventListener('click', (e) => { e.stopPropagation(); togglePlay(); });
+        videoSection.addEventListener('mouseenter', () => { videoControls.classList.add('visible'); clearTimeout(controlsTimeout); });
+        videoSection.addEventListener('mouseleave', () => { if (!promoVideo.paused && !isMobile) { controlsTimeout = setTimeout(() => { videoControls.classList.remove('visible'); }, 2000); } });
         let touchTimeout = null;
-        videoSection.addEventListener('touchstart', () => {
-            if (videoControls.classList.contains('visible')) {
-                clearTimeout(touchTimeout);
-                touchTimeout = setTimeout(() => {
-                    if (!promoVideo.paused) {
-                        videoControls.classList.remove('visible');
-                    }
-                }, 4000);
-            } else {
-                videoControls.classList.add('visible');
-                clearTimeout(touchTimeout);
-                touchTimeout = setTimeout(() => {
-                    if (!promoVideo.paused) {
-                        videoControls.classList.remove('visible');
-                    }
-                }, 4000);
-            }
-        });
-
-        // Control button events
+        videoSection.addEventListener('touchstart', () => { if (videoControls.classList.contains('visible')) { clearTimeout(touchTimeout); touchTimeout = setTimeout(() => { if (!promoVideo.paused) videoControls.classList.remove('visible'); }, 4000); } else { videoControls.classList.add('visible'); clearTimeout(touchTimeout); touchTimeout = setTimeout(() => { if (!promoVideo.paused) videoControls.classList.remove('visible'); }, 4000); } });
         playPauseBtn.addEventListener('click', togglePlay);
         progressContainer.addEventListener('click', setProgress);
         volumeBtn.addEventListener('click', toggleMute);
         volumeSlider.addEventListener('click', setVolume);
         fullscreenBtn.addEventListener('click', toggleFullscreen);
-
-        // Fullscreen change events
         document.addEventListener('fullscreenchange', handleFullscreenChange);
         document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-
-        function handleFullscreenChange() {
-            if (document.fullscreenElement || document.webkitFullscreenElement) {
-                videoSection.classList.add('fullscreen');
-            } else {
-                videoSection.classList.remove('fullscreen');
-            }
-        }
-
-        // Set initial volume
-        promoVideo.volume = 0.8;
-        volumeFill.style.width = '80%';
-        updateVolumeIcon();
-
-        // --- End Video Controls ---
-
-        function showScreen(name) {
-            Object.values(screens).forEach(s => s && s.classList.remove('active'));
-            if (screens[name]) screens[name].classList.add('active');
-
-            if (name === 'chat') {
-                gameContainer.style.minHeight = isMobile ? '0' : '600px';
-                terminateBtn.classList.add('visible');
-            } else {
-                gameContainer.style.minHeight = '480px';
-                terminateBtn.classList.remove('visible');
-                chatDrawRoom.style.position = '';
-            }
-        }
-
-        function cleanupRoom() {
-            if (roomRef) {
-                if (terminationListener) roomRef.child('termination').off('value', terminationListener);
-                if (myName) roomRef.child('activeUsers').child(myName).remove();
-                if (isCreator) roomRef.child('peerJoined').set(false);
-                roomRef.off();
-            }
-            roomRef = null; currentRoomId = null; peerJoined = false; isCreator = false;
-        }
-
-        async function terminateSession(isRemote = false, byName = null) {
-            if (!isRemote && roomRef && myName) {
-                try { await roomRef.child('termination').set({ terminatedBy: myName, timestamp: Date.now() }); } catch(_) {}
-            }
-            cleanupRoom();
-            showScreen('intro');
-            if (byName && byName !== myName) alert(`${byName} has terminated the session.`);
-            if (ctx) { ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); }
-            messagesList.innerHTML = '';
-            clearStagedPhotos();
-        }
-
-        function setupTerminationListener() {
-            if (!roomRef) return;
-            if (terminationListener) roomRef.child('termination').off('value', terminationListener);
-            terminationListener = snap => {
-                const d = snap.val();
-                if (d && d.terminatedBy && d.terminatedBy !== myName) terminateSession(true, d.terminatedBy);
-            };
-            roomRef.child('termination').on('value', terminationListener);
-        }
-
-        function generateRoomCode() {
-            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-            let c = '';
-            for (let i = 0; i < 6; i++) c += chars[Math.floor(Math.random() * chars.length)];
-            return c;
-        }
-
-        confirmCreateBtn.addEventListener('click', async () => {
-            const name = createNameInput.value.trim();
-            if (!name) { createError.innerText = 'Please enter your name'; return; }
-            myName = name; createError.innerText = '';
-            const code = generateRoomCode();
-            currentRoomId = code; isCreator = true;
-            roomCodeSpanWait.textContent = code;
-            showScreen('waiting');
-            roomRef = db.ref(`chat_tabs/${code}`);
-            try {
-                await roomRef.set({ creator: myName, created: Date.now(), peerJoined: false, activeUsers: { [myName]: true } });
-                setupRoomListeners();
-            } catch(e) { waitingError.innerText = 'Connection error. Try again.'; console.error(e); }
-        });
-
-        nextToCodeBtn.addEventListener('click', () => {
-            const name = joinNameInput.value.trim();
-            if (!name) { joinNameError.innerText = 'Please enter your name'; return; }
-            myName = name; joinNameError.innerText = ''; showScreen('joinCode');
-        });
-
-        submitJoinBtn.addEventListener('click', async () => {
-            const code = joinCodeInput.value.trim().toUpperCase();
-            if (code.length !== 6) { joinCodeError.innerText = 'Enter 6-digit code'; return; }
-            const ref = db.ref(`chat_tabs/${code}`);
-            const snap = await ref.once('value');
-            if (!snap.exists()) { joinCodeError.innerText = 'Room not found'; return; }
-            const d = snap.val();
-            if (d.peerJoined && Object.keys(d.activeUsers || {}).length >= 2) { joinCodeError.innerText = 'Room is full'; return; }
-            currentRoomId = code; isCreator = false; roomRef = ref;
-            await roomRef.child('peerJoined').set(true);
-            await roomRef.child('activeUsers').update({ [myName]: true });
-            setupRoomListeners();
-            enterChatRoom();
-        });
-
-        function setupRoomListeners() {
-            if (!roomRef) return;
-
-            roomRef.child('peerJoined').on('value', snap => {
-                if (snap.val() === true && !peerJoined) {
-                    peerJoined = true;
-                    if (screens.waiting.classList.contains('active')) enterChatRoom();
-                }
-            });
-
-            const seenKeys = new Set();
-
-            roomRef.child('messages').once('value', snap => {
-                const raw = snap.val();
-                if (!raw) return;
-                messagesList.innerHTML = '';
-                const entries = Object.entries(raw).sort((a, b) => (a[1].timestamp || 0) - (b[1].timestamp || 0));
-                entries.forEach(([k, msg]) => {
-                    seenKeys.add(k);
-                    renderMessage(msg, false);
-                });
-            });
-
-            roomRef.child('messages').on('child_added', snap => {
-                if (seenKeys.has(snap.key)) return;
-                seenKeys.add(snap.key);
-                renderMessage(snap.val(), true);
-            });
-
-            roomRef.child('photos').on('child_added', snap => {
-                const msgKey = snap.key;
-                setTimeout(() => {
-                    const bubble = document.querySelector(`[data-msgkey="${msgKey}"]`);
-                    if (bubble && !bubble.querySelector('.msg-photos')) {
-                        const photoMap = snap.val();
-                        if (photoMap) {
-                            const photosArr = Object.values(photoMap);
-                            injectPhotosIntoBubble(bubble, photosArr);
-                        }
-                    }
-                }, 50);
-            });
-
-            roomRef.child('drawing/strokes').on('child_added', snap => {
-                const s = snap.val();
-                if (s && s.sender !== myName) drawRemoteStroke(s);
-            });
-            roomRef.child('drawing/clearFlag').on('value', snap => {
-                if (snap.val() === true && ctx) {
-                    ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
-                    ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
-                    roomRef.child('drawing/clearFlag').set(false);
-                }
-            });
-
-            roomRef.child('activeUsers').on('value', snap => {
-                const cnt = Object.keys(snap.val() || {}).length;
-                peerStatus.innerText = cnt >= 2 ? '🟢 Connected • 2 users' : '🟡 Waiting for peer...';
-            });
-
-            setupTerminationListener();
-        }
-
-        function renderMessage(msg, animate) {
-            if (!msg) return;
-            const isOwn = msg.sender === myName;
-            const div = document.createElement('div');
-            div.className = `message-bubble${isOwn ? ' message-own' : ''}`;
-            if (msg.msgKey) div.dataset.msgkey = msg.msgKey;
-            if (animate) div.style.animation = 'chatMessageIn 0.32s cubic-bezier(0.2,0.9,0.4,1.1) forwards';
-
-            const nameEl = document.createElement('div');
-            nameEl.className = 'msg-name';
-            nameEl.textContent = msg.sender || '';
-            div.appendChild(nameEl);
-
-            if (msg.text && msg.text.trim()) {
-                const textEl = document.createElement('div');
-                textEl.className = 'msg-text';
-                textEl.textContent = msg.text;
-                div.appendChild(textEl);
-            }
-
-            if (msg.photos && msg.photos.length > 0) {
-                injectPhotosIntoBubble(div, msg.photos);
-            }
-
-            messagesList.appendChild(div);
-            scrollToBottom();
-        }
-
-        function injectPhotosIntoBubble(bubble, photosArr) {
-            if (!photosArr || photosArr.length === 0) return;
-            if (bubble.querySelector('.msg-photos')) return;
-
-            const wrap = document.createElement('div');
-            wrap.className = 'msg-photos';
-
-            const urls = photosArr.map(p => p.dataUrl).filter(Boolean);
-
-            photosArr.forEach((photo, idx) => {
-                if (!photo || !photo.dataUrl) return;
-                const img = document.createElement('img');
-                img.className = 'msg-photo';
-                img.alt = photo.name || 'photo';
-                img.loading = 'lazy';
-                img.addEventListener('load', scrollToBottom, { once: true });
-                img.addEventListener('click', () => openLightbox(urls, idx));
-                img.src = photo.dataUrl;
-                wrap.appendChild(img);
-            });
-
-            bubble.appendChild(wrap);
-            scrollToBottom();
-        }
-
-        function scrollToBottom() {
-            requestAnimationFrame(() => {
-                messagesList.scrollTop = messagesList.scrollHeight;
-            });
-        }
-
-        async function enterChatRoom() {
-            showScreen('chat');
-            roomCodeDisplay.innerText = `Room: ${currentRoomId}`;
-            initCanvas();
-            await loadCanvasFromDb();
-        }
-
-        async function loadCanvasFromDb() {
-            if (!roomRef) return;
-            const snap = await roomRef.child('drawing/strokes').once('value');
-            const strokes = snap.val();
-            if (strokes && ctx) {
-                ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
-                ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
-                Object.values(strokes).sort((a,b) => a.timestamp - b.timestamp).forEach(drawRemoteStroke);
-            }
-        }
-
-        function drawRemoteStroke(s) {
-            if (!ctx) return;
-            ctx.beginPath(); ctx.lineWidth = s.lineWidth || 3; ctx.lineCap = 'round';
-            if (s.tool === 'eraser') { ctx.globalCompositeOperation = 'destination-out'; ctx.strokeStyle = 'rgba(0,0,0,1)'; }
-            else { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = s.color || '#FFF'; }
-            ctx.moveTo(s.x0, s.y0); ctx.lineTo(s.x1, s.y1); ctx.stroke();
-            ctx.globalCompositeOperation = 'source-over';
-        }
-
+        function handleFullscreenChange() { if (document.fullscreenElement || document.webkitFullscreenElement) videoSection.classList.add('fullscreen'); else videoSection.classList.remove('fullscreen'); }
+        promoVideo.volume = 0.8; volumeFill.style.width = '80%'; updateVolumeIcon();
+        function showScreen(name) { Object.values(screens).forEach(s => s && s.classList.remove('active')); if (screens[name]) screens[name].classList.add('active'); if (name === 'chat') { gameContainer.style.minHeight = isMobile ? '0' : '600px'; terminateBtn.classList.add('visible'); } else { gameContainer.style.minHeight = '480px'; terminateBtn.classList.remove('visible'); chatDrawRoom.style.position = ''; } }
+        function cleanupRoom() { if (roomRef) { if (terminationListener) roomRef.child('termination').off('value', terminationListener); if (myName) roomRef.child('activeUsers').child(myName).remove(); if (isCreator) roomRef.child('peerJoined').set(false); roomRef.off(); } roomRef = null; currentRoomId = null; peerJoined = false; isCreator = false; }
+        async function terminateSession(isRemote = false, byName = null) { if (!isRemote && roomRef && myName) { try { await roomRef.child('termination').set({ terminatedBy: myName, timestamp: Date.now() }); } catch(_) {} } cleanupRoom(); showScreen('intro'); if (byName && byName !== myName) alert(`${byName} has terminated the session.`); if (ctx) { ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); } messagesList.innerHTML = ''; clearStagedPhotos(); }
+        function setupTerminationListener() { if (!roomRef) return; if (terminationListener) roomRef.child('termination').off('value', terminationListener); terminationListener = snap => { const d = snap.val(); if (d && d.terminatedBy && d.terminatedBy !== myName) terminateSession(true, d.terminatedBy); }; roomRef.child('termination').on('value', terminationListener); }
+        function generateRoomCode() { const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let c = ''; for (let i=0;i<6;i++) c += chars[Math.floor(Math.random() * chars.length)]; return c; }
+        confirmCreateBtn.addEventListener('click', async () => { const name = createNameInput.value.trim(); if (!name) { createError.innerText = 'Please enter your name'; return; } myName = name; createError.innerText = ''; const code = generateRoomCode(); currentRoomId = code; isCreator = true; roomCodeSpanWait.textContent = code; showScreen('waiting'); roomRef = db.ref(`chat_tabs/${code}`); try { await roomRef.set({ creator: myName, created: Date.now(), peerJoined: false, activeUsers: { [myName]: true } }); setupRoomListeners(); } catch(e) { waitingError.innerText = 'Connection error. Try again.'; console.error(e); } });
+        nextToCodeBtn.addEventListener('click', () => { const name = joinNameInput.value.trim(); if (!name) { joinNameError.innerText = 'Please enter your name'; return; } myName = name; joinNameError.innerText = ''; showScreen('joinCode'); });
+        submitJoinBtn.addEventListener('click', async () => { const code = joinCodeInput.value.trim().toUpperCase(); if (code.length !== 6) { joinCodeError.innerText = 'Enter 6-digit code'; return; } const ref = db.ref(`chat_tabs/${code}`); const snap = await ref.once('value'); if (!snap.exists()) { joinCodeError.innerText = 'Room not found'; return; } const d = snap.val(); if (d.peerJoined && Object.keys(d.activeUsers || {}).length >= 2) { joinCodeError.innerText = 'Room is full'; return; } currentRoomId = code; isCreator = false; roomRef = ref; await roomRef.child('peerJoined').set(true); await roomRef.child('activeUsers').update({ [myName]: true }); setupRoomListeners(); enterChatRoom(); });
+        function setupRoomListeners() { if (!roomRef) return; roomRef.child('peerJoined').on('value', snap => { if (snap.val() === true && !peerJoined) { peerJoined = true; if (screens.waiting.classList.contains('active')) enterChatRoom(); } }); const seenKeys = new Set(); roomRef.child('messages').once('value', snap => { const raw = snap.val(); if (!raw) return; messagesList.innerHTML = ''; const entries = Object.entries(raw).sort((a, b) => (a[1].timestamp || 0) - (b[1].timestamp || 0)); entries.forEach(([k, msg]) => { seenKeys.add(k); renderMessage(msg, false); }); }); roomRef.child('messages').on('child_added', snap => { if (seenKeys.has(snap.key)) return; seenKeys.add(snap.key); renderMessage(snap.val(), true); }); roomRef.child('photos').on('child_added', snap => { const msgKey = snap.key; setTimeout(() => { const bubble = document.querySelector(`[data-msgkey="${msgKey}"]`); if (bubble && !bubble.querySelector('.msg-photos')) { const photoMap = snap.val(); if (photoMap) { const photosArr = Object.values(photoMap); injectPhotosIntoBubble(bubble, photosArr); } } }, 50); }); roomRef.child('drawing/strokes').on('child_added', snap => { const s = snap.val(); if (s && s.sender !== myName) drawRemoteStroke(s); }); roomRef.child('drawing/clearFlag').on('value', snap => { if (snap.val() === true && ctx) { ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); roomRef.child('drawing/clearFlag').set(false); } }); roomRef.child('activeUsers').on('value', snap => { const cnt = Object.keys(snap.val() || {}).length; peerStatus.innerText = cnt >= 2 ? '🟢 Connected • 2 users' : '🟡 Waiting for peer...'; }); setupTerminationListener(); }
+        function renderMessage(msg, animate) { if (!msg) return; const isOwn = msg.sender === myName; const div = document.createElement('div'); div.className = `message-bubble${isOwn ? ' message-own' : ''}`; if (msg.msgKey) div.dataset.msgkey = msg.msgKey; if (animate) div.style.animation = 'chatMessageIn 0.32s cubic-bezier(0.2,0.9,0.4,1.1) forwards'; const nameEl = document.createElement('div'); nameEl.className = 'msg-name'; nameEl.textContent = msg.sender || ''; div.appendChild(nameEl); if (msg.text && msg.text.trim()) { const textEl = document.createElement('div'); textEl.className = 'msg-text'; textEl.textContent = msg.text; div.appendChild(textEl); } if (msg.photos && msg.photos.length > 0) { injectPhotosIntoBubble(div, msg.photos); } messagesList.appendChild(div); scrollToBottom(); }
+        function injectPhotosIntoBubble(bubble, photosArr) { if (!photosArr || photosArr.length === 0) return; if (bubble.querySelector('.msg-photos')) return; const wrap = document.createElement('div'); wrap.className = 'msg-photos'; const urls = photosArr.map(p => p.dataUrl).filter(Boolean); photosArr.forEach((photo, idx) => { if (!photo || !photo.dataUrl) return; const img = document.createElement('img'); img.className = 'msg-photo'; img.alt = photo.name || 'photo'; img.loading = 'lazy'; img.addEventListener('load', scrollToBottom, { once: true }); img.addEventListener('click', () => openLightbox(urls, idx)); img.src = photo.dataUrl; wrap.appendChild(img); }); bubble.appendChild(wrap); scrollToBottom(); }
+        function scrollToBottom() { requestAnimationFrame(() => { messagesList.scrollTop = messagesList.scrollHeight; }); }
+        async function enterChatRoom() { showScreen('chat'); roomCodeDisplay.innerText = `Room: ${currentRoomId}`; initCanvas(); await loadCanvasFromDb(); }
+        async function loadCanvasFromDb() { if (!roomRef) return; const snap = await roomRef.child('drawing/strokes').once('value'); const strokes = snap.val(); if (strokes && ctx) { ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); Object.values(strokes).sort((a,b) => a.timestamp - b.timestamp).forEach(drawRemoteStroke); } }
+        function drawRemoteStroke(s) { if (!ctx) return; ctx.beginPath(); ctx.lineWidth = s.lineWidth || 3; ctx.lineCap = 'round'; if (s.tool === 'eraser') { ctx.globalCompositeOperation = 'destination-out'; ctx.strokeStyle = 'rgba(0,0,0,1)'; } else { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = s.color || '#FFF'; } ctx.moveTo(s.x0, s.y0); ctx.lineTo(s.x1, s.y1); ctx.stroke(); ctx.globalCompositeOperation = 'source-over'; }
         let resizeObserver = null;
-        function initCanvas() {
-            const doResize = () => {
-                const container = drawCanvas.parentElement;
-                const w = Math.max(container.clientWidth - 2, 10);
-                const h = isMobile ? 180 : 280;
-                drawCanvas.width = w; drawCanvas.height = h;
-                ctx = drawCanvas.getContext('2d');
-                ctx.fillStyle = '#111'; ctx.fillRect(0, 0, w, h);
-                ctx.strokeStyle = '#FFF'; ctx.lineWidth = 3; ctx.lineCap = 'round';
-                loadCanvasFromDb();
-            };
-            doResize();
-            if (window.ResizeObserver) {
-                if (resizeObserver) resizeObserver.disconnect();
-                resizeObserver = new ResizeObserver(doResize);
-                resizeObserver.observe(drawCanvas.parentElement);
-            } else {
-                window.addEventListener('resize', doResize);
-            }
-            attachDrawingEvents();
-        }
-
-        function attachDrawingEvents() {
-            const getXY = e => {
-                const rect = drawCanvas.getBoundingClientRect();
-                const sx = drawCanvas.width / rect.width;
-                const sy = drawCanvas.height / rect.height;
-                const src = e.touches ? e.touches[0] : e;
-                return {
-                    x: Math.min(Math.max(0, (src.clientX - rect.left) * sx), drawCanvas.width),
-                    y: Math.min(Math.max(0, (src.clientY - rect.top)  * sy), drawCanvas.height)
-                };
-            };
-            const onStart = e => { e.preventDefault(); isDrawing = true; const {x,y} = getXY(e); lastX=x; lastY=y; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+0.1,y+0.1); ctx.stroke(); };
-            const onMove  = e => {
-                if (!isDrawing) return; e.preventDefault();
-                const {x,y} = getXY(e);
-                ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke();
-                if (roomRef) roomRef.child('drawing/strokes').push({ x0:lastX,y0:lastY,x1:x,y1:y, tool:currentTool, color: currentTool==='eraser'?'#000':'#FFF', lineWidth: currentTool==='eraser'?15:3, sender:myName, timestamp:Date.now() });
-                lastX=x; lastY=y;
-            };
-            const onEnd = () => { isDrawing = false; };
-            drawCanvas.addEventListener('mousedown', onStart);
-            drawCanvas.addEventListener('mousemove', onMove);
-            drawCanvas.addEventListener('mouseup',   onEnd);
-            drawCanvas.addEventListener('mouseleave',onEnd);
-            drawCanvas.addEventListener('touchstart',onStart, { passive: false });
-            drawCanvas.addEventListener('touchmove', onMove,  { passive: false });
-            drawCanvas.addEventListener('touchend',  onEnd);
-        }
-
-        function setPen()    { currentTool='pen';    if(ctx){ ctx.globalCompositeOperation='source-over'; ctx.strokeStyle='#FFF'; ctx.lineWidth=3; } }
+        function initCanvas() { const doResize = () => { const container = drawCanvas.parentElement; const w = Math.max(container.clientWidth - 2, 10); const h = isMobile ? 180 : 280; drawCanvas.width = w; drawCanvas.height = h; ctx = drawCanvas.getContext('2d'); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, w, h); ctx.strokeStyle = '#FFF'; ctx.lineWidth = 3; ctx.lineCap = 'round'; loadCanvasFromDb(); }; doResize(); if (window.ResizeObserver) { if (resizeObserver) resizeObserver.disconnect(); resizeObserver = new ResizeObserver(doResize); resizeObserver.observe(drawCanvas.parentElement); } else { window.addEventListener('resize', doResize); } attachDrawingEvents(); }
+        function attachDrawingEvents() { const getXY = e => { const rect = drawCanvas.getBoundingClientRect(); const sx = drawCanvas.width / rect.width; const sy = drawCanvas.height / rect.height; const src = e.touches ? e.touches[0] : e; return { x: Math.min(Math.max(0, (src.clientX - rect.left) * sx), drawCanvas.width), y: Math.min(Math.max(0, (src.clientY - rect.top) * sy), drawCanvas.height) }; }; const onStart = e => { e.preventDefault(); isDrawing = true; const {x,y} = getXY(e); lastX=x; lastY=y; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+0.1,y+0.1); ctx.stroke(); }; const onMove = e => { if (!isDrawing) return; e.preventDefault(); const {x,y} = getXY(e); ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke(); if (roomRef) roomRef.child('drawing/strokes').push({ x0:lastX,y0:lastY,x1:x,y1:y, tool:currentTool, color: currentTool==='eraser'?'#000':'#FFF', lineWidth: currentTool==='eraser'?15:3, sender:myName, timestamp:Date.now() }); lastX=x; lastY=y; }; const onEnd = () => { isDrawing = false; }; drawCanvas.addEventListener('mousedown', onStart); drawCanvas.addEventListener('mousemove', onMove); drawCanvas.addEventListener('mouseup', onEnd); drawCanvas.addEventListener('mouseleave',onEnd); drawCanvas.addEventListener('touchstart',onStart, { passive: false }); drawCanvas.addEventListener('touchmove', onMove, { passive: false }); drawCanvas.addEventListener('touchend', onEnd); }
+        function setPen() { currentTool='pen'; if(ctx){ ctx.globalCompositeOperation='source-over'; ctx.strokeStyle='#FFF'; ctx.lineWidth=3; } }
         function setEraser() { currentTool='eraser'; if(ctx){ ctx.globalCompositeOperation='destination-out'; ctx.lineWidth=15; } }
         penTool.addEventListener('click', setPen);
         eraserTool.addEventListener('click', setEraser);
-        clearCanvasBtn.addEventListener('click', async () => {
-            if (!ctx) return;
-            ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
-            ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
-            if (roomRef) { await roomRef.child('drawing/clearFlag').set(true); await roomRef.child('drawing/strokes').remove(); }
-            setPen();
-        });
-
-        async function sendMessage() {
-            const txt = chatInput.value.trim();
-            if (!txt && stagedPhotos.length === 0) return;
-            if (!roomRef) return;
-
-            const photosToSend = [...stagedPhotos];
-            chatInput.value = '';
-            clearStagedPhotos();
-
-            const msgRef = roomRef.child('messages').push();
-            const msgKey = msgRef.key;
-            const payload = {
-                msgKey,
-                sender:    myName,
-                text:      txt,
-                timestamp: Date.now(),
-                hasPhotos: photosToSend.length > 0
-            };
-            await msgRef.set(payload);
-
-            if (photosToSend.length > 0) {
-                const photoUpdates = {};
-                photosToSend.forEach((p, i) => {
-                    photoUpdates[`photos/${msgKey}/${i}`] = { dataUrl: p.dataUrl, name: p.name };
-                });
-                await roomRef.update(photoUpdates);
-
-                const ownBubble = document.querySelector(`[data-msgkey="${msgKey}"]`);
-                if (ownBubble) {
-                    setTimeout(() => injectPhotosIntoBubble(ownBubble, photosToSend), 50);
-                }
-            }
-        }
-
-        function compressImage(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onerror = reject;
-                reader.onload = ev => {
-                    resolve({ dataUrl: ev.target.result, name: file.name });
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        async function stageFiles(files) {
-            const imgs = Array.from(files).filter(f => f.type.startsWith('image/'));
-            if (!imgs.length) return;
-            for (const f of imgs) {
-                try { stagedPhotos.push(await compressImage(f)); }
-                catch(e) { console.error('compress error', e); }
-            }
-            renderPhotoQueue();
-        }
-
-        function renderPhotoQueue() {
-            photoPreviewQueue.innerHTML = '';
-            if (!stagedPhotos.length) { photoPreviewQueue.classList.remove('has-photos'); return; }
-            photoPreviewQueue.classList.add('has-photos');
-            stagedPhotos.forEach((p, i) => {
-                const wrap = document.createElement('div');
-                wrap.className = 'preview-thumb-wrap';
-                const img = document.createElement('img');
-                img.className = 'preview-thumb'; img.src = p.dataUrl; img.alt = p.name;
-                const rm = document.createElement('button');
-                rm.className = 'preview-thumb-remove'; rm.textContent = '×';
-                rm.addEventListener('click', () => { stagedPhotos.splice(i, 1); renderPhotoQueue(); });
-                wrap.appendChild(img); wrap.appendChild(rm);
-                photoPreviewQueue.appendChild(wrap);
-            });
-        }
-
+        clearCanvasBtn.addEventListener('click', async () => { if (!ctx) return; ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); if (roomRef) { await roomRef.child('drawing/clearFlag').set(true); await roomRef.child('drawing/strokes').remove(); } setPen(); });
+        async function sendMessage() { const txt = chatInput.value.trim(); if (!txt && stagedPhotos.length === 0) return; if (!roomRef) return; const photosToSend = [...stagedPhotos]; chatInput.value = ''; clearStagedPhotos(); const msgRef = roomRef.child('messages').push(); const msgKey = msgRef.key; const payload = { msgKey, sender: myName, text: txt, timestamp: Date.now(), hasPhotos: photosToSend.length > 0 }; await msgRef.set(payload); if (photosToSend.length > 0) { const photoUpdates = {}; photosToSend.forEach((p, i) => { photoUpdates[`photos/${msgKey}/${i}`] = { dataUrl: p.dataUrl, name: p.name }; }); await roomRef.update(photoUpdates); const ownBubble = document.querySelector(`[data-msgkey="${msgKey}"]`); if (ownBubble) { setTimeout(() => injectPhotosIntoBubble(ownBubble, photosToSend), 50); } } }
+        function compressImage(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onerror = reject; reader.onload = ev => { resolve({ dataUrl: ev.target.result, name: file.name }); }; reader.readAsDataURL(file); }); }
+        async function stageFiles(files) { const imgs = Array.from(files).filter(f => f.type.startsWith('image/')); if (!imgs.length) return; for (const f of imgs) { try { stagedPhotos.push(await compressImage(f)); } catch(e) { console.error('compress error', e); } } renderPhotoQueue(); }
+        function renderPhotoQueue() { photoPreviewQueue.innerHTML = ''; if (!stagedPhotos.length) { photoPreviewQueue.classList.remove('has-photos'); return; } photoPreviewQueue.classList.add('has-photos'); stagedPhotos.forEach((p, i) => { const wrap = document.createElement('div'); wrap.className = 'preview-thumb-wrap'; const img = document.createElement('img'); img.className = 'preview-thumb'; img.src = p.dataUrl; img.alt = p.name; const rm = document.createElement('button'); rm.className = 'preview-thumb-remove'; rm.textContent = '×'; rm.addEventListener('click', () => { stagedPhotos.splice(i, 1); renderPhotoQueue(); }); wrap.appendChild(img); wrap.appendChild(rm); photoPreviewQueue.appendChild(wrap); }); }
         function clearStagedPhotos() { stagedPhotos = []; renderPhotoQueue(); photoFileInput.value = ''; }
-
         paperclipBtn.addEventListener('click', () => photoFileInput.click());
         photoFileInput.addEventListener('change', e => { if (e.target.files.length) stageFiles(e.target.files); });
-
         let dragCnt = 0;
         chatDrawRoom.addEventListener('dragenter', e => { e.preventDefault(); dragCnt++; if (e.dataTransfer.types.includes('Files')) dragOverlay.classList.add('active'); });
         chatDrawRoom.addEventListener('dragleave', e => { e.preventDefault(); dragCnt--; if (dragCnt <= 0) { dragCnt=0; dragOverlay.classList.remove('active'); } });
-        chatDrawRoom.addEventListener('dragover',  e => e.preventDefault());
-        chatDrawRoom.addEventListener('drop',      e => { e.preventDefault(); dragCnt=0; dragOverlay.classList.remove('active'); if (e.dataTransfer.files.length) stageFiles(e.dataTransfer.files); });
-
+        chatDrawRoom.addEventListener('dragover', e => e.preventDefault());
+        chatDrawRoom.addEventListener('drop', e => { e.preventDefault(); dragCnt=0; dragOverlay.classList.remove('active'); if (e.dataTransfer.files.length) stageFiles(e.dataTransfer.files); });
         sendMsgBtn.addEventListener('click', sendMessage);
         chatInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendMessage(); });
-
-        function openLightbox(photos, idx) {
-            lightboxPhotos = photos; lightboxIndex = idx;
-            showLightboxSlide();
-            lightbox.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
-        function showLightboxSlide() {
-            lightboxImg.src = lightboxPhotos[lightboxIndex] || '';
-            const multi = lightboxPhotos.length > 1;
-            lightboxPrev.classList.toggle('show', multi);
-            lightboxNext.classList.toggle('show', multi);
-        }
-        function closeLightbox() {
-            lightbox.classList.remove('open');
-            lightboxImg.src = ''; lightboxPhotos = [];
-            document.body.style.overflow = '';
-        }
+        function openLightbox(photos, idx) { lightboxPhotos = photos; lightboxIndex = idx; showLightboxSlide(); lightbox.classList.add('open'); document.body.style.overflow = 'hidden'; }
+        function showLightboxSlide() { lightboxImg.src = lightboxPhotos[lightboxIndex] || ''; const multi = lightboxPhotos.length > 1; lightboxPrev.classList.toggle('show', multi); lightboxNext.classList.toggle('show', multi); }
+        function closeLightbox() { lightbox.classList.remove('open'); lightboxImg.src = ''; lightboxPhotos = []; document.body.style.overflow = ''; }
         lightboxClose.addEventListener('click', closeLightbox);
         lightbox.addEventListener('click', e => { if (e.target === lightbox || e.target === lightboxImg) closeLightbox(); });
         lightboxPrev.addEventListener('click', e => { e.stopPropagation(); lightboxIndex = (lightboxIndex - 1 + lightboxPhotos.length) % lightboxPhotos.length; showLightboxSlide(); });
         lightboxNext.addEventListener('click', e => { e.stopPropagation(); lightboxIndex = (lightboxIndex + 1) % lightboxPhotos.length; showLightboxSlide(); });
-        document.addEventListener('keydown', e => {
-            if (!lightbox.classList.contains('open')) return;
-            if (e.key === 'Escape') closeLightbox();
-            if (e.key === 'ArrowLeft')  { lightboxIndex = (lightboxIndex-1+lightboxPhotos.length)%lightboxPhotos.length; showLightboxSlide(); }
-            if (e.key === 'ArrowRight') { lightboxIndex = (lightboxIndex+1)%lightboxPhotos.length; showLightboxSlide(); }
-        });
-
-        let lbTouchX = 0;
-        lightbox.addEventListener('touchstart', e => { lbTouchX = e.touches[0].clientX; }, { passive: true });
-        lightbox.addEventListener('touchend', e => {
-            const dx = e.changedTouches[0].clientX - lbTouchX;
-            if (Math.abs(dx) < 40) return;
-            if (dx < 0) { lightboxIndex = (lightboxIndex+1)%lightboxPhotos.length; showLightboxSlide(); }
-            else        { lightboxIndex = (lightboxIndex-1+lightboxPhotos.length)%lightboxPhotos.length; showLightboxSlide(); }
-        }, { passive: true });
-
-        copyWaitingCodeBtn.addEventListener('click', () => {
-            if (!currentRoomId) return;
-            navigator.clipboard.writeText(currentRoomId).then(() => {
-                copyWaitingCodeBtn.textContent = 'Copied!';
-                setTimeout(() => copyWaitingCodeBtn.textContent = 'Copy', 1500);
-            });
-        });
-        document.getElementById('backFromCreate').addEventListener('click',   () => showScreen('intro'));
+        document.addEventListener('keydown', e => { if (!lightbox.classList.contains('open')) return; if (e.key === 'Escape') closeLightbox(); if (e.key === 'ArrowLeft') { lightboxIndex = (lightboxIndex-1+lightboxPhotos.length)%lightboxPhotos.length; showLightboxSlide(); } if (e.key === 'ArrowRight') { lightboxIndex = (lightboxIndex+1)%lightboxPhotos.length; showLightboxSlide(); } });
+        let lbTouchX = 0; lightbox.addEventListener('touchstart', e => { lbTouchX = e.touches[0].clientX; }, { passive: true }); lightbox.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - lbTouchX; if (Math.abs(dx) < 40) return; if (dx < 0) { lightboxIndex = (lightboxIndex+1)%lightboxPhotos.length; showLightboxSlide(); } else { lightboxIndex = (lightboxIndex-1+lightboxPhotos.length)%lightboxPhotos.length; showLightboxSlide(); } }, { passive: true });
+        copyWaitingCodeBtn.addEventListener('click', () => { if (!currentRoomId) return; navigator.clipboard.writeText(currentRoomId).then(() => { copyWaitingCodeBtn.textContent = 'Copied!'; setTimeout(() => copyWaitingCodeBtn.textContent = 'Copy', 1500); }); });
+        document.getElementById('backFromCreate').addEventListener('click', () => showScreen('intro'));
         document.getElementById('backFromJoinName').addEventListener('click', () => showScreen('intro'));
         document.getElementById('backFromJoinCode').addEventListener('click', () => showScreen('joinName'));
         cancelWaitingBtn.addEventListener('click', () => terminateSession(false));
-        terminateBtn.addEventListener('click',     () => terminateSession(false));
+        terminateBtn.addEventListener('click', () => terminateSession(false));
         document.getElementById('createBtn').addEventListener('click', () => showScreen('create'));
-        document.getElementById('joinBtn').addEventListener('click',   () => showScreen('joinName'));
-
+        document.getElementById('joinBtn').addEventListener('click', () => showScreen('joinName'));
         showScreen('intro');
         setPen();
     </script>
