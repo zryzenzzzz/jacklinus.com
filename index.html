@@ -2,109 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Jacklinus · Encrypted Chat</title>
-    <!-- Font Awesome for envelope icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { height: 100%; overflow-x: hidden; }
-        body {
-            background: #f0f0f0;
-            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 24px;
-            position: relative;
-        }
-        /* TOP-RIGHT EMAIL — pure black icon + text, no background, no rounded container */
-        .top-right-email {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            background: transparent;
-            padding: 0;
-            border: none;
-            box-shadow: none;
-            backdrop-filter: none;
-            transition: opacity 0.2s;
-        }
-        .top-right-email i {
-            font-size: 22px;
-            color: #000;
-            -webkit-text-stroke: 0;
-            -webkit-text-fill-color: #000;
-            display: inline-block;
-            line-height: 1;
-        }
-        .top-right-email span {
-            font-size: 16px;
-            font-weight: 500;
-            color: #000;
-            letter-spacing: 0.2px;
-            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-        }
-        .top-right-email:hover {
-            opacity: 0.7;
-        }
-
-        /* Mobile inline: hidden on desktop, shown above video */
-        .mobile-email-inline {
-            display: none;
-            width: 100%;
-            max-width: 1000px;
-            margin-top: 24px;
-            margin-bottom: 4px;
-            text-align: left;
-            padding-left: 4px;
-            text-decoration: none;
-            align-items: center;
-            gap: 10px;
-            background: transparent;
-            border: none;
-        }
-        .mobile-email-inline i {
-            font-size: 20px;
-            color: #000;
-            -webkit-text-stroke: 0;
-            -webkit-text-fill-color: #000;
-        }
-        .mobile-email-inline span {
-            font-size: 15px;
-            font-weight: 500;
-            color: #000;
-            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-        }
-        .mobile-email-inline:hover {
-            opacity: 0.7;
-        }
-
+        html, body { height: 100%; overflow-x: hidden; background: #f0f0f0; font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+        body { display: flex; flex-direction: column; align-items: center; padding: 40px 24px; position: relative; min-height: 100vh; }
+        .top-right-email { position: fixed; top: 30px; right: 30px; z-index: 999; display: flex; align-items: center; gap: 10px; text-decoration: none; background: transparent; padding: 0; border: none; transition: opacity 0.2s; }
+        .top-right-email i { font-size: 22px; color: #000; -webkit-text-stroke: 0; -webkit-text-fill-color: #000; line-height: 1; }
+        .top-right-email span { font-size: 16px; font-weight: 500; color: #000; letter-spacing: 0.2px; }
+        .top-right-email:hover { opacity: 0.7; }
+        .mobile-email-inline { display: none; width: 100%; max-width: 1000px; margin-top: 24px; margin-bottom: 4px; text-align: left; padding-left: 4px; text-decoration: none; align-items: center; gap: 10px; background: transparent; border: none; }
+        .mobile-email-inline i { font-size: 20px; color: #000; -webkit-text-stroke: 0; -webkit-text-fill-color: #000; }
+        .mobile-email-inline span { font-size: 15px; font-weight: 500; color: #000; }
+        .mobile-email-inline:hover { opacity: 0.7; }
         @media (max-width: 700px) {
             body { padding: 16px 12px 20px; justify-content: flex-start; }
-            .top-right-email {
-                display: none !important;
-            }
-            .mobile-email-inline {
-                display: flex !important;
-            }
+            .top-right-email { display: none !important; }
+            .mobile-email-inline { display: flex !important; }
             .page-logo { top: 16px; left: 14px; }
             .page-logo img { width: 50px; height: 50px; }
             .linkedin-image { max-width: 300px; }
             .above-tagline { font-size: 13px; }
-            .action-buttons { gap: 12px; }
             .intro-screen { padding: 20px 24px 36px; }
             .intro-title-img { max-width: 200px; }
             .game-container { border-radius: 20px; min-height: 400px; }
-            .chat-draw-room { position: relative !important; inset: auto !important; flex-direction: column; height: auto !important; min-height: 0; }
-            .chat-section { height: 50vh; min-height: 300px; overflow: hidden; border-right: none; border-bottom: 1px solid #222; }
-            .draw-section { height: 200px; border-left: none; border-top: 1px solid #222; flex-shrink: 0; }
+            .chat-draw-room { flex-direction: column; height: auto !important; min-height: 0; position: relative !important; inset: auto !important; }
+            .chat-section { height: 50vh; min-height: 300px; overflow: hidden; border-right: none; border-bottom: 1px solid #222; flex: 0 0 auto; }
+            .draw-section { height: 0; border-left: none; border-top: 1px solid #222; flex-shrink: 0; display: flex; flex-direction: column; transition: height 0.25s ease, opacity 0.2s ease, padding 0.2s ease; overflow: hidden; opacity: 0; pointer-events: none; padding: 0; min-height: 0; }
+            .draw-section.open { height: 200px; opacity: 1; pointer-events: auto; border-top-width: 1px; padding: 0; }
+            .draw-section .draw-header { flex-shrink: 0; }
+            .draw-section canvas { flex: 1; min-height: 100px; }
             .msg-photo { width: 80px; height: 80px; }
             .send-btn { padding: 0 16px; font-size: 15px; }
             .chat-input { font-size: 16px; }
@@ -118,25 +47,12 @@
             .control-btn { font-size: 15px; min-width: 28px; min-height: 28px; }
             .time-display { font-size: 11px; min-width: 70px; }
             .volume-container:hover .volume-slider, .volume-slider.active { width: 40px; }
+            .draw-toggle-btn { display: flex !important; }
         }
-
-        /* All original styles (unchanged) */
         .page-logo { position: fixed; top: 30px; left: 30px; z-index: 100; }
         .page-logo img { width: 80px; height: 80px; object-fit: contain; display: block; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1)); }
-        /* LinkedIn image — now just a static image, no link */
-        .linkedin-image-wrapper {
-            display: block;
-            text-align: center;
-            margin-bottom: 20px;
-            cursor: default;
-        }
-        .linkedin-image {
-            max-width: 500px;
-            width: 90%;
-            height: auto;
-            display: inline-block;
-            pointer-events: none; /* disables any click interaction */
-        }
+        .linkedin-image-wrapper { display: block; text-align: center; margin-bottom: 20px; cursor: default; }
+        .linkedin-image { max-width: 500px; width: 90%; height: auto; display: inline-block; pointer-events: none; }
         .above-tagline { text-align: center; margin-bottom: 20px; font-size: 16px; font-weight: 500; color: #333; letter-spacing: 0.3px; }
         .game-container { width: 100%; max-width: 1000px; min-width: 320px; background: #000; border-radius: 28px; box-shadow: 0px 4px 16px rgba(0,0,0,0.35), 0px 34px 44px rgba(0,0,0,0.17); overflow: hidden; position: relative; min-height: 480px; transition: min-height 0.2s ease; flex-shrink: 0; }
         .screen-base { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.3s ease; opacity: 0; pointer-events: none; }
@@ -155,12 +71,14 @@
         .error-msg { color: #ff8a7a; font-size: 12px; margin-top: 10px; text-align: center; }
         .back-link { margin-top: 24px; color: #888; font-size: 13px; cursor: pointer; background: none; border: none; font-family: inherit; }
         .waiting-msg { color: #ccc; margin-top: 20px; font-size: 14px; }
-        .chat-draw-room { display: none; position: absolute; inset: 0; flex-direction: row; z-index: 10; background: #0f0f12; }
+        .chat-draw-room { display: none; flex-direction: row; z-index: 10; background: #0f0f12; position: absolute; inset: 0; }
         .chat-draw-room.active { display: flex; }
         .chat-section { flex: 3; display: flex; flex-direction: column; background: #000; border-right: 1px solid #222; min-height: 0; overflow: hidden; }
         .chat-header { flex-shrink: 0; padding: 14px 20px; border-bottom: 1px solid #1e1e1e; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
         .room-code-badge { background: #1a1a1a; border-radius: 40px; padding: 6px 16px; font-size: 12px; font-family: monospace; color: #aaa; }
-        .online-badge { font-size: 12px; color: #4cd964; background: #1a1a1a; padding: 4px 12px; border-radius: 20px; }
+        .online-badge { font-size: 12px; color: #4cd964; background: #1a1a1a; padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
+        .online-badge .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #4cd964; flex-shrink: 0; }
+        .online-badge .dot.yellow { background: #f7b731; }
         .messages-area { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
         .messages-area::-webkit-scrollbar { width: 5px; }
         .messages-area::-webkit-scrollbar-track { background: #111; }
@@ -188,13 +106,14 @@
         .paperclip-btn svg { width: 19px; height: 19px; }
         .chat-input { flex: 1; background: #1c1c1e; border: none; border-radius: 30px; padding: 11px 16px; color: #fff; font-size: 14px; outline: none; font-family: inherit; font-size: 16px; }
         .send-btn { background: #fff; border: none; border-radius: 30px; padding: 0 20px; font-weight: 600; cursor: pointer; height: 40px; font-family: inherit; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
-        .draw-section { flex: 2; background: #0a0a0c; display: flex; flex-direction: column; border-left: 1px solid #222; min-height: 0; }
+        .draw-section { flex: 2; background: #0a0a0c; display: flex; flex-direction: column; border-left: 1px solid #222; min-height: 0; position: relative; transition: height 0.25s ease, opacity 0.2s ease; }
         .draw-header { flex-shrink: 0; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
         .draw-header span { font-size: 13px; font-weight: 500; color: #ddd; }
-        .draw-tools { display: flex; gap: 8px; }
+        .draw-tools { display: flex; gap: 8px; align-items: center; }
         .tool-btn { background: #1c1c1e; border: none; border-radius: 30px; padding: 6px 14px; color: #fff; font-size: 12px; cursor: pointer; font-family: inherit; -webkit-tap-highlight-color: transparent; }
         .tool-btn:active { opacity: 0.65; }
-        canvas { flex: 1; width: 100%; background: #111; cursor: crosshair; touch-action: none; display: block; }
+        .draw-toggle-btn { display: none; background: none; border: none; color: #fff; font-size: 18px; cursor: pointer; padding: 4px 8px; -webkit-tap-highlight-color: transparent; }
+        canvas { flex: 1; width: 100%; background: #111; cursor: crosshair; touch-action: none; display: block; min-height: 120px; }
         .glass-btn { position: fixed; bottom: 24px; right: 24px; padding: 11px 24px; font-size: 14px; color: #fff; border: none; background: rgba(0,0,0,0.78); border-radius: 40px; backdrop-filter: blur(12px); cursor: pointer; z-index: 200; display: none; font-family: inherit; font-weight: 500; letter-spacing: 0.4px; box-shadow: 0 4px 14px rgba(0,0,0,0.35); -webkit-tap-highlight-color: transparent; }
         .glass-btn.visible { display: block; }
         .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.93); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px; touch-action: manipulation; }
@@ -236,26 +155,19 @@
         .video-section.fullscreen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh; margin: 0; border-radius: 0; z-index: 9998; background: #000; }
         .video-section.fullscreen .video-wrapper video { min-height: 100vh; max-height: 100vh; object-fit: contain; }
         .video-section.fullscreen .video-controls { padding: 50px 24px 20px 24px; }
+        @media (max-width: 700px) {
+            .draw-section { height: 0; opacity: 0; pointer-events: none; border-top-width: 0; padding: 0; min-height: 0; }
+            .draw-section.open { height: 200px; opacity: 1; pointer-events: auto; border-top-width: 1px; }
+        }
     </style>
 </head>
 <body>
-    <!-- TOP-RIGHT EMAIL: pure black icon + text -->
     <a href="mailto:service@jacklinus.com" class="top-right-email" aria-label="Email service@jacklinus.com">
-        <i class="fas fa-envelope"></i>
-        <span>service@jacklinus.com</span>
+        <i class="fas fa-envelope"></i><span>service@jacklinus.com</span>
     </a>
-
-    <div class="page-logo">
-        <img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20black.png?raw=true" alt="Jacklinus">
-    </div>
-
-    <!-- LinkedIn image — static, no link, just the image -->
-    <div class="linkedin-image-wrapper">
-        <img class="linkedin-image" src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Linked%20In%20Redirect.png?raw=true" alt="Jacklinus LinkedIn">
-    </div>
-
+    <div class="page-logo"><img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20black.png?raw=true" alt="Jacklinus"></div>
+    <div class="linkedin-image-wrapper"><img class="linkedin-image" src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Linked%20In%20Redirect.png?raw=true" alt="Jacklinus LinkedIn"></div>
     <div class="above-tagline">Chat securely with Chat Tab by jacklinus</div>
-
     <div class="game-container" id="gameContainer">
         <div id="introScreen" class="screen-base intro-screen active">
             <img class="intro-title-img" src="https://raw.githubusercontent.com/zryzenzzzz/jacklinus.com/main/Photos/smallersecure.png" alt="Secure Encrypted Chats">
@@ -298,33 +210,30 @@
             <button class="back-link" id="cancelWaitingBtn">← Cancel</button>
         </div>
         <div id="chatDrawRoom" class="chat-draw-room">
-            <div class="drag-overlay" id="dragOverlay">
-                <div class="drag-overlay-label">📎 Drop photos to attach</div>
-            </div>
+            <div class="drag-overlay" id="dragOverlay"><div class="drag-overlay-label">📎 Drop photos to attach</div></div>
             <div class="chat-section">
                 <div class="chat-header">
                     <span class="room-code-badge" id="roomCodeDisplay"></span>
-                    <span class="online-badge" id="peerStatus">⚫ Connecting...</span>
+                    <span class="online-badge" id="peerStatus"><span class="dot yellow"></span> Connecting...</span>
                 </div>
                 <div class="messages-area" id="messagesList"></div>
                 <div class="chat-input-area">
                     <div class="photo-preview-queue" id="photoPreviewQueue"></div>
                     <div class="chat-input-row">
                         <input type="file" id="photoFileInput" accept="image/*" multiple style="display:none">
-                        <button class="paperclip-btn" id="paperclipBtn" title="Send files" aria-label="Send files">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48"/>
-                            </svg>
+                        <button class="paperclip-btn" id="paperclipBtn" aria-label="Send files">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
                         </button>
                         <input type="text" id="chatInput" class="chat-input" placeholder="Type message..." autocomplete="off">
                         <button id="sendMsgBtn" class="send-btn">Send</button>
                     </div>
                 </div>
             </div>
-            <div class="draw-section">
+            <div class="draw-section" id="drawSection">
                 <div class="draw-header">
                     <span>Live drawing</span>
                     <div class="draw-tools">
+                        <button class="draw-toggle-btn" id="drawToggleBtn" aria-label="Toggle drawing">▶</button>
                         <button id="penTool" class="tool-btn">Pen</button>
                         <button id="eraserTool" class="tool-btn">Eraser</button>
                         <button id="clearCanvasBtn" class="tool-btn">Clear</button>
@@ -334,25 +243,17 @@
             </div>
         </div>
     </div>
-
-    <!-- MOBILE INLINE EMAIL (hidden on desktop, shown above video) -->
     <a href="mailto:service@jacklinus.com" class="mobile-email-inline" aria-label="Email service@jacklinus.com">
-        <i class="fas fa-envelope"></i>
-        <span>service@jacklinus.com</span>
+        <i class="fas fa-envelope"></i><span>service@jacklinus.com</span>
     </a>
-
-    <div class="video-label">
-        Watch Video <span class="arrow-down">↓</span>
-    </div>
+    <div class="video-label">Watch Video <span class="arrow-down">↓</span></div>
     <div class="video-section" id="videoSection">
         <div class="video-wrapper">
             <video id="promoVideo" playsinline preload="metadata">
                 <source src="https://www.dropbox.com/scl/fi/h3wwurrlgc5wiwje7o687/0721-3.mp4?rlkey=ifeutllme14ihnbxoyw4hg7zd&st=ohcuh3sm&raw=1" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
-            <button class="custom-play-btn" id="customPlayBtn" aria-label="Play video">
-                <span class="play-icon"></span>
-            </button>
+            <button class="custom-play-btn" id="customPlayBtn" aria-label="Play video"><span class="play-icon"></span></button>
             <div class="video-controls" id="videoControls">
                 <div class="controls-row">
                     <button class="control-btn" id="playPauseBtn" aria-label="Play/Pause"><span id="playPauseIcon">▶</span></button>
@@ -369,17 +270,14 @@
             </div>
         </div>
     </div>
-
     <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
         <button class="lightbox-close" id="lightboxClose" aria-label="Close">✕</button>
         <button class="lightbox-nav" id="lightboxPrev" aria-label="Previous">&#8249;</button>
         <img id="lightboxImg" src="" alt="Full size photo">
         <button class="lightbox-nav" id="lightboxNext" aria-label="Next">&#8250;</button>
     </div>
-
     <button class="glass-btn" id="terminateBtn">Terminate Session</button>
 
-    <!-- Firebase & script (unchanged) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
     <script>
@@ -435,11 +333,49 @@
         const volumeFill = document.getElementById('volumeFill');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         const videoSection = document.getElementById('videoSection');
+        const drawSection = document.getElementById('drawSection');
+        const drawToggleBtn = document.getElementById('drawToggleBtn');
         const screens = { intro: document.getElementById('introScreen'), create: document.getElementById('createFlow'), joinName: document.getElementById('joinFlowName'), joinCode: document.getElementById('joinFlowCode'), waiting: document.getElementById('waitingFlow'), chat: chatDrawRoom };
         let ctx = drawCanvas.getContext('2d');
         let currentRoomId = null, myName = '', isCreator = false, roomRef = null, peerJoined = false, isDrawing = false, lastX = 0, lastY = 0, currentTool = 'pen', terminationListener = null, stagedPhotos = [], lightboxPhotos = [], lightboxIndex = 0;
         const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
         let controlsTimeout = null;
+        let drawOpen = false;
+
+        // Toggle drawing section: start closed on mobile, open on desktop
+        if (isMobile) {
+            drawOpen = false;
+            drawSection.classList.remove('open');
+            drawToggleBtn.textContent = '▶';
+        } else {
+            drawOpen = true;
+            drawSection.classList.add('open');
+            drawToggleBtn.textContent = '◀';
+        }
+
+        drawToggleBtn.addEventListener('click', () => {
+            drawOpen = !drawOpen;
+            drawSection.classList.toggle('open', drawOpen);
+            drawToggleBtn.textContent = drawOpen ? '◀' : '▶';
+            // resize canvas if opening
+            if (drawOpen) {
+                setTimeout(() => {
+                    const container = drawCanvas.parentElement;
+                    const w = Math.max(container.clientWidth - 2, 10);
+                    const h = isMobile ? 180 : 280;
+                    drawCanvas.width = w;
+                    drawCanvas.height = h;
+                    ctx = drawCanvas.getContext('2d');
+                    ctx.fillStyle = '#111';
+                    ctx.fillRect(0, 0, w, h);
+                    ctx.strokeStyle = '#FFF';
+                    ctx.lineWidth = 3;
+                    ctx.lineCap = 'round';
+                    loadCanvasFromDb();
+                }, 50);
+            }
+        });
+
         function togglePlay() { if (promoVideo.paused) { promoVideo.play().catch(()=>{}); customPlayBtn.style.display='none'; playPauseIcon.textContent='⏸'; } else { promoVideo.pause(); customPlayBtn.style.display='flex'; playPauseIcon.textContent='▶'; } }
         function updateProgress() { if (promoVideo.duration) { const p = (promoVideo.currentTime / promoVideo.duration) * 100; progressBar.style.width = p + '%'; timeDisplay.textContent = formatTime(promoVideo.currentTime) + ' / ' + formatTime(promoVideo.duration); } }
         function formatTime(seconds) { if (isNaN(seconds)) return '0:00'; const m = Math.floor(seconds / 60), s = Math.floor(seconds % 60); return m + ':' + (s < 10 ? '0' : '') + s; }
@@ -470,6 +406,7 @@
         document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
         function handleFullscreenChange() { if (document.fullscreenElement || document.webkitFullscreenElement) videoSection.classList.add('fullscreen'); else videoSection.classList.remove('fullscreen'); }
         promoVideo.volume = 0.8; volumeFill.style.width = '80%'; updateVolumeIcon();
+
         function showScreen(name) { Object.values(screens).forEach(s => s && s.classList.remove('active')); if (screens[name]) screens[name].classList.add('active'); if (name === 'chat') { gameContainer.style.minHeight = isMobile ? '0' : '600px'; terminateBtn.classList.add('visible'); } else { gameContainer.style.minHeight = '480px'; terminateBtn.classList.remove('visible'); chatDrawRoom.style.position = ''; } }
         function cleanupRoom() { if (roomRef) { if (terminationListener) roomRef.child('termination').off('value', terminationListener); if (myName) roomRef.child('activeUsers').child(myName).remove(); if (isCreator) roomRef.child('peerJoined').set(false); roomRef.off(); } roomRef = null; currentRoomId = null; peerJoined = false; isCreator = false; }
         async function terminateSession(isRemote = false, byName = null) { if (!isRemote && roomRef && myName) { try { await roomRef.child('termination').set({ terminatedBy: myName, timestamp: Date.now() }); } catch(_) {} } cleanupRoom(); showScreen('intro'); if (byName && byName !== myName) alert(`${byName} has terminated the session.`); if (ctx) { ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); } messagesList.innerHTML = ''; clearStagedPhotos(); }
@@ -478,16 +415,16 @@
         confirmCreateBtn.addEventListener('click', async () => { const name = createNameInput.value.trim(); if (!name) { createError.innerText = 'Please enter your name'; return; } myName = name; createError.innerText = ''; const code = generateRoomCode(); currentRoomId = code; isCreator = true; roomCodeSpanWait.textContent = code; showScreen('waiting'); roomRef = db.ref(`chat_tabs/${code}`); try { await roomRef.set({ creator: myName, created: Date.now(), peerJoined: false, activeUsers: { [myName]: true } }); setupRoomListeners(); } catch(e) { waitingError.innerText = 'Connection error. Try again.'; console.error(e); } });
         nextToCodeBtn.addEventListener('click', () => { const name = joinNameInput.value.trim(); if (!name) { joinNameError.innerText = 'Please enter your name'; return; } myName = name; joinNameError.innerText = ''; showScreen('joinCode'); });
         submitJoinBtn.addEventListener('click', async () => { const code = joinCodeInput.value.trim().toUpperCase(); if (code.length !== 6) { joinCodeError.innerText = 'Enter 6-digit code'; return; } const ref = db.ref(`chat_tabs/${code}`); const snap = await ref.once('value'); if (!snap.exists()) { joinCodeError.innerText = 'Room not found'; return; } const d = snap.val(); if (d.peerJoined && Object.keys(d.activeUsers || {}).length >= 2) { joinCodeError.innerText = 'Room is full'; return; } currentRoomId = code; isCreator = false; roomRef = ref; await roomRef.child('peerJoined').set(true); await roomRef.child('activeUsers').update({ [myName]: true }); setupRoomListeners(); enterChatRoom(); });
-        function setupRoomListeners() { if (!roomRef) return; roomRef.child('peerJoined').on('value', snap => { if (snap.val() === true && !peerJoined) { peerJoined = true; if (screens.waiting.classList.contains('active')) enterChatRoom(); } }); const seenKeys = new Set(); roomRef.child('messages').once('value', snap => { const raw = snap.val(); if (!raw) return; messagesList.innerHTML = ''; const entries = Object.entries(raw).sort((a, b) => (a[1].timestamp || 0) - (b[1].timestamp || 0)); entries.forEach(([k, msg]) => { seenKeys.add(k); renderMessage(msg, false); }); }); roomRef.child('messages').on('child_added', snap => { if (seenKeys.has(snap.key)) return; seenKeys.add(snap.key); renderMessage(snap.val(), true); }); roomRef.child('photos').on('child_added', snap => { const msgKey = snap.key; setTimeout(() => { const bubble = document.querySelector(`[data-msgkey="${msgKey}"]`); if (bubble && !bubble.querySelector('.msg-photos')) { const photoMap = snap.val(); if (photoMap) { const photosArr = Object.values(photoMap); injectPhotosIntoBubble(bubble, photosArr); } } }, 50); }); roomRef.child('drawing/strokes').on('child_added', snap => { const s = snap.val(); if (s && s.sender !== myName) drawRemoteStroke(s); }); roomRef.child('drawing/clearFlag').on('value', snap => { if (snap.val() === true && ctx) { ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); roomRef.child('drawing/clearFlag').set(false); } }); roomRef.child('activeUsers').on('value', snap => { const cnt = Object.keys(snap.val() || {}).length; peerStatus.innerText = cnt >= 2 ? '🟢 Connected • 2 users' : '🟡 Waiting for peer...'; }); setupTerminationListener(); }
+        function setupRoomListeners() { if (!roomRef) return; roomRef.child('peerJoined').on('value', snap => { if (snap.val() === true && !peerJoined) { peerJoined = true; if (screens.waiting.classList.contains('active')) enterChatRoom(); } }); const seenKeys = new Set(); roomRef.child('messages').once('value', snap => { const raw = snap.val(); if (!raw) return; messagesList.innerHTML = ''; const entries = Object.entries(raw).sort((a, b) => (a[1].timestamp || 0) - (b[1].timestamp || 0)); entries.forEach(([k, msg]) => { seenKeys.add(k); renderMessage(msg, false); }); }); roomRef.child('messages').on('child_added', snap => { if (seenKeys.has(snap.key)) return; seenKeys.add(snap.key); renderMessage(snap.val(), true); }); roomRef.child('photos').on('child_added', snap => { const msgKey = snap.key; setTimeout(() => { const bubble = document.querySelector(`[data-msgkey="${msgKey}"]`); if (bubble && !bubble.querySelector('.msg-photos')) { const photoMap = snap.val(); if (photoMap) { const photosArr = Object.values(photoMap); injectPhotosIntoBubble(bubble, photosArr); } } }, 50); }); roomRef.child('drawing/strokes').on('child_added', snap => { const s = snap.val(); if (s && s.sender !== myName) drawRemoteStroke(s); }); roomRef.child('drawing/clearFlag').on('value', snap => { if (snap.val() === true && ctx) { ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); roomRef.child('drawing/clearFlag').set(false); } }); roomRef.child('activeUsers').on('value', snap => { const cnt = Object.keys(snap.val() || {}).length; const dot = peerStatus.querySelector('.dot'); if (cnt >= 2) { dot.className = 'dot'; dot.style.background = '#4cd964'; peerStatus.innerHTML = `<span class="dot" style="background:#4cd964"></span> Connected • 2 users`; } else { dot.className = 'dot yellow'; dot.style.background = '#f7b731'; peerStatus.innerHTML = `<span class="dot yellow" style="background:#f7b731"></span> Waiting for peer...`; } }); setupTerminationListener(); }
         function renderMessage(msg, animate) { if (!msg) return; const isOwn = msg.sender === myName; const div = document.createElement('div'); div.className = `message-bubble${isOwn ? ' message-own' : ''}`; if (msg.msgKey) div.dataset.msgkey = msg.msgKey; if (animate) div.style.animation = 'chatMessageIn 0.32s cubic-bezier(0.2,0.9,0.4,1.1) forwards'; const nameEl = document.createElement('div'); nameEl.className = 'msg-name'; nameEl.textContent = msg.sender || ''; div.appendChild(nameEl); if (msg.text && msg.text.trim()) { const textEl = document.createElement('div'); textEl.className = 'msg-text'; textEl.textContent = msg.text; div.appendChild(textEl); } if (msg.photos && msg.photos.length > 0) { injectPhotosIntoBubble(div, msg.photos); } messagesList.appendChild(div); scrollToBottom(); }
         function injectPhotosIntoBubble(bubble, photosArr) { if (!photosArr || photosArr.length === 0) return; if (bubble.querySelector('.msg-photos')) return; const wrap = document.createElement('div'); wrap.className = 'msg-photos'; const urls = photosArr.map(p => p.dataUrl).filter(Boolean); photosArr.forEach((photo, idx) => { if (!photo || !photo.dataUrl) return; const img = document.createElement('img'); img.className = 'msg-photo'; img.alt = photo.name || 'photo'; img.loading = 'lazy'; img.addEventListener('load', scrollToBottom, { once: true }); img.addEventListener('click', () => openLightbox(urls, idx)); img.src = photo.dataUrl; wrap.appendChild(img); }); bubble.appendChild(wrap); scrollToBottom(); }
         function scrollToBottom() { requestAnimationFrame(() => { messagesList.scrollTop = messagesList.scrollHeight; }); }
         async function enterChatRoom() { showScreen('chat'); roomCodeDisplay.innerText = `Room: ${currentRoomId}`; initCanvas(); await loadCanvasFromDb(); }
-        async function loadCanvasFromDb() { if (!roomRef) return; const snap = await roomRef.child('drawing/strokes').once('value'); const strokes = snap.val(); if (strokes && ctx) { ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); Object.values(strokes).sort((a,b) => a.timestamp - b.timestamp).forEach(drawRemoteStroke); } }
+        async function loadCanvasFromDb() { if (!roomRef || !ctx) return; const snap = await roomRef.child('drawing/strokes').once('value'); const strokes = snap.val(); if (strokes) { ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); Object.values(strokes).sort((a,b) => a.timestamp - b.timestamp).forEach(drawRemoteStroke); } }
         function drawRemoteStroke(s) { if (!ctx) return; ctx.beginPath(); ctx.lineWidth = s.lineWidth || 3; ctx.lineCap = 'round'; if (s.tool === 'eraser') { ctx.globalCompositeOperation = 'destination-out'; ctx.strokeStyle = 'rgba(0,0,0,1)'; } else { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = s.color || '#FFF'; } ctx.moveTo(s.x0, s.y0); ctx.lineTo(s.x1, s.y1); ctx.stroke(); ctx.globalCompositeOperation = 'source-over'; }
         let resizeObserver = null;
-        function initCanvas() { const doResize = () => { const container = drawCanvas.parentElement; const w = Math.max(container.clientWidth - 2, 10); const h = isMobile ? 180 : 280; drawCanvas.width = w; drawCanvas.height = h; ctx = drawCanvas.getContext('2d'); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, w, h); ctx.strokeStyle = '#FFF'; ctx.lineWidth = 3; ctx.lineCap = 'round'; loadCanvasFromDb(); }; doResize(); if (window.ResizeObserver) { if (resizeObserver) resizeObserver.disconnect(); resizeObserver = new ResizeObserver(doResize); resizeObserver.observe(drawCanvas.parentElement); } else { window.addEventListener('resize', doResize); } attachDrawingEvents(); }
-        function attachDrawingEvents() { const getXY = e => { const rect = drawCanvas.getBoundingClientRect(); const sx = drawCanvas.width / rect.width; const sy = drawCanvas.height / rect.height; const src = e.touches ? e.touches[0] : e; return { x: Math.min(Math.max(0, (src.clientX - rect.left) * sx), drawCanvas.width), y: Math.min(Math.max(0, (src.clientY - rect.top) * sy), drawCanvas.height) }; }; const onStart = e => { e.preventDefault(); isDrawing = true; const {x,y} = getXY(e); lastX=x; lastY=y; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+0.1,y+0.1); ctx.stroke(); }; const onMove = e => { if (!isDrawing) return; e.preventDefault(); const {x,y} = getXY(e); ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke(); if (roomRef) roomRef.child('drawing/strokes').push({ x0:lastX,y0:lastY,x1:x,y1:y, tool:currentTool, color: currentTool==='eraser'?'#000':'#FFF', lineWidth: currentTool==='eraser'?15:3, sender:myName, timestamp:Date.now() }); lastX=x; lastY=y; }; const onEnd = () => { isDrawing = false; }; drawCanvas.addEventListener('mousedown', onStart); drawCanvas.addEventListener('mousemove', onMove); drawCanvas.addEventListener('mouseup', onEnd); drawCanvas.addEventListener('mouseleave',onEnd); drawCanvas.addEventListener('touchstart',onStart, { passive: false }); drawCanvas.addEventListener('touchmove', onMove, { passive: false }); drawCanvas.addEventListener('touchend', onEnd); }
+        function initCanvas() { const doResize = () => { const container = drawCanvas.parentElement; if (!drawOpen) { drawCanvas.width = 0; drawCanvas.height = 0; return; } const w = Math.max(container.clientWidth - 2, 10); const h = isMobile ? 180 : 280; drawCanvas.width = w; drawCanvas.height = h; ctx = drawCanvas.getContext('2d'); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, w, h); ctx.strokeStyle = '#FFF'; ctx.lineWidth = 3; ctx.lineCap = 'round'; loadCanvasFromDb(); }; doResize(); if (window.ResizeObserver) { if (resizeObserver) resizeObserver.disconnect(); resizeObserver = new ResizeObserver(doResize); resizeObserver.observe(drawCanvas.parentElement); } else { window.addEventListener('resize', doResize); } attachDrawingEvents(); }
+        function attachDrawingEvents() { const getXY = e => { const rect = drawCanvas.getBoundingClientRect(); const sx = drawCanvas.width / rect.width; const sy = drawCanvas.height / rect.height; const src = e.touches ? e.touches[0] : e; return { x: Math.min(Math.max(0, (src.clientX - rect.left) * sx), drawCanvas.width), y: Math.min(Math.max(0, (src.clientY - rect.top) * sy), drawCanvas.height) }; }; const onStart = e => { if (!drawOpen) return; e.preventDefault(); isDrawing = true; const {x,y} = getXY(e); lastX=x; lastY=y; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+0.1,y+0.1); ctx.stroke(); }; const onMove = e => { if (!isDrawing || !drawOpen) return; e.preventDefault(); const {x,y} = getXY(e); ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke(); if (roomRef) roomRef.child('drawing/strokes').push({ x0:lastX,y0:lastY,x1:x,y1:y, tool:currentTool, color: currentTool==='eraser'?'#000':'#FFF', lineWidth: currentTool==='eraser'?15:3, sender:myName, timestamp:Date.now() }); lastX=x; lastY=y; }; const onEnd = () => { isDrawing = false; }; drawCanvas.addEventListener('mousedown', onStart); drawCanvas.addEventListener('mousemove', onMove); drawCanvas.addEventListener('mouseup', onEnd); drawCanvas.addEventListener('mouseleave',onEnd); drawCanvas.addEventListener('touchstart',onStart, { passive: false }); drawCanvas.addEventListener('touchmove', onMove, { passive: false }); drawCanvas.addEventListener('touchend', onEnd); }
         function setPen() { currentTool='pen'; if(ctx){ ctx.globalCompositeOperation='source-over'; ctx.strokeStyle='#FFF'; ctx.lineWidth=3; } }
         function setEraser() { currentTool='eraser'; if(ctx){ ctx.globalCompositeOperation='destination-out'; ctx.lineWidth=15; } }
         penTool.addEventListener('click', setPen);
@@ -526,6 +463,11 @@
         document.getElementById('joinBtn').addEventListener('click', () => showScreen('joinName'));
         showScreen('intro');
         setPen();
+        // Ensure draw section starts closed on mobile
+        if (isMobile) {
+            drawSection.classList.remove('open');
+            drawToggleBtn.textContent = '▶';
+        }
     </script>
 </body>
 </html>
