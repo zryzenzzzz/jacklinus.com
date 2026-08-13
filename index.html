@@ -156,8 +156,9 @@
         .video-section.fullscreen .video-wrapper video { min-height: 100vh; max-height: 100vh; object-fit: contain; }
         .video-section.fullscreen .video-controls { padding: 50px 24px 20px 24px; }
         @media (max-width: 700px) {
-            .draw-section { height: 0; opacity: 0; pointer-events: none; border-top-width: 0; padding: 0; min-height: 0; }
-            .draw-section.open { height: 200px; opacity: 1; pointer-events: auto; border-top-width: 1px; }
+            .draw-section { height: 0 !important; opacity: 0 !important; pointer-events: none !important; border-top-width: 0 !important; padding: 0 !important; min-height: 0 !important; overflow: hidden !important; }
+            .draw-section.open { height: 200px !important; opacity: 1 !important; pointer-events: auto !important; border-top-width: 1px !important; padding: 0 !important; overflow: hidden !important; }
+            .chat-section { height: 100% !important; min-height: 300px; border-bottom: none; }
         }
     </style>
 </head>
@@ -342,7 +343,7 @@
         let controlsTimeout = null;
         let drawOpen = false;
 
-        // Toggle drawing section: start closed on mobile, open on desktop
+        // Mobile: start closed, Desktop: start open
         if (isMobile) {
             drawOpen = false;
             drawSection.classList.remove('open');
@@ -373,6 +374,10 @@
                     ctx.lineCap = 'round';
                     loadCanvasFromDb();
                 }, 50);
+            } else {
+                // when closed, clear canvas to save resources
+                drawCanvas.width = 0;
+                drawCanvas.height = 0;
             }
         });
 
@@ -463,7 +468,7 @@
         document.getElementById('joinBtn').addEventListener('click', () => showScreen('joinName'));
         showScreen('intro');
         setPen();
-        // Ensure draw section starts closed on mobile
+        // ensure mobile starts closed
         if (isMobile) {
             drawSection.classList.remove('open');
             drawToggleBtn.textContent = '▶';
