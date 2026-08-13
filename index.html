@@ -17,6 +17,7 @@
         .mobile-email-inline i { font-size: 20px; color: #000; -webkit-text-stroke: 0; -webkit-text-fill-color: #000; }
         .mobile-email-inline span { font-size: 15px; font-weight: 500; color: #000; }
         .mobile-email-inline:hover { opacity: 0.7; }
+        .mobile-draw-handle { display: none; }
         @media (max-width: 700px) {
             body { padding: 16px 12px 20px; justify-content: flex-start; }
             .top-right-email { display: none !important; }
@@ -29,9 +30,9 @@
             .intro-title-img { max-width: 200px; }
             .game-container { border-radius: 20px; min-height: 400px; }
             .chat-draw-room { flex-direction: column; height: auto !important; min-height: 0; position: relative !important; inset: auto !important; }
-            .chat-section { height: 50vh; min-height: 300px; overflow: hidden; border-right: none; border-bottom: 1px solid #222; flex: 0 0 auto; }
-            .draw-section { height: 0; border-left: none; border-top: 1px solid #222; flex-shrink: 0; display: flex; flex-direction: column; transition: height 0.25s ease, opacity 0.2s ease, padding 0.2s ease; overflow: hidden; opacity: 0; pointer-events: none; padding: 0; min-height: 0; }
-            .draw-section.open { height: 200px; opacity: 1; pointer-events: auto; border-top-width: 1px; padding: 0; }
+            .chat-section { height: 50vh; min-height: 300px; overflow: hidden; border-right: none; border-bottom: none; flex: 0 0 auto; }
+            .draw-section { height: 0; border-left: none; border-top: none; flex-shrink: 0; display: flex; flex-direction: column; transition: height 0.25s ease, opacity 0.2s ease, padding 0.2s ease; overflow: hidden; opacity: 0; pointer-events: none; padding: 0; min-height: 0; }
+            .draw-section.open { height: 200px; opacity: 1; pointer-events: auto; padding: 0; }
             .draw-section .draw-header { flex-shrink: 0; }
             .draw-section canvas { flex: 1; min-height: 100px; }
             .msg-photo { width: 80px; height: 80px; }
@@ -47,7 +48,27 @@
             .control-btn { font-size: 15px; min-width: 28px; min-height: 28px; }
             .time-display { font-size: 11px; min-width: 70px; }
             .volume-container:hover .volume-slider, .volume-slider.active { width: 40px; }
-            .draw-toggle-btn { display: flex !important; }
+            .mobile-draw-handle {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2px;
+                padding: 7px 0 6px;
+                background: #0a0a0c;
+                border-top: 1px solid #222;
+                border-bottom: 1px solid #222;
+                cursor: pointer;
+                flex-shrink: 0;
+                -webkit-tap-highlight-color: transparent;
+                user-select: none;
+                position: relative;
+                z-index: 5;
+                touch-action: manipulation;
+            }
+            .mobile-draw-handle:active { background: #141416; }
+            .mobile-draw-handle .handle-arrow { font-size: 15px; color: #fff; line-height: 1; transition: transform 0.25s ease; }
+            .mobile-draw-handle .handle-label { font-size: 10px; color: #999; letter-spacing: 0.6px; text-transform: uppercase; font-weight: 700; }
         }
         .page-logo { position: fixed; top: 30px; left: 30px; z-index: 100; }
         .page-logo img { width: 80px; height: 80px; object-fit: contain; display: block; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1)); }
@@ -112,7 +133,6 @@
         .draw-tools { display: flex; gap: 8px; align-items: center; }
         .tool-btn { background: #1c1c1e; border: none; border-radius: 30px; padding: 6px 14px; color: #fff; font-size: 12px; cursor: pointer; font-family: inherit; -webkit-tap-highlight-color: transparent; }
         .tool-btn:active { opacity: 0.65; }
-        .draw-toggle-btn { display: none; background: none; border: none; color: #fff; font-size: 18px; cursor: pointer; padding: 4px 8px; -webkit-tap-highlight-color: transparent; }
         canvas { flex: 1; width: 100%; background: #111; cursor: crosshair; touch-action: none; display: block; min-height: 120px; }
         .glass-btn { position: fixed; bottom: 24px; right: 24px; padding: 11px 24px; font-size: 14px; color: #fff; border: none; background: rgba(0,0,0,0.78); border-radius: 40px; backdrop-filter: blur(12px); cursor: pointer; z-index: 200; display: none; font-family: inherit; font-weight: 500; letter-spacing: 0.4px; box-shadow: 0 4px 14px rgba(0,0,0,0.35); -webkit-tap-highlight-color: transparent; }
         .glass-btn.visible { display: block; }
@@ -155,10 +175,6 @@
         .video-section.fullscreen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh; margin: 0; border-radius: 0; z-index: 9998; background: #000; }
         .video-section.fullscreen .video-wrapper video { min-height: 100vh; max-height: 100vh; object-fit: contain; }
         .video-section.fullscreen .video-controls { padding: 50px 24px 20px 24px; }
-        @media (max-width: 700px) {
-            .draw-section { height: 0; opacity: 0; pointer-events: none; border-top-width: 0; padding: 0; min-height: 0; }
-            .draw-section.open { height: 200px; opacity: 1; pointer-events: auto; border-top-width: 1px; }
-        }
     </style>
 </head>
 <body>
@@ -229,11 +245,15 @@
                     </div>
                 </div>
             </div>
+            <!-- Persistent mobile handle: always tappable (even while the drawing panel is fully collapsed) since it lives outside the collapsing/overflow-hidden draw-section -->
+            <div class="mobile-draw-handle" id="mobileDrawHandle" role="button" tabindex="0" aria-label="Toggle drawing panel" aria-expanded="false">
+                <span class="handle-arrow" id="handleArrow">▼</span>
+                <span class="handle-label">Draw</span>
+            </div>
             <div class="draw-section" id="drawSection">
                 <div class="draw-header">
                     <span>Live drawing</span>
                     <div class="draw-tools">
-                        <button class="draw-toggle-btn" id="drawToggleBtn" aria-label="Toggle drawing">▶</button>
                         <button id="penTool" class="tool-btn">Pen</button>
                         <button id="eraserTool" class="tool-btn">Eraser</button>
                         <button id="clearCanvasBtn" class="tool-btn">Clear</button>
@@ -277,7 +297,7 @@
         <button class="lightbox-nav" id="lightboxNext" aria-label="Next">&#8250;</button>
     </div>
     <button class="glass-btn" id="terminateBtn">Terminate Session</button>
-
+ 
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
     <script>
@@ -334,30 +354,34 @@
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         const videoSection = document.getElementById('videoSection');
         const drawSection = document.getElementById('drawSection');
-        const drawToggleBtn = document.getElementById('drawToggleBtn');
+        const mobileDrawHandle = document.getElementById('mobileDrawHandle');
+        const handleArrow = document.getElementById('handleArrow');
         const screens = { intro: document.getElementById('introScreen'), create: document.getElementById('createFlow'), joinName: document.getElementById('joinFlowName'), joinCode: document.getElementById('joinFlowCode'), waiting: document.getElementById('waitingFlow'), chat: chatDrawRoom };
         let ctx = drawCanvas.getContext('2d');
         let currentRoomId = null, myName = '', isCreator = false, roomRef = null, peerJoined = false, isDrawing = false, lastX = 0, lastY = 0, currentTool = 'pen', terminationListener = null, stagedPhotos = [], lightboxPhotos = [], lightboxIndex = 0;
         const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
         let controlsTimeout = null;
         let drawOpen = false;
-
-        // Toggle drawing section: start closed on mobile, open on desktop
+ 
+        // Drawing panel starts CLOSED on mobile so the chat gets the full screen; open on desktop where there's room for both side by side.
+        function setHandleState() {
+            if (!isMobile) return;
+            drawSection.classList.toggle('open', drawOpen);
+            handleArrow.textContent = drawOpen ? '▲' : '▼';
+            mobileDrawHandle.setAttribute('aria-expanded', drawOpen ? 'true' : 'false');
+        }
         if (isMobile) {
             drawOpen = false;
-            drawSection.classList.remove('open');
-            drawToggleBtn.textContent = '▶';
+            setHandleState();
         } else {
             drawOpen = true;
             drawSection.classList.add('open');
-            drawToggleBtn.textContent = '◀';
         }
-
-        drawToggleBtn.addEventListener('click', () => {
+ 
+        function toggleDrawPanel() {
             drawOpen = !drawOpen;
-            drawSection.classList.toggle('open', drawOpen);
-            drawToggleBtn.textContent = drawOpen ? '◀' : '▶';
-            // resize canvas if opening
+            setHandleState();
+            // Resize/redraw canvas once it becomes visible again
             if (drawOpen) {
                 setTimeout(() => {
                     const container = drawCanvas.parentElement;
@@ -372,10 +396,17 @@
                     ctx.lineWidth = 3;
                     ctx.lineCap = 'round';
                     loadCanvasFromDb();
-                }, 50);
+                }, 260); // wait for the slide transition to finish
             }
-        });
-
+        }
+        // Tapping (or keyboard-activating) the persistent handle slides the drawing panel open/closed.
+        // The handle lives OUTSIDE the draw-section's own overflow:hidden box, so it stays visible
+        // and tappable no matter how collapsed the drawing panel currently is — and the chat's
+        // message list + input row (with the Send button) live in a separate, fixed-height
+        // .chat-section, so they're always reachable regardless of the drawing panel's state.
+        mobileDrawHandle.addEventListener('click', toggleDrawPanel);
+        mobileDrawHandle.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDrawPanel(); } });
+ 
         function togglePlay() { if (promoVideo.paused) { promoVideo.play().catch(()=>{}); customPlayBtn.style.display='none'; playPauseIcon.textContent='⏸'; } else { promoVideo.pause(); customPlayBtn.style.display='flex'; playPauseIcon.textContent='▶'; } }
         function updateProgress() { if (promoVideo.duration) { const p = (promoVideo.currentTime / promoVideo.duration) * 100; progressBar.style.width = p + '%'; timeDisplay.textContent = formatTime(promoVideo.currentTime) + ' / ' + formatTime(promoVideo.duration); } }
         function formatTime(seconds) { if (isNaN(seconds)) return '0:00'; const m = Math.floor(seconds / 60), s = Math.floor(seconds % 60); return m + ':' + (s < 10 ? '0' : '') + s; }
@@ -406,7 +437,7 @@
         document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
         function handleFullscreenChange() { if (document.fullscreenElement || document.webkitFullscreenElement) videoSection.classList.add('fullscreen'); else videoSection.classList.remove('fullscreen'); }
         promoVideo.volume = 0.8; volumeFill.style.width = '80%'; updateVolumeIcon();
-
+ 
         function showScreen(name) { Object.values(screens).forEach(s => s && s.classList.remove('active')); if (screens[name]) screens[name].classList.add('active'); if (name === 'chat') { gameContainer.style.minHeight = isMobile ? '0' : '600px'; terminateBtn.classList.add('visible'); } else { gameContainer.style.minHeight = '480px'; terminateBtn.classList.remove('visible'); chatDrawRoom.style.position = ''; } }
         function cleanupRoom() { if (roomRef) { if (terminationListener) roomRef.child('termination').off('value', terminationListener); if (myName) roomRef.child('activeUsers').child(myName).remove(); if (isCreator) roomRef.child('peerJoined').set(false); roomRef.off(); } roomRef = null; currentRoomId = null; peerJoined = false; isCreator = false; }
         async function terminateSession(isRemote = false, byName = null) { if (!isRemote && roomRef && myName) { try { await roomRef.child('termination').set({ terminatedBy: myName, timestamp: Date.now() }); } catch(_) {} } cleanupRoom(); showScreen('intro'); if (byName && byName !== myName) alert(`${byName} has terminated the session.`); if (ctx) { ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); } messagesList.innerHTML = ''; clearStagedPhotos(); }
@@ -423,8 +454,8 @@
         async function loadCanvasFromDb() { if (!roomRef || !ctx) return; const snap = await roomRef.child('drawing/strokes').once('value'); const strokes = snap.val(); if (strokes) { ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); Object.values(strokes).sort((a,b) => a.timestamp - b.timestamp).forEach(drawRemoteStroke); } }
         function drawRemoteStroke(s) { if (!ctx) return; ctx.beginPath(); ctx.lineWidth = s.lineWidth || 3; ctx.lineCap = 'round'; if (s.tool === 'eraser') { ctx.globalCompositeOperation = 'destination-out'; ctx.strokeStyle = 'rgba(0,0,0,1)'; } else { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = s.color || '#FFF'; } ctx.moveTo(s.x0, s.y0); ctx.lineTo(s.x1, s.y1); ctx.stroke(); ctx.globalCompositeOperation = 'source-over'; }
         let resizeObserver = null;
-        function initCanvas() { const doResize = () => { const container = drawCanvas.parentElement; if (!drawOpen) { drawCanvas.width = 0; drawCanvas.height = 0; return; } const w = Math.max(container.clientWidth - 2, 10); const h = isMobile ? 180 : 280; drawCanvas.width = w; drawCanvas.height = h; ctx = drawCanvas.getContext('2d'); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, w, h); ctx.strokeStyle = '#FFF'; ctx.lineWidth = 3; ctx.lineCap = 'round'; loadCanvasFromDb(); }; doResize(); if (window.ResizeObserver) { if (resizeObserver) resizeObserver.disconnect(); resizeObserver = new ResizeObserver(doResize); resizeObserver.observe(drawCanvas.parentElement); } else { window.addEventListener('resize', doResize); } attachDrawingEvents(); }
-        function attachDrawingEvents() { const getXY = e => { const rect = drawCanvas.getBoundingClientRect(); const sx = drawCanvas.width / rect.width; const sy = drawCanvas.height / rect.height; const src = e.touches ? e.touches[0] : e; return { x: Math.min(Math.max(0, (src.clientX - rect.left) * sx), drawCanvas.width), y: Math.min(Math.max(0, (src.clientY - rect.top) * sy), drawCanvas.height) }; }; const onStart = e => { if (!drawOpen) return; e.preventDefault(); isDrawing = true; const {x,y} = getXY(e); lastX=x; lastY=y; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+0.1,y+0.1); ctx.stroke(); }; const onMove = e => { if (!isDrawing || !drawOpen) return; e.preventDefault(); const {x,y} = getXY(e); ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke(); if (roomRef) roomRef.child('drawing/strokes').push({ x0:lastX,y0:lastY,x1:x,y1:y, tool:currentTool, color: currentTool==='eraser'?'#000':'#FFF', lineWidth: currentTool==='eraser'?15:3, sender:myName, timestamp:Date.now() }); lastX=x; lastY=y; }; const onEnd = () => { isDrawing = false; }; drawCanvas.addEventListener('mousedown', onStart); drawCanvas.addEventListener('mousemove', onMove); drawCanvas.addEventListener('mouseup', onEnd); drawCanvas.addEventListener('mouseleave',onEnd); drawCanvas.addEventListener('touchstart',onStart, { passive: false }); drawCanvas.addEventListener('touchmove', onMove, { passive: false }); drawCanvas.addEventListener('touchend', onEnd); }
+        function initCanvas() { const doResize = () => { const container = drawCanvas.parentElement; if (isMobile && !drawOpen) { drawCanvas.width = 0; drawCanvas.height = 0; return; } const w = Math.max(container.clientWidth - 2, 10); const h = isMobile ? 180 : 280; drawCanvas.width = w; drawCanvas.height = h; ctx = drawCanvas.getContext('2d'); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, w, h); ctx.strokeStyle = '#FFF'; ctx.lineWidth = 3; ctx.lineCap = 'round'; loadCanvasFromDb(); }; doResize(); if (window.ResizeObserver) { if (resizeObserver) resizeObserver.disconnect(); resizeObserver = new ResizeObserver(doResize); resizeObserver.observe(drawCanvas.parentElement); } else { window.addEventListener('resize', doResize); } attachDrawingEvents(); }
+        function attachDrawingEvents() { const getXY = e => { const rect = drawCanvas.getBoundingClientRect(); const sx = drawCanvas.width / rect.width; const sy = drawCanvas.height / rect.height; const src = e.touches ? e.touches[0] : e; return { x: Math.min(Math.max(0, (src.clientX - rect.left) * sx), drawCanvas.width), y: Math.min(Math.max(0, (src.clientY - rect.top) * sy), drawCanvas.height) }; }; const onStart = e => { if (isMobile && !drawOpen) return; e.preventDefault(); isDrawing = true; const {x,y} = getXY(e); lastX=x; lastY=y; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+0.1,y+0.1); ctx.stroke(); }; const onMove = e => { if (!isDrawing || (isMobile && !drawOpen)) return; e.preventDefault(); const {x,y} = getXY(e); ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke(); if (roomRef) roomRef.child('drawing/strokes').push({ x0:lastX,y0:lastY,x1:x,y1:y, tool:currentTool, color: currentTool==='eraser'?'#000':'#FFF', lineWidth: currentTool==='eraser'?15:3, sender:myName, timestamp:Date.now() }); lastX=x; lastY=y; }; const onEnd = () => { isDrawing = false; }; drawCanvas.addEventListener('mousedown', onStart); drawCanvas.addEventListener('mousemove', onMove); drawCanvas.addEventListener('mouseup', onEnd); drawCanvas.addEventListener('mouseleave',onEnd); drawCanvas.addEventListener('touchstart',onStart, { passive: false }); drawCanvas.addEventListener('touchmove', onMove, { passive: false }); drawCanvas.addEventListener('touchend', onEnd); }
         function setPen() { currentTool='pen'; if(ctx){ ctx.globalCompositeOperation='source-over'; ctx.strokeStyle='#FFF'; ctx.lineWidth=3; } }
         function setEraser() { currentTool='eraser'; if(ctx){ ctx.globalCompositeOperation='destination-out'; ctx.lineWidth=15; } }
         penTool.addEventListener('click', setPen);
@@ -463,11 +494,6 @@
         document.getElementById('joinBtn').addEventListener('click', () => showScreen('joinName'));
         showScreen('intro');
         setPen();
-        // Ensure draw section starts closed on mobile
-        if (isMobile) {
-            drawSection.classList.remove('open');
-            drawToggleBtn.textContent = '▶';
-        }
     </script>
 </body>
 </html>
