@@ -18,58 +18,6 @@
         .mobile-email-inline span { font-size: 15px; font-weight: 500; color: #000; }
         .mobile-email-inline:hover { opacity: 0.7; }
         .mobile-draw-handle { display: none; }
-        @media (max-width: 700px) {
-            body { padding: 16px 12px 20px; justify-content: flex-start; }
-            .top-right-email { display: none !important; }
-            .mobile-email-inline { display: flex !important; }
-            .page-logo { top: 16px; left: 14px; }
-            .page-logo img { width: 50px; height: 50px; }
-            .linkedin-image { max-width: 300px; }
-            .above-tagline { font-size: 13px; }
-            .intro-screen { padding: 20px 24px 36px; }
-            .intro-title-img { max-width: 200px; }
-            .game-container { border-radius: 20px; min-height: 400px; }
-            .chat-draw-room { flex-direction: column; height: auto !important; min-height: 0; position: relative !important; inset: auto !important; }
-            .chat-section { height: 50vh; min-height: 300px; overflow: hidden; border-right: none; border-bottom: none; flex: 0 0 auto; }
-            .draw-section { height: 0; border-left: none; border-top: none; flex-shrink: 0; display: flex; flex-direction: column; transition: height 0.25s ease, opacity 0.2s ease, padding 0.2s ease; overflow: hidden; opacity: 0; pointer-events: none; padding: 0; min-height: 0; }
-            .draw-section.open { height: 200px; opacity: 1; pointer-events: auto; padding: 0; }
-            .draw-section .draw-header { flex-shrink: 0; }
-            .draw-section canvas { flex: 1; min-height: 100px; }
-            .msg-photo { width: 80px; height: 80px; }
-            .send-btn { padding: 0 16px; font-size: 15px; }
-            .chat-input { font-size: 16px; }
-            .video-section { border-radius: 0; margin-top: 20px; }
-            .video-wrapper video { min-height: 250px; max-height: 50vh; }
-            .video-label { font-size: 17px; margin-bottom: 10px; margin-top: 6px; }
-            .custom-play-btn { width: 70px; height: 70px; }
-            .play-icon { border-top-width: 18px; border-bottom-width: 18px; border-left-width: 28px; margin-left: 5px; }
-            .glass-btn { bottom: 16px; right: 16px; padding: 8px 18px; font-size: 12px; }
-            .video-controls .controls-row { gap: 8px; }
-            .control-btn { font-size: 15px; min-width: 28px; min-height: 28px; }
-            .time-display { font-size: 11px; min-width: 70px; }
-            .volume-container:hover .volume-slider, .volume-slider.active { width: 40px; }
-            .mobile-draw-handle {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 2px;
-                padding: 7px 0 6px;
-                background: #0a0a0c;
-                border-top: 1px solid #222;
-                border-bottom: 1px solid #222;
-                cursor: pointer;
-                flex-shrink: 0;
-                -webkit-tap-highlight-color: transparent;
-                user-select: none;
-                position: relative;
-                z-index: 5;
-                touch-action: manipulation;
-            }
-            .mobile-draw-handle:active { background: #141416; }
-            .mobile-draw-handle .handle-arrow { font-size: 15px; color: #fff; line-height: 1; transition: transform 0.25s ease; }
-            .mobile-draw-handle .handle-label { font-size: 10px; color: #999; letter-spacing: 0.6px; text-transform: uppercase; font-weight: 700; }
-        }
         .page-logo { position: fixed; top: 30px; left: 30px; z-index: 100; }
         .page-logo img { width: 80px; height: 80px; object-fit: contain; display: block; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1)); }
         .linkedin-image-wrapper { display: block; text-align: center; margin-bottom: 20px; cursor: default; }
@@ -112,7 +60,7 @@
         .msg-photos { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
         .msg-photo { width: 100px; height: 100px; border-radius: 10px; object-fit: cover; cursor: zoom-in; display: block; border: 1px solid rgba(255,255,255,0.07); transition: transform 0.15s, box-shadow 0.15s; flex-shrink: 0; }
         .msg-photo:hover { transform: scale(1.04); box-shadow: 0 4px 18px rgba(0,0,0,0.5); }
-        .chat-input-area { flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; padding: 10px 14px 14px; background: #000; border-top: 1px solid #1c1c1e; }
+        .chat-input-area { flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; padding: 10px 14px 14px; background: #000; border-top: 1px solid #1c1c1e; position: relative; z-index: 30; }
         .photo-preview-queue { display: none; flex-wrap: wrap; gap: 7px; padding: 4px 0 2px; }
         .photo-preview-queue.has-photos { display: flex; }
         .preview-thumb-wrap { position: relative; width: 56px; height: 56px; flex-shrink: 0; }
@@ -125,7 +73,7 @@
         .paperclip-btn { background: #1c1c1e; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: background 0.15s; -webkit-tap-highlight-color: transparent; }
         .paperclip-btn:hover { background: #2c2c2e; }
         .paperclip-btn svg { width: 19px; height: 19px; }
-        .chat-input { flex: 1; background: #1c1c1e; border: none; border-radius: 30px; padding: 11px 16px; color: #fff; font-size: 14px; outline: none; font-family: inherit; font-size: 16px; }
+        .chat-input { flex: 1; background: #1c1c1e; border: none; border-radius: 30px; padding: 11px 16px; color: #fff; font-size: 16px; outline: none; font-family: inherit; }
         .send-btn { background: #fff; border: none; border-radius: 30px; padding: 0 20px; font-weight: 600; cursor: pointer; height: 40px; font-family: inherit; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
         .draw-section { flex: 2; background: #0a0a0c; display: flex; flex-direction: column; border-left: 1px solid #222; min-height: 0; position: relative; transition: height 0.25s ease, opacity 0.2s ease; }
         .draw-header { flex-shrink: 0; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
@@ -175,6 +123,60 @@
         .video-section.fullscreen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh; margin: 0; border-radius: 0; z-index: 9998; background: #000; }
         .video-section.fullscreen .video-wrapper video { min-height: 100vh; max-height: 100vh; object-fit: contain; }
         .video-section.fullscreen .video-controls { padding: 50px 24px 20px 24px; }
+        
+        /* Mobile specific styles */
+        @media (max-width: 700px) {
+            body { padding: 16px 12px 20px; justify-content: flex-start; }
+            .top-right-email { display: none !important; }
+            .mobile-email-inline { display: flex !important; }
+            .page-logo { top: 16px; left: 14px; }
+            .page-logo img { width: 50px; height: 50px; }
+            .linkedin-image { max-width: 300px; }
+            .above-tagline { font-size: 13px; }
+            .intro-screen { padding: 20px 24px 36px; }
+            .intro-title-img { max-width: 200px; }
+            .game-container { border-radius: 20px; min-height: 400px; }
+            .chat-draw-room { flex-direction: column; height: auto !important; min-height: 0; position: relative !important; inset: auto !important; }
+            .chat-section { height: 50vh; min-height: 300px; overflow: hidden; border-right: none; border-bottom: none; flex: 0 0 auto; }
+            .draw-section { height: 0; border-left: none; border-top: none; flex-shrink: 0; display: flex; flex-direction: column; transition: height 0.25s ease, opacity 0.2s ease, padding 0.2s ease; overflow: hidden; opacity: 0; pointer-events: none; padding: 0; min-height: 0; }
+            .draw-section.open { height: 200px; opacity: 1; pointer-events: auto; padding: 0; }
+            .draw-section .draw-header { flex-shrink: 0; }
+            .draw-section canvas { flex: 1; min-height: 100px; }
+            .msg-photo { width: 80px; height: 80px; }
+            .send-btn { padding: 0 16px; font-size: 15px; }
+            .chat-input { font-size: 16px; }
+            .video-section { border-radius: 0; margin-top: 20px; }
+            .video-wrapper video { min-height: 250px; max-height: 50vh; }
+            .video-label { font-size: 17px; margin-bottom: 10px; margin-top: 6px; }
+            .custom-play-btn { width: 70px; height: 70px; }
+            .play-icon { border-top-width: 18px; border-bottom-width: 18px; border-left-width: 28px; margin-left: 5px; }
+            .glass-btn { bottom: 16px; right: 16px; padding: 8px 18px; font-size: 12px; }
+            .video-controls .controls-row { gap: 8px; }
+            .control-btn { font-size: 15px; min-width: 28px; min-height: 28px; }
+            .time-display { font-size: 11px; min-width: 70px; }
+            .volume-container:hover .volume-slider, .volume-slider.active { width: 40px; }
+            .mobile-draw-handle {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2px;
+                padding: 7px 0 6px;
+                background: #0a0a0c;
+                border-top: 1px solid #222;
+                border-bottom: 1px solid #222;
+                cursor: pointer;
+                flex-shrink: 0;
+                -webkit-tap-highlight-color: transparent;
+                user-select: none;
+                position: relative;
+                z-index: 25;
+                touch-action: manipulation;
+            }
+            .mobile-draw-handle:active { background: #141416; }
+            .mobile-draw-handle .handle-arrow { font-size: 15px; color: #fff; line-height: 1; transition: transform 0.25s ease; }
+            .mobile-draw-handle .handle-label { font-size: 10px; color: #999; letter-spacing: 0.6px; text-transform: uppercase; font-weight: 700; }
+        }
     </style>
 </head>
 <body>
@@ -245,7 +247,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Persistent mobile handle: always tappable (even while the drawing panel is fully collapsed) since it lives outside the collapsing/overflow-hidden draw-section -->
             <div class="mobile-draw-handle" id="mobileDrawHandle" role="button" tabindex="0" aria-label="Toggle drawing panel" aria-expanded="false">
                 <span class="handle-arrow" id="handleArrow">▼</span>
                 <span class="handle-label">Draw</span>
@@ -362,48 +363,35 @@
         const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
         let controlsTimeout = null;
         let drawOpen = false;
+        let canvasInitialized = false;
  
-        // Drawing panel starts CLOSED on mobile so the chat gets the full screen; open on desktop where there's room for both side by side.
         function setHandleState() {
-            if (!isMobile) return;
+            if (!isMobile) {
+                drawOpen = true;
+                drawSection.classList.add('open');
+                return;
+            }
             drawSection.classList.toggle('open', drawOpen);
             handleArrow.textContent = drawOpen ? '▲' : '▼';
             mobileDrawHandle.setAttribute('aria-expanded', drawOpen ? 'true' : 'false');
         }
         if (isMobile) {
             drawOpen = false;
-            setHandleState();
         } else {
             drawOpen = true;
-            drawSection.classList.add('open');
         }
+        setHandleState();
  
         function toggleDrawPanel() {
             drawOpen = !drawOpen;
             setHandleState();
-            // Resize/redraw canvas once it becomes visible again
             if (drawOpen) {
                 setTimeout(() => {
-                    const container = drawCanvas.parentElement;
-                    const w = Math.max(container.clientWidth - 2, 10);
-                    const h = isMobile ? 180 : 280;
-                    drawCanvas.width = w;
-                    drawCanvas.height = h;
-                    ctx = drawCanvas.getContext('2d');
-                    ctx.fillStyle = '#111';
-                    ctx.fillRect(0, 0, w, h);
-                    ctx.strokeStyle = '#FFF';
-                    ctx.lineWidth = 3;
-                    ctx.lineCap = 'round';
+                    initCanvas();
                     loadCanvasFromDb();
-                }, 260); // wait for the slide transition to finish
+                }, 260);
             }
         }
-        // Tapping (or keyboard-activating) the persistent handle slides the drawing panel open/closed.
-        // The handle lives OUTSIDE the draw-section's own overflow:hidden box, so it stays visible
-        // and tappable no matter how collapsed the drawing panel currently is — and the chat's
-        // message list + input row (with the Send button) live in a separate, fixed-height
-        // .chat-section, so they're always reachable regardless of the drawing panel's state.
         mobileDrawHandle.addEventListener('click', toggleDrawPanel);
         mobileDrawHandle.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDrawPanel(); } });
  
@@ -439,28 +427,144 @@
         promoVideo.volume = 0.8; volumeFill.style.width = '80%'; updateVolumeIcon();
  
         function showScreen(name) { Object.values(screens).forEach(s => s && s.classList.remove('active')); if (screens[name]) screens[name].classList.add('active'); if (name === 'chat') { gameContainer.style.minHeight = isMobile ? '0' : '600px'; terminateBtn.classList.add('visible'); } else { gameContainer.style.minHeight = '480px'; terminateBtn.classList.remove('visible'); chatDrawRoom.style.position = ''; } }
-        function cleanupRoom() { if (roomRef) { if (terminationListener) roomRef.child('termination').off('value', terminationListener); if (myName) roomRef.child('activeUsers').child(myName).remove(); if (isCreator) roomRef.child('peerJoined').set(false); roomRef.off(); } roomRef = null; currentRoomId = null; peerJoined = false; isCreator = false; }
+        function cleanupRoom() { if (roomRef) { if (terminationListener) roomRef.child('termination').off('value', terminationListener); if (myName) roomRef.child('activeUsers').child(myName).remove(); if (isCreator) roomRef.child('peerJoined').set(false); roomRef.off(); } roomRef = null; currentRoomId = null; peerJoined = false; isCreator = false; canvasInitialized = false; }
         async function terminateSession(isRemote = false, byName = null) { if (!isRemote && roomRef && myName) { try { await roomRef.child('termination').set({ terminatedBy: myName, timestamp: Date.now() }); } catch(_) {} } cleanupRoom(); showScreen('intro'); if (byName && byName !== myName) alert(`${byName} has terminated the session.`); if (ctx) { ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); } messagesList.innerHTML = ''; clearStagedPhotos(); }
         function setupTerminationListener() { if (!roomRef) return; if (terminationListener) roomRef.child('termination').off('value', terminationListener); terminationListener = snap => { const d = snap.val(); if (d && d.terminatedBy && d.terminatedBy !== myName) terminateSession(true, d.terminatedBy); }; roomRef.child('termination').on('value', terminationListener); }
         function generateRoomCode() { const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let c = ''; for (let i=0;i<6;i++) c += chars[Math.floor(Math.random() * chars.length)]; return c; }
         confirmCreateBtn.addEventListener('click', async () => { const name = createNameInput.value.trim(); if (!name) { createError.innerText = 'Please enter your name'; return; } myName = name; createError.innerText = ''; const code = generateRoomCode(); currentRoomId = code; isCreator = true; roomCodeSpanWait.textContent = code; showScreen('waiting'); roomRef = db.ref(`chat_tabs/${code}`); try { await roomRef.set({ creator: myName, created: Date.now(), peerJoined: false, activeUsers: { [myName]: true } }); setupRoomListeners(); } catch(e) { waitingError.innerText = 'Connection error. Try again.'; console.error(e); } });
         nextToCodeBtn.addEventListener('click', () => { const name = joinNameInput.value.trim(); if (!name) { joinNameError.innerText = 'Please enter your name'; return; } myName = name; joinNameError.innerText = ''; showScreen('joinCode'); });
         submitJoinBtn.addEventListener('click', async () => { const code = joinCodeInput.value.trim().toUpperCase(); if (code.length !== 6) { joinCodeError.innerText = 'Enter 6-digit code'; return; } const ref = db.ref(`chat_tabs/${code}`); const snap = await ref.once('value'); if (!snap.exists()) { joinCodeError.innerText = 'Room not found'; return; } const d = snap.val(); if (d.peerJoined && Object.keys(d.activeUsers || {}).length >= 2) { joinCodeError.innerText = 'Room is full'; return; } currentRoomId = code; isCreator = false; roomRef = ref; await roomRef.child('peerJoined').set(true); await roomRef.child('activeUsers').update({ [myName]: true }); setupRoomListeners(); enterChatRoom(); });
-        function setupRoomListeners() { if (!roomRef) return; roomRef.child('peerJoined').on('value', snap => { if (snap.val() === true && !peerJoined) { peerJoined = true; if (screens.waiting.classList.contains('active')) enterChatRoom(); } }); const seenKeys = new Set(); roomRef.child('messages').once('value', snap => { const raw = snap.val(); if (!raw) return; messagesList.innerHTML = ''; const entries = Object.entries(raw).sort((a, b) => (a[1].timestamp || 0) - (b[1].timestamp || 0)); entries.forEach(([k, msg]) => { seenKeys.add(k); renderMessage(msg, false); }); }); roomRef.child('messages').on('child_added', snap => { if (seenKeys.has(snap.key)) return; seenKeys.add(snap.key); renderMessage(snap.val(), true); }); roomRef.child('photos').on('child_added', snap => { const msgKey = snap.key; setTimeout(() => { const bubble = document.querySelector(`[data-msgkey="${msgKey}"]`); if (bubble && !bubble.querySelector('.msg-photos')) { const photoMap = snap.val(); if (photoMap) { const photosArr = Object.values(photoMap); injectPhotosIntoBubble(bubble, photosArr); } } }, 50); }); roomRef.child('drawing/strokes').on('child_added', snap => { const s = snap.val(); if (s && s.sender !== myName) drawRemoteStroke(s); }); roomRef.child('drawing/clearFlag').on('value', snap => { if (snap.val() === true && ctx) { ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); roomRef.child('drawing/clearFlag').set(false); } }); roomRef.child('activeUsers').on('value', snap => { const cnt = Object.keys(snap.val() || {}).length; const dot = peerStatus.querySelector('.dot'); if (cnt >= 2) { dot.className = 'dot'; dot.style.background = '#4cd964'; peerStatus.innerHTML = `<span class="dot" style="background:#4cd964"></span> Connected • 2 users`; } else { dot.className = 'dot yellow'; dot.style.background = '#f7b731'; peerStatus.innerHTML = `<span class="dot yellow" style="background:#f7b731"></span> Waiting for peer...`; } }); setupTerminationListener(); }
+        function setupRoomListeners() { if (!roomRef) return; roomRef.child('peerJoined').on('value', snap => { if (snap.val() === true && !peerJoined) { peerJoined = true; if (screens.waiting.classList.contains('active')) enterChatRoom(); } }); const seenKeys = new Set(); roomRef.child('messages').once('value', snap => { const raw = snap.val(); if (!raw) return; messagesList.innerHTML = ''; const entries = Object.entries(raw).sort((a, b) => (a[1].timestamp || 0) - (b[1].timestamp || 0)); entries.forEach(([k, msg]) => { seenKeys.add(k); renderMessage(msg, false); }); }); roomRef.child('messages').on('child_added', snap => { if (seenKeys.has(snap.key)) return; seenKeys.add(snap.key); renderMessage(snap.val(), true); }); roomRef.child('photos').on('child_added', snap => { const msgKey = snap.key; setTimeout(() => { const bubble = document.querySelector(`[data-msgkey="${msgKey}"]`); if (bubble && !bubble.querySelector('.msg-photos')) { const photoMap = snap.val(); if (photoMap) { const photosArr = Object.values(photoMap); injectPhotosIntoBubble(bubble, photosArr); } } }, 50); }); 
+            
+            // Drawing listeners - FIXED for real-time sync
+            roomRef.child('drawing/strokes').on('child_added', snap => { 
+                const s = snap.val(); 
+                if (s && s.sender !== myName) {
+                    drawRemoteStroke(s);
+                }
+            });
+            roomRef.child('drawing/clearFlag').on('value', snap => { 
+                if (snap.val() === true && ctx) { 
+                    ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); 
+                    ctx.fillStyle = '#111'; 
+                    ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); 
+                    roomRef.child('drawing/clearFlag').set(false); 
+                } 
+            }); 
+            roomRef.child('activeUsers').on('value', snap => { const cnt = Object.keys(snap.val() || {}).length; const dot = peerStatus.querySelector('.dot'); if (cnt >= 2) { dot.className = 'dot'; dot.style.background = '#4cd964'; peerStatus.innerHTML = `<span class="dot" style="background:#4cd964"></span> Connected • 2 users`; } else { dot.className = 'dot yellow'; dot.style.background = '#f7b731'; peerStatus.innerHTML = `<span class="dot yellow" style="background:#f7b731"></span> Waiting for peer...`; } }); setupTerminationListener(); }
         function renderMessage(msg, animate) { if (!msg) return; const isOwn = msg.sender === myName; const div = document.createElement('div'); div.className = `message-bubble${isOwn ? ' message-own' : ''}`; if (msg.msgKey) div.dataset.msgkey = msg.msgKey; if (animate) div.style.animation = 'chatMessageIn 0.32s cubic-bezier(0.2,0.9,0.4,1.1) forwards'; const nameEl = document.createElement('div'); nameEl.className = 'msg-name'; nameEl.textContent = msg.sender || ''; div.appendChild(nameEl); if (msg.text && msg.text.trim()) { const textEl = document.createElement('div'); textEl.className = 'msg-text'; textEl.textContent = msg.text; div.appendChild(textEl); } if (msg.photos && msg.photos.length > 0) { injectPhotosIntoBubble(div, msg.photos); } messagesList.appendChild(div); scrollToBottom(); }
         function injectPhotosIntoBubble(bubble, photosArr) { if (!photosArr || photosArr.length === 0) return; if (bubble.querySelector('.msg-photos')) return; const wrap = document.createElement('div'); wrap.className = 'msg-photos'; const urls = photosArr.map(p => p.dataUrl).filter(Boolean); photosArr.forEach((photo, idx) => { if (!photo || !photo.dataUrl) return; const img = document.createElement('img'); img.className = 'msg-photo'; img.alt = photo.name || 'photo'; img.loading = 'lazy'; img.addEventListener('load', scrollToBottom, { once: true }); img.addEventListener('click', () => openLightbox(urls, idx)); img.src = photo.dataUrl; wrap.appendChild(img); }); bubble.appendChild(wrap); scrollToBottom(); }
         function scrollToBottom() { requestAnimationFrame(() => { messagesList.scrollTop = messagesList.scrollHeight; }); }
         async function enterChatRoom() { showScreen('chat'); roomCodeDisplay.innerText = `Room: ${currentRoomId}`; initCanvas(); await loadCanvasFromDb(); }
-        async function loadCanvasFromDb() { if (!roomRef || !ctx) return; const snap = await roomRef.child('drawing/strokes').once('value'); const strokes = snap.val(); if (strokes) { ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); Object.values(strokes).sort((a,b) => a.timestamp - b.timestamp).forEach(drawRemoteStroke); } }
-        function drawRemoteStroke(s) { if (!ctx) return; ctx.beginPath(); ctx.lineWidth = s.lineWidth || 3; ctx.lineCap = 'round'; if (s.tool === 'eraser') { ctx.globalCompositeOperation = 'destination-out'; ctx.strokeStyle = 'rgba(0,0,0,1)'; } else { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = s.color || '#FFF'; } ctx.moveTo(s.x0, s.y0); ctx.lineTo(s.x1, s.y1); ctx.stroke(); ctx.globalCompositeOperation = 'source-over'; }
+        async function loadCanvasFromDb() { 
+            if (!roomRef || !ctx || !canvasInitialized) return; 
+            const snap = await roomRef.child('drawing/strokes').once('value'); 
+            const strokes = snap.val(); 
+            if (strokes) { 
+                ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); 
+                ctx.fillStyle = '#111'; 
+                ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); 
+                Object.values(strokes).sort((a,b) => a.timestamp - b.timestamp).forEach(s => {
+                    if (s.sender !== myName) drawRemoteStroke(s);
+                }); 
+            } 
+        }
+        function drawRemoteStroke(s) { 
+            if (!ctx || !canvasInitialized) return; 
+            ctx.beginPath(); 
+            ctx.lineWidth = s.lineWidth || 3; 
+            ctx.lineCap = 'round'; 
+            if (s.tool === 'eraser') { 
+                ctx.globalCompositeOperation = 'destination-out'; 
+                ctx.strokeStyle = 'rgba(0,0,0,1)'; 
+            } else { 
+                ctx.globalCompositeOperation = 'source-over'; 
+                ctx.strokeStyle = s.color || '#FFF'; 
+            } 
+            ctx.moveTo(s.x0, s.y0); 
+            ctx.lineTo(s.x1, s.y1); 
+            ctx.stroke(); 
+            ctx.globalCompositeOperation = 'source-over'; 
+        }
         let resizeObserver = null;
-        function initCanvas() { const doResize = () => { const container = drawCanvas.parentElement; if (isMobile && !drawOpen) { drawCanvas.width = 0; drawCanvas.height = 0; return; } const w = Math.max(container.clientWidth - 2, 10); const h = isMobile ? 180 : 280; drawCanvas.width = w; drawCanvas.height = h; ctx = drawCanvas.getContext('2d'); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, w, h); ctx.strokeStyle = '#FFF'; ctx.lineWidth = 3; ctx.lineCap = 'round'; loadCanvasFromDb(); }; doResize(); if (window.ResizeObserver) { if (resizeObserver) resizeObserver.disconnect(); resizeObserver = new ResizeObserver(doResize); resizeObserver.observe(drawCanvas.parentElement); } else { window.addEventListener('resize', doResize); } attachDrawingEvents(); }
-        function attachDrawingEvents() { const getXY = e => { const rect = drawCanvas.getBoundingClientRect(); const sx = drawCanvas.width / rect.width; const sy = drawCanvas.height / rect.height; const src = e.touches ? e.touches[0] : e; return { x: Math.min(Math.max(0, (src.clientX - rect.left) * sx), drawCanvas.width), y: Math.min(Math.max(0, (src.clientY - rect.top) * sy), drawCanvas.height) }; }; const onStart = e => { if (isMobile && !drawOpen) return; e.preventDefault(); isDrawing = true; const {x,y} = getXY(e); lastX=x; lastY=y; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+0.1,y+0.1); ctx.stroke(); }; const onMove = e => { if (!isDrawing || (isMobile && !drawOpen)) return; e.preventDefault(); const {x,y} = getXY(e); ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke(); if (roomRef) roomRef.child('drawing/strokes').push({ x0:lastX,y0:lastY,x1:x,y1:y, tool:currentTool, color: currentTool==='eraser'?'#000':'#FFF', lineWidth: currentTool==='eraser'?15:3, sender:myName, timestamp:Date.now() }); lastX=x; lastY=y; }; const onEnd = () => { isDrawing = false; }; drawCanvas.addEventListener('mousedown', onStart); drawCanvas.addEventListener('mousemove', onMove); drawCanvas.addEventListener('mouseup', onEnd); drawCanvas.addEventListener('mouseleave',onEnd); drawCanvas.addEventListener('touchstart',onStart, { passive: false }); drawCanvas.addEventListener('touchmove', onMove, { passive: false }); drawCanvas.addEventListener('touchend', onEnd); }
-        function setPen() { currentTool='pen'; if(ctx){ ctx.globalCompositeOperation='source-over'; ctx.strokeStyle='#FFF'; ctx.lineWidth=3; } }
-        function setEraser() { currentTool='eraser'; if(ctx){ ctx.globalCompositeOperation='destination-out'; ctx.lineWidth=15; } }
+        function initCanvas() { 
+            const doResize = () => { 
+                const container = drawCanvas.parentElement; 
+                if (isMobile && !drawOpen) { 
+                    drawCanvas.width = 0; 
+                    drawCanvas.height = 0; 
+                    canvasInitialized = false;
+                    return; 
+                } 
+                const w = Math.max(container.clientWidth - 2, 10); 
+                const h = isMobile ? 180 : 280; 
+                drawCanvas.width = w; 
+                drawCanvas.height = h; 
+                ctx = drawCanvas.getContext('2d'); 
+                ctx.fillStyle = '#111'; 
+                ctx.fillRect(0, 0, w, h); 
+                ctx.strokeStyle = '#FFF'; 
+                ctx.lineWidth = 3; 
+                ctx.lineCap = 'round'; 
+                canvasInitialized = true;
+                loadCanvasFromDb(); 
+            }; 
+            doResize(); 
+            if (window.ResizeObserver) { 
+                if (resizeObserver) resizeObserver.disconnect(); 
+                resizeObserver = new ResizeObserver(doResize); 
+                resizeObserver.observe(drawCanvas.parentElement); 
+            } else { 
+                window.addEventListener('resize', doResize); 
+            } 
+            attachDrawingEvents(); 
+        }
+        function attachDrawingEvents() { 
+            const getXY = e => { 
+                const rect = drawCanvas.getBoundingClientRect(); 
+                const sx = drawCanvas.width / rect.width; 
+                const sy = drawCanvas.height / rect.height; 
+                const src = e.touches ? e.touches[0] : e; 
+                return { x: Math.min(Math.max(0, (src.clientX - rect.left) * sx), drawCanvas.width), y: Math.min(Math.max(0, (src.clientY - rect.top) * sy), drawCanvas.height) }; 
+            }; 
+            const onStart = e => { 
+                if (isMobile && !drawOpen) return; 
+                if (!canvasInitialized) return;
+                e.preventDefault(); 
+                isDrawing = true; 
+                const {x,y} = getXY(e); 
+                lastX=x; lastY=y; 
+                ctx.beginPath(); 
+                ctx.moveTo(x,y); 
+                ctx.lineTo(x+0.1,y+0.1); 
+                ctx.stroke(); 
+            }; 
+            const onMove = e => { 
+                if (!isDrawing || (isMobile && !drawOpen)) return; 
+                if (!canvasInitialized) return;
+                e.preventDefault(); 
+                const {x,y} = getXY(e); 
+                ctx.beginPath(); 
+                ctx.moveTo(lastX,lastY); 
+                ctx.lineTo(x,y); 
+                ctx.stroke(); 
+                if (roomRef) roomRef.child('drawing/strokes').push({ x0:lastX,y0:lastY,x1:x,y1:y, tool:currentTool, color: currentTool==='eraser'?'#000':'#FFF', lineWidth: currentTool==='eraser'?15:3, sender:myName, timestamp:Date.now() }); 
+                lastX=x; lastY=y; 
+            }; 
+            const onEnd = () => { isDrawing = false; }; 
+            drawCanvas.addEventListener('mousedown', onStart); 
+            drawCanvas.addEventListener('mousemove', onMove); 
+            drawCanvas.addEventListener('mouseup', onEnd); 
+            drawCanvas.addEventListener('mouseleave',onEnd); 
+            drawCanvas.addEventListener('touchstart',onStart, { passive: false }); 
+            drawCanvas.addEventListener('touchmove', onMove, { passive: false }); 
+            drawCanvas.addEventListener('touchend', onEnd); 
+        }
+        function setPen() { currentTool='pen'; if(ctx && canvasInitialized){ ctx.globalCompositeOperation='source-over'; ctx.strokeStyle='#FFF'; ctx.lineWidth=3; } }
+        function setEraser() { currentTool='eraser'; if(ctx && canvasInitialized){ ctx.globalCompositeOperation='destination-out'; ctx.lineWidth=15; } }
         penTool.addEventListener('click', setPen);
         eraserTool.addEventListener('click', setEraser);
-        clearCanvasBtn.addEventListener('click', async () => { if (!ctx) return; ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); if (roomRef) { await roomRef.child('drawing/clearFlag').set(true); await roomRef.child('drawing/strokes').remove(); } setPen(); });
+        clearCanvasBtn.addEventListener('click', async () => { if (!ctx || !canvasInitialized) return; ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); if (roomRef) { await roomRef.child('drawing/clearFlag').set(true); await roomRef.child('drawing/strokes').remove(); } setPen(); });
         async function sendMessage() { const txt = chatInput.value.trim(); if (!txt && stagedPhotos.length === 0) return; if (!roomRef) return; const photosToSend = [...stagedPhotos]; chatInput.value = ''; clearStagedPhotos(); const msgRef = roomRef.child('messages').push(); const msgKey = msgRef.key; const payload = { msgKey, sender: myName, text: txt, timestamp: Date.now(), hasPhotos: photosToSend.length > 0 }; await msgRef.set(payload); if (photosToSend.length > 0) { const photoUpdates = {}; photosToSend.forEach((p, i) => { photoUpdates[`photos/${msgKey}/${i}`] = { dataUrl: p.dataUrl, name: p.name }; }); await roomRef.update(photoUpdates); const ownBubble = document.querySelector(`[data-msgkey="${msgKey}"]`); if (ownBubble) { setTimeout(() => injectPhotosIntoBubble(ownBubble, photosToSend), 50); } } }
         function compressImage(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onerror = reject; reader.onload = ev => { resolve({ dataUrl: ev.target.result, name: file.name }); }; reader.readAsDataURL(file); }); }
         async function stageFiles(files) { const imgs = Array.from(files).filter(f => f.type.startsWith('image/')); if (!imgs.length) return; for (const f of imgs) { try { stagedPhotos.push(await compressImage(f)); } catch(e) { console.error('compress error', e); } } renderPhotoQueue(); }
