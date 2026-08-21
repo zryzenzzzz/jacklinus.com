@@ -707,9 +707,9 @@
                 return { x: Math.min(Math.max(0, (src.clientX - rect.left) * sx), drawCanvas.width), y: Math.min(Math.max(0, (src.clientY - rect.top) * sy), drawCanvas.height) }; 
             }; 
             const onStart = e => { 
+                e.preventDefault(); // critical: prevent scroll / page drag on touch
                 if (isMobile && !drawOpen) return; 
                 if (!canvasInitialized) return;
-                e.preventDefault(); 
                 isDrawing = true; 
                 const {x,y} = getXY(e); 
                 lastX=x; lastY=y; 
@@ -719,9 +719,9 @@
                 ctx.stroke(); 
             }; 
             const onMove = e => { 
+                e.preventDefault(); // critical: prevent scroll while dragging
                 if (!isDrawing || (isMobile && !drawOpen)) return; 
                 if (!canvasInitialized) return;
-                e.preventDefault(); 
                 const {x,y} = getXY(e); 
                 ctx.beginPath(); 
                 ctx.moveTo(lastX,lastY); 
@@ -730,14 +730,18 @@
                 if (roomRef) roomRef.child('drawing/strokes').push({ x0:lastX,y0:lastY,x1:x,y1:y, tool:currentTool, color: currentTool==='eraser'?'#000':'#FFF', lineWidth: currentTool==='eraser'?15:3, sender:myName, timestamp:Date.now() }); 
                 lastX=x; lastY=y; 
             }; 
-            const onEnd = () => { isDrawing = false; }; 
+            const onEnd = (e) => { 
+                e.preventDefault(); 
+                isDrawing = false; 
+            }; 
             drawCanvas.addEventListener('mousedown', onStart); 
             drawCanvas.addEventListener('mousemove', onMove); 
             drawCanvas.addEventListener('mouseup', onEnd); 
             drawCanvas.addEventListener('mouseleave',onEnd); 
-            drawCanvas.addEventListener('touchstart',onStart, { passive: false }); 
+            drawCanvas.addEventListener('touchstart', onStart, { passive: false }); 
             drawCanvas.addEventListener('touchmove', onMove, { passive: false }); 
             drawCanvas.addEventListener('touchend', onEnd); 
+            drawCanvas.addEventListener('touchcancel', onEnd); 
         }
         function setPen() { currentTool='pen'; if(ctx && canvasInitialized){ ctx.globalCompositeOperation='source-over'; ctx.strokeStyle='#FFF'; ctx.lineWidth=3; } }
         function setEraser() { currentTool='eraser'; if(ctx && canvasInitialized){ ctx.globalCompositeOperation='destination-out'; ctx.lineWidth=15; } }
