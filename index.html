@@ -23,7 +23,73 @@
         .linkedin-image-wrapper { display: block; text-align: center; margin-bottom: 20px; cursor: default; }
         .linkedin-image { max-width: 500px; width: 90%; height: auto; display: inline-block; pointer-events: none; }
         .above-tagline { text-align: center; margin-bottom: 20px; font-size: 16px; font-weight: 500; color: #333; letter-spacing: 0.3px; }
-        .game-container { width: 100%; max-width: 1000px; min-width: 320px; background: #000; border-radius: 28px; box-shadow: 0px 4px 16px rgba(0,0,0,0.35), 0px 34px 44px rgba(0,0,0,0.17); overflow: hidden; position: relative; min-height: 480px; transition: min-height 0.2s ease; flex-shrink: 0; }
+        
+        /* Main wrapper for game + banner */
+        .game-banner-wrapper {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            max-width: 1180px;
+            width: 100%;
+            gap: 20px;
+        }
+        
+        .game-container { 
+            flex: 1;
+            min-width: 320px; 
+            background: #000; 
+            border-radius: 28px; 
+            box-shadow: 0px 4px 16px rgba(0,0,0,0.35), 0px 34px 44px rgba(0,0,0,0.17); 
+            overflow: hidden; 
+            position: relative; 
+            min-height: 480px; 
+            transition: min-height 0.2s ease; 
+            max-width: 1000px;
+        }
+        
+        .banner-wrapper {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            width: 160px;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .ad-label {
+            font-size: 10px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 600;
+            background: #e8e8e8;
+            padding: 2px 10px;
+            border-radius: 3px;
+            user-select: none;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        .banner-container {
+            flex-shrink: 0;
+            min-width: 160px;
+            width: 160px;
+            min-height: 600px;
+            background: #f0f0f0;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .banner-container iframe {
+            border: none;
+            width: 160px;
+            height: 600px;
+        }
+        
         .screen-base { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.3s ease; opacity: 0; pointer-events: none; }
         .screen-base.active { opacity: 1; pointer-events: auto; z-index: 5; }
         .intro-screen { padding: 30px 40px 50px; }
@@ -181,8 +247,8 @@
             margin-top: 8px;
         }
         
-        /* Mobile specific styles */
-        @media (max-width: 700px) {
+        /* Mobile specific styles - Banner hidden on mobile */
+        @media (max-width: 850px) {
             body { padding: 16px 12px 20px; justify-content: flex-start; }
             .top-right-email { display: none !important; }
             .mobile-email-inline { display: flex !important; }
@@ -192,7 +258,25 @@
             .above-tagline { font-size: 13px; }
             .intro-screen { padding: 20px 24px 36px; }
             .intro-title-img { max-width: 200px; }
-            .game-container { border-radius: 20px; min-height: 400px; }
+            
+            .game-banner-wrapper {
+                flex-direction: column;
+                align-items: center;
+                gap: 0;
+            }
+            
+            .game-container { 
+                border-radius: 20px; 
+                min-height: 400px;
+                max-width: 100%;
+                width: 100%;
+            }
+            
+            /* Hide the banner entirely on mobile */
+            .banner-wrapper {
+                display: none !important;
+            }
+            
             .chat-draw-room { flex-direction: column; height: auto !important; min-height: 0; position: relative !important; inset: auto !important; }
             .chat-section { height: 50vh; min-height: 300px; overflow: hidden; border-right: none; border-bottom: none; flex: 0 0 auto; }
             .draw-section { height: 0; border-left: none; border-top: none; flex-shrink: 0; display: flex; flex-direction: column; transition: height 0.25s ease, opacity 0.2s ease, padding 0.2s ease; overflow: hidden; opacity: 0; pointer-events: none; padding: 0; min-height: 0; }
@@ -202,7 +286,7 @@
             .msg-photo { width: 80px; height: 80px; }
             .send-btn { padding: 0 16px; font-size: 15px; }
             .chat-input { font-size: 16px; }
-            .video-section { border-radius: 0; margin-top: 20px; }
+            .video-section { border-radius: 0; margin-top: 20px; max-width: 100%; }
             .video-wrapper video { min-height: 250px; max-height: 50vh; }
             .video-label { font-size: 17px; margin-bottom: 10px; margin-top: 6px; }
             .custom-play-btn { width: 70px; height: 70px; }
@@ -246,84 +330,106 @@
     <div class="page-logo"><img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20black.png?raw=true" alt="Jacklinus"></div>
     <div class="linkedin-image-wrapper"><img class="linkedin-image" src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Linked%20In%20Redirect.png?raw=true" alt="Jacklinus LinkedIn"></div>
     <div class="above-tagline">Chat securely with Chat Tab by jacklinus</div>
-    <div class="game-container" id="gameContainer">
-        <div id="introScreen" class="screen-base intro-screen active">
-            <img class="intro-title-img" src="https://raw.githubusercontent.com/zryzenzzzz/jacklinus.com/main/Photos/smallersecure.png" alt="Secure Encrypted Chats">
-            <div class="action-buttons">
-                <button class="action-btn" id="createBtn">Create a Chat Tab</button>
-                <button class="action-btn" id="joinBtn">Join a Chat Tab</button>
-            </div>
-        </div>
-        <div id="createFlow" class="screen-base flow-container">
-            <div class="flow-input-group">
-                <input type="text" id="createNameInput" class="flow-input" placeholder="Your name" maxlength="20" autocomplete="off">
-                <button id="confirmCreateBtn" class="flow-btn">Create</button>
-            </div>
-            <div id="createError" class="error-msg"></div>
-            <button class="back-link" id="backFromCreate">← Back</button>
-        </div>
-        <div id="joinFlowName" class="screen-base flow-container">
-            <div class="flow-input-group">
-                <input type="text" id="joinNameInput" class="flow-input" placeholder="Your name" maxlength="20" autocomplete="off">
-                <button id="nextToCodeBtn" class="flow-btn">Next</button>
-            </div>
-            <div id="joinNameError" class="error-msg"></div>
-            <button class="back-link" id="backFromJoinName">← Back</button>
-        </div>
-        <div id="joinFlowCode" class="screen-base flow-container">
-            <div class="flow-input-group">
-                <input type="text" id="joinCodeInput" class="flow-input" placeholder="Enter 6-digit code" maxlength="6" style="text-transform:uppercase" autocomplete="off">
-                <button id="submitJoinBtn" class="flow-btn">Join</button>
-            </div>
-            <div id="joinCodeError" class="error-msg"></div>
-            <button class="back-link" id="backFromJoinCode">← Back</button>
-        </div>
-        <div id="waitingFlow" class="screen-base flow-container">
-            <div class="waiting-msg">⏳ Waiting for other person to join...</div>
-            <div class="code-display">
-                <span id="roomCodeSpanWait"></span>
-                <button id="copyWaitingCodeBtn" class="copy-code-btn">Copy</button>
-            </div>
-            <div id="waitingError" class="error-msg"></div>
-            <button class="back-link" id="cancelWaitingBtn">← Cancel</button>
-        </div>
-        <div id="chatDrawRoom" class="chat-draw-room">
-            <div class="drag-overlay" id="dragOverlay"><div class="drag-overlay-label">📎 Drop photos to attach</div></div>
-            <div class="chat-section">
-                <div class="chat-header">
-                    <span class="room-code-badge" id="roomCodeDisplay"></span>
-                    <span class="online-badge" id="peerStatus"><span class="dot yellow"></span> Connecting...</span>
+    
+    <div class="game-banner-wrapper">
+        <!-- Game Container -->
+        <div class="game-container" id="gameContainer">
+            <div id="introScreen" class="screen-base intro-screen active">
+                <img class="intro-title-img" src="https://raw.githubusercontent.com/zryzenzzzz/jacklinus.com/main/Photos/smallersecure.png" alt="Secure Encrypted Chats">
+                <div class="action-buttons">
+                    <button class="action-btn" id="createBtn">Create a Chat Tab</button>
+                    <button class="action-btn" id="joinBtn">Join a Chat Tab</button>
                 </div>
-                <div class="messages-area" id="messagesList"></div>
-                <div class="chat-input-area">
-                    <div class="photo-preview-queue" id="photoPreviewQueue"></div>
-                    <div class="chat-input-row">
-                        <input type="file" id="photoFileInput" accept="image/*" multiple style="display:none">
-                        <button class="paperclip-btn" id="paperclipBtn" aria-label="Send files">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
-                        </button>
-                        <input type="text" id="chatInput" class="chat-input" placeholder="Type message..." autocomplete="off">
-                        <button id="sendMsgBtn" class="send-btn">Send</button>
+            </div>
+            <div id="createFlow" class="screen-base flow-container">
+                <div class="flow-input-group">
+                    <input type="text" id="createNameInput" class="flow-input" placeholder="Your name" maxlength="20" autocomplete="off">
+                    <button id="confirmCreateBtn" class="flow-btn">Create</button>
+                </div>
+                <div id="createError" class="error-msg"></div>
+                <button class="back-link" id="backFromCreate">← Back</button>
+            </div>
+            <div id="joinFlowName" class="screen-base flow-container">
+                <div class="flow-input-group">
+                    <input type="text" id="joinNameInput" class="flow-input" placeholder="Your name" maxlength="20" autocomplete="off">
+                    <button id="nextToCodeBtn" class="flow-btn">Next</button>
+                </div>
+                <div id="joinNameError" class="error-msg"></div>
+                <button class="back-link" id="backFromJoinName">← Back</button>
+            </div>
+            <div id="joinFlowCode" class="screen-base flow-container">
+                <div class="flow-input-group">
+                    <input type="text" id="joinCodeInput" class="flow-input" placeholder="Enter 6-digit code" maxlength="6" style="text-transform:uppercase" autocomplete="off">
+                    <button id="submitJoinBtn" class="flow-btn">Join</button>
+                </div>
+                <div id="joinCodeError" class="error-msg"></div>
+                <button class="back-link" id="backFromJoinCode">← Back</button>
+            </div>
+            <div id="waitingFlow" class="screen-base flow-container">
+                <div class="waiting-msg">⏳ Waiting for other person to join...</div>
+                <div class="code-display">
+                    <span id="roomCodeSpanWait"></span>
+                    <button id="copyWaitingCodeBtn" class="copy-code-btn">Copy</button>
+                </div>
+                <div id="waitingError" class="error-msg"></div>
+                <button class="back-link" id="cancelWaitingBtn">← Cancel</button>
+            </div>
+            <div id="chatDrawRoom" class="chat-draw-room">
+                <div class="drag-overlay" id="dragOverlay"><div class="drag-overlay-label">📎 Drop photos to attach</div></div>
+                <div class="chat-section">
+                    <div class="chat-header">
+                        <span class="room-code-badge" id="roomCodeDisplay"></span>
+                        <span class="online-badge" id="peerStatus"><span class="dot yellow"></span> Connecting...</span>
+                    </div>
+                    <div class="messages-area" id="messagesList"></div>
+                    <div class="chat-input-area">
+                        <div class="photo-preview-queue" id="photoPreviewQueue"></div>
+                        <div class="chat-input-row">
+                            <input type="file" id="photoFileInput" accept="image/*" multiple style="display:none">
+                            <button class="paperclip-btn" id="paperclipBtn" aria-label="Send files">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+                            </button>
+                            <input type="text" id="chatInput" class="chat-input" placeholder="Type message..." autocomplete="off">
+                            <button id="sendMsgBtn" class="send-btn">Send</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="mobile-draw-handle" id="mobileDrawHandle" role="button" tabindex="0" aria-label="Toggle drawing panel" aria-expanded="false">
-                <span class="handle-arrow" id="handleArrow">▼</span>
-                <span class="handle-label">Draw</span>
-            </div>
-            <div class="draw-section" id="drawSection">
-                <div class="draw-header">
-                    <span>Live drawing</span>
-                    <div class="draw-tools">
-                        <button id="penTool" class="tool-btn">Pen</button>
-                        <button id="eraserTool" class="tool-btn">Eraser</button>
-                        <button id="clearCanvasBtn" class="tool-btn">Clear</button>
-                    </div>
+                <div class="mobile-draw-handle" id="mobileDrawHandle" role="button" tabindex="0" aria-label="Toggle drawing panel" aria-expanded="false">
+                    <span class="handle-arrow" id="handleArrow">▼</span>
+                    <span class="handle-label">Draw</span>
                 </div>
-                <canvas id="drawCanvas"></canvas>
+                <div class="draw-section" id="drawSection">
+                    <div class="draw-header">
+                        <span>Live drawing</span>
+                        <div class="draw-tools">
+                            <button id="penTool" class="tool-btn">Pen</button>
+                            <button id="eraserTool" class="tool-btn">Eraser</button>
+                            <button id="clearCanvasBtn" class="tool-btn">Clear</button>
+                        </div>
+                    </div>
+                    <canvas id="drawCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Banner Ad - 160x600 skyscraper with "Advertisement" label (Desktop only) -->
+        <div class="banner-wrapper">
+            <span class="ad-label">Advertisement</span>
+            <div class="banner-container">
+                <script>
+                    atOptions = {
+                        'key' : '8af4bd7ec358bab836fd0e16c1507030',
+                        'format' : 'iframe',
+                        'height' : 600,
+                        'width' : 160,
+                        'params' : {}
+                    };
+                </script>
+                <script src="https://www.highperformanceformat.com/8af4bd7ec358bab836fd0e16c1507030/invoke.js"></script>
             </div>
         </div>
     </div>
+    
     <a href="mailto:service@jacklinus.com" class="mobile-email-inline" aria-label="Email service@jacklinus.com">
         <i class="fas fa-envelope"></i><span>service@jacklinus.com</span>
     </a>
