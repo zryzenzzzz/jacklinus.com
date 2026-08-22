@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chat Room Stats · Jacklinus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #f0f0f0;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            padding: 30px 20px 60px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ddd;
+        }
+        .header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #000;
+        }
+        .header h1 i {
+            color: #4cd964;
+            margin-right: 10px;
+        }
+        .header .subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .back-link {
+            color: #000;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 8px 18px;
+            border: 1px solid #ccc;
+            border-radius: 30px;
+            transition: all 0.2s;
+        }
+        .back-link:hover {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+        .clean-btn {
+            background: #ff453a;
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-family: inherit;
+        }
+        .clean-btn:hover {
+            opacity: 0.8;
+        }
+        .clean-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 10px;
+        }
+        .room-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px 22px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border: 1px solid #e8e8e8;
+            transition: transform 0.15s, box-shadow 0.15s;
+            animation: fadeIn 0.3s ease;
+        }
+        .room-card.removing {
+            animation: fadeOut 0.3s ease forwards;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.95); }
+        }
+        .room-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+        }
+        .room-code {
+            font-family: monospace;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #000;
+        }
+        .room-age {
+            font-size: 12px;
+            color: #999;
+            margin-left: 10px;
+        }
+        .room-age.old {
+            color: #ff453a;
+            font-weight: 600;
+        }
+        .room-users {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .user-count {
+            font-size: 32px;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+        .user-count.online {
+            color: #4cd964;
+        }
+        .user-count.offline {
+            color: #999;
+        }
+        .user-dot {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            transition: background 0.3s;
+        }
+        .user-dot.online {
+            background: #4cd964;
+        }
+        .user-dot.offline {
+            background: #ccc;
+        }
+        .user-list {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #555;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .user-tag {
+            background: #f0f0f0;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #333;
+            transition: all 0.3s;
+        }
+        .user-tag.leaving {
+            background: #ff453a;
+            color: #fff;
+            transform: scale(0.8);
+            opacity: 0;
+        }
+        .room-meta {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #999;
+            border-top: 1px solid #eee;
+            padding-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+        .empty-state i {
+            font-size: 48px;
+            color: #ddd;
+            margin-bottom: 15px;
+            display: block;
+        }
+        .empty-state h3 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .refresh-btn {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-family: inherit;
+            margin-top: 15px;
+        }
+        .refresh-btn:hover {
+            opacity: 0.8;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+        .loading i {
+            font-size: 32px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        .live-badge {
+            font-size: 11px;
+            background: #4cd964;
+            color: #fff;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 8px;
+        }
+        .old-badge {
+            font-size: 11px;
+            background: #ff453a;
+            color: #fff;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 8px;
+        }
+        .footer-stats {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 13px;
+            color: #888;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+        .footer-stats a {
+            color: #000;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #000;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+        .toast.success {
+            background: #4cd964;
+        }
+        .toast.error {
+            background: #ff453a;
+        }
+        .live-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4cd964;
+            margin-right: 6px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        @media (max-width: 600px) {
+            .header h1 { font-size: 20px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .room-code { font-size: 18px; }
+            .user-count { font-size: 26px; }
+            .header-actions { width: 100%; }
+            .header-actions .back-link, .header-actions .clean-btn { flex: 1; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1><i class="fas fa-users"></i> Chat Room Stats <span style="font-size:14px;color:#4cd964;font-weight:400;"><span class="live-indicator"></span> LIVE</span></h1>
+                <div class="subtitle">Real-time user counts across all active chat tabs</div>
+            </div>
+            <div class="header-actions">
+                <button class="clean-btn" id="cleanOldBtn"><i class="fas fa-broom"></i> Clean Old Rooms</button>
+                <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Chat</a>
+            </div>
+        </div>
+
+        <div id="statsContent">
+            <div class="loading"><i class="fas fa-spinner"></i> Loading rooms...</div>
+        </div>
+
+        <div class="footer-stats">
+            <span>🟢 Real-time updates · </span>
+            <a id="refreshLink"><i class="fas fa-sync-alt"></i> Refresh</a>
+            <span style="margin-left:15px;">© 2025 Jacklinus</span>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = { databaseURL: "https://games-5a163-default-rtdb.firebaseio.com/" };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        const statsContent = document.getElementById('statsContent');
+        const cleanOldBtn = document.getElementById('cleanOldBtn');
+        const refreshLink = document.getElementById('refreshLink');
+        const toast = document.getElementById('toast');
+
+        const THREE_HOURS = 3 * 60 * 60 * 1000;
+        let roomsRef = null;
+        let currentRoomData = {};
+        let roomCards = {};
+
+        function showToast(message, type = '') {
+            toast.textContent = message;
+            toast.className = 'toast show ' + type;
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.className = 'toast';
+            }, 4000);
+        }
+
+        function getActiveUsers(activeUsersObj) {
+            if (!activeUsersObj) return [];
+            return Object.keys(activeUsersObj).filter(name => name && name.trim() !== '');
+        }
+
+        function updateRoomCard(roomId, room) {
+            const userCount = room.userCount || 0;
+            const isOnline = userCount > 0;
+            const userNames = room.userNames || [];
+            const hoursOld = Math.round(room.age / 3600000);
+            const minutesOld = Math.round((room.age % 3600000) / 60000);
+
+            let ageDisplay = '';
+            if (room.age > 0) {
+                if (hoursOld > 0) {
+                    ageDisplay = `${hoursOld}h ${minutesOld}m old`;
+                } else {
+                    ageDisplay = `${minutesOld}m old`;
+                }
+            }
+
+            return `
+                <div class="room-card" id="card-${roomId}">
+                    <div class="room-code">
+                        ${roomId}
+                        ${isOnline ? `<span class="live-badge">${userCount} online</span>` : ''}
+                        ${room.isOld ? `<span class="old-badge">⚠️ OLD</span>` : ''}
+                        <span class="room-age ${room.isOld ? 'old' : ''}">${ageDisplay}</span>
+                    </div>
+                    <div class="room-users">
+                        <span class="user-dot ${isOnline ? 'online' : 'offline'}"></span>
+                        <span class="user-count ${isOnline ? 'online' : 'offline'}">${userCount}</span>
+                        <span style="color:#888;font-size:14px;">user${userCount !== 1 ? 's' : ''}</span>
+                    </div>
+                    ${userNames.length > 0 ? `
+                        <div class="user-list" id="userlist-${roomId}">
+                            ${userNames.map(name => `<span class="user-tag" id="user-${roomId}-${name}"><i class="fas fa-user" style="font-size:10px;margin-right:4px;"></i>${name}</span>`).join('')}
+                        </div>
+                    ` : '<div style="color:#999;font-size:13px;margin-top:8px;">⚠️ Stale room with no active users</div>'}
+                    <div class="room-meta">
+                        <span>Created by: ${room.creator}</span>
+                        <span>${room.created ? new Date(room.created).toLocaleDateString() : 'N/A'}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStats(rooms) {
+            if (!rooms) {
+                statsContent.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-comment-slash"></i>
+                        <h3>No active chat rooms</h3>
+                        <p>There are currently no rooms with users. Create a chat tab to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const now = Date.now();
+            const activeRooms = {};
+            const roomKeys = Object.keys(rooms);
+            let totalUsers = 0;
+            let oldRoomCount = 0;
+            
+            roomKeys.forEach(key => {
+                const room = rooms[key];
+                const users = getActiveUsers(room.activeUsers);
+                const created = room.created || 0;
+                const age = now - created;
+                const isOld = age > THREE_HOURS;
+                
+                if (users.length > 0 || isOld) {
+                    activeRooms[key] = {
+                        ...room,
+                        userNames: users,
+                        userCount: users.length,
+                        created: created,
+                        age: age,
+                        isOld: isOld,
+                        creator: room.creator || 'Unknown'
+                    };
+                    if (users.length > 0) totalUsers += users.length;
+                    if (isOld) oldRoomCount++;
+                }
+            });
+
+            const roomKeysSorted = Object.keys(activeRooms).sort((a, b) => {
+                return (activeRooms[b].userCount || 0) - (activeRooms[a].userCount || 0);
+            });
+
+            if (roomKeysSorted.length === 0) {
+                statsContent.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-comment-slash"></i>
+                        <h3>No rooms found</h3>
+                        <p>All chat rooms have been cleaned up!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `<div class="stats-grid">`;
+            
+            roomKeysSorted.forEach(key => {
+                const room = activeRooms[key];
+                html += updateRoomCard(key, room);
+            });
+
+            html += `</div>`;
+            
+            html += `
+                <div style="margin-top:20px;padding:12px 20px;background:#fff;border-radius:12px;border:1px solid #e8e8e8;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+                    <span><strong>${roomKeysSorted.length}</strong> room${roomKeysSorted.length !== 1 ? 's' : ''}</span>
+                    <span><strong>${totalUsers}</strong> total user${totalUsers !== 1 ? 's' : ''} online</span>
+                    ${oldRoomCount > 0 ? `<span style="color:#ff453a;"><strong>${oldRoomCount}</strong> stale room${oldRoomCount !== 1 ? 's' : ''} (3+ hours old)</span>` : '<span style="color:#4cd964;">✅ All rooms are fresh</span>'}
+                    <span style="color:#999;font-size:12px;">🟢 Live updates</span>
+                </div>
+            `;
+
+            statsContent.innerHTML = html;
+            
+            // Store current room data for updates
+            currentRoomData = activeRooms;
+        }
+
+        function setupRealtimeListeners() {
+            // Remove any existing listeners
+            if (roomsRef) {
+                roomsRef.off();
+            }
+
+            roomsRef = db.ref('chat_tabs');
+            
+            // Listen for all changes at once - this gives us real-time updates
+            roomsRef.on('value', (snapshot) => {
+                const rooms = snapshot.val();
+                renderStats(rooms);
+            });
+
+            // Also listen for child changes to animate specific updates
+            roomsRef.on('child_changed', (snapshot) => {
+                const roomId = snapshot.key;
+                const room = snapshot.val();
+                const users = getActiveUsers(room.activeUsers);
+                const userCount = users.length;
+                
+                // Update the user count badge with animation
+                const card = document.getElementById(`card-${roomId}`);
+                if (card) {
+                    const countElement = card.querySelector('.user-count');
+                    const dotElement = card.querySelector('.user-dot');
+                    const badgeElement = card.querySelector('.live-badge');
+                    
+                    if (countElement) {
+                        countElement.textContent = userCount;
+                        countElement.className = `user-count ${userCount > 0 ? 'online' : 'offline'}`;
+                    }
+                    if (dotElement) {
+                        dotElement.className = `user-dot ${userCount > 0 ? 'online' : 'offline'}`;
+                    }
+                    
+                    // Update badge
+                    if (badgeElement) {
+                        if (userCount > 0) {
+                            badgeElement.textContent = `${userCount} online`;
+                            badgeElement.style.display = 'inline-block';
+                        } else {
+                            badgeElement.style.display = 'none';
+                        }
+                    }
+                    
+                    // Update user list with animation
+                    const userList = document.getElementById(`userlist-${roomId}`);
+                    if (userList) {
+                        // Get current user tags
+                        const currentTags = userList.querySelectorAll('.user-tag');
+                        const currentUsers = new Set();
+                        currentTags.forEach(tag => {
+                            const name = tag.textContent.replace('', '').trim();
+                            currentUsers.add(name);
+                        });
+                        
+                        const newUsers = new Set(users);
+                        
+                        // Add new users with animation
+                        newUsers.forEach(name => {
+                            if (!currentUsers.has(name)) {
+                                const tag = document.createElement('span');
+                                tag.className = 'user-tag';
+                                tag.id = `user-${roomId}-${name}`;
+                                tag.innerHTML = `<i class="fas fa-user" style="font-size:10px;margin-right:4px;"></i>${name}`;
+                                tag.style.animation = 'fadeIn 0.3s ease';
+                                userList.appendChild(tag);
+                            }
+                        });
+                        
+                        // Remove users that left with animation
+                        currentUsers.forEach(name => {
+                            if (!newUsers.has(name)) {
+                                const tag = document.getElementById(`user-${roomId}-${name}`);
+                                if (tag) {
+                                    tag.classList.add('leaving');
+                                    setTimeout(() => {
+                                        if (tag.parentNode) tag.remove();
+                                    }, 300);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
+            // Handle room removal
+            roomsRef.on('child_removed', (snapshot) => {
+                const roomId = snapshot.key;
+                const card = document.getElementById(`card-${roomId}`);
+                if (card) {
+                    card.classList.add('removing');
+                    setTimeout(() => {
+                        // Re-render to update the grid
+                        roomsRef.once('value').then(s => renderStats(s.val()));
+                    }, 350);
+                }
+            });
+
+            // Handle new room creation
+            roomsRef.on('child_added', (snapshot) => {
+                // Re-render to show the new room
+                roomsRef.once('value').then(s => renderStats(s.val()));
+            });
+        }
+
+        function loadStats() {
+            statsContent.innerHTML = `<div class="loading"><i class="fas fa-spinner"></i> Loading rooms...</div>`;
+            
+            db.ref('chat_tabs').once('value')
+                .then(snapshot => {
+                    renderStats(snapshot.val());
+                    // Set up real-time listeners after initial load
+                    setupRealtimeListeners();
+                })
+                .catch(err => {
+                    statsContent.innerHTML = `
+                        <div class="empty-state" style="color:#ff6b6b;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Error loading data</h3>
+                            <p>${err.message || 'Could not connect to Firebase.'}</p>
+                            <button class="refresh-btn" onclick="loadStats()">Try Again</button>
+                        </div>
+                    `;
+                    console.error('Stats load error:', err);
+                });
+        }
+
+        function cleanOldRooms() {
+            cleanOldBtn.disabled = true;
+            cleanOldBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cleaning...';
+            
+            const now = Date.now();
+            let removedCount = 0;
+            
+            db.ref('chat_tabs').once('value')
+                .then(snap => {
+                    const rooms = snap.val();
+                    if (!rooms) {
+                        showToast('No rooms to clean', 'success');
+                        cleanOldBtn.disabled = false;
+                        cleanOldBtn.innerHTML = '<i class="fas fa-broom"></i> Clean Old Rooms';
+                        return;
+                    }
+                    
+                    const removes = [];
+                    Object.keys(rooms).forEach(roomId => {
+                        const room = rooms[roomId];
+                        const created = room.created || 0;
+                        const age = now - created;
+                        const userCount = room.activeUsers ? Object.keys(room.activeUsers).length : 0;
+                        
+                        if (age > THREE_HOURS && userCount < 2) {
+                            removes.push(
+                                db.ref('chat_tabs/' + roomId).remove()
+                                    .then(() => {
+                                        removedCount++;
+                                        console.log(`🧹 Removed old room: ${roomId}`);
+                                    })
+                                    .catch(err => console.error('Error removing room:', err))
+                            );
+                        }
+                    });
+                    
+                    if (removes.length === 0) {
+                        showToast('No old rooms to clean (all rooms are fresh or have active users)', 'success');
+                        cleanOldBtn.disabled = false;
+                        cleanOldBtn.innerHTML = '<i class="fas fa-broom"></i> Clean Old Rooms';
+                        return;
+                    }
+                    
+                    Promise.all(removes).then(() => {
+                        showToast(`✅ Cleaned ${removedCount} old room${removedCount !== 1 ? 's' : ''}`, 'success');
+                        cleanOldBtn.disabled = false;
+                        cleanOldBtn.innerHTML = '<i class="fas fa-broom"></i> Clean Old Rooms';
+                        // Refresh will happen via real-time listener
+                    }).catch(err => {
+                        showToast('Error cleaning rooms: ' + err.message, 'error');
+                        cleanOldBtn.disabled = false;
+                        cleanOldBtn.innerHTML = '<i class="fas fa-broom"></i> Clean Old Rooms';
+                    });
+                })
+                .catch(err => {
+                    showToast('Error: ' + err.message, 'error');
+                    cleanOldBtn.disabled = false;
+                    cleanOldBtn.innerHTML = '<i class="fas fa-broom"></i> Clean Old Rooms';
+                });
+        }
+
+        document.getElementById('refreshLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            // Re-setup listeners
+            if (roomsRef) {
+                roomsRef.off();
+            }
+            loadStats();
+        });
+
+        cleanOldBtn.addEventListener('click', cleanOldRooms);
+
+        // Initial load
+        loadStats();
+
+        // Clean up listeners on page unload
+        window.addEventListener('beforeunload', () => {
+            if (roomsRef) {
+                roomsRef.off();
+            }
+        });
+
+        window.loadStats = loadStats;
+    </script>
+</body>
+</html>
