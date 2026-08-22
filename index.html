@@ -530,6 +530,41 @@
         const firebaseConfig = { databaseURL: "https://games-5a163-default-rtdb.firebaseio.com/" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+
+        // ========== AUTO-CLEAN OLD ROOMS (3+ hours) ==========
+        const THREE_HOURS = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+
+        function autoCleanOldRooms() {
+            const now = Date.now();
+            
+            db.ref('chat_tabs').once('value').then(snap => {
+                const rooms = snap.val();
+                if (!rooms) return;
+                
+                Object.keys(rooms).forEach(roomId => {
+                    const room = rooms[roomId];
+                    const created = room.created || 0;
+                    const age = now - created;
+                    
+                    // If room is older than 3 hours, remove it
+                    if (age > THREE_HOURS) {
+                        db.ref('chat_tabs/' + roomId).remove()
+                            .then(() => {
+                                console.log(`🧹 Auto-cleaned old room: ${roomId} (${Math.round(age/60000)} minutes old)`);
+                            })
+                            .catch(err => console.error('Auto-clean error:', err));
+                    }
+                });
+            }).catch(err => console.error('Auto-clean error:', err));
+        }
+
+        // Run auto-clean every 5 minutes
+        setInterval(autoCleanOldRooms, 5 * 60 * 1000);
+
+        // Run once on page load
+        autoCleanOldRooms();
+        // ========== END AUTO-CLEAN ==========
+
         const gameContainer = document.getElementById('gameContainer');
         const terminateBtn = document.getElementById('terminateBtn');
         const messagesList = document.getElementById('messagesList');
