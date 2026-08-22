@@ -227,7 +227,7 @@
             max-width: 1000px;
             text-align: center;
             margin-top: 20px;
-            padding: 20px 0;
+            padding: 20px 0 10px;
         }
         
         .footer-mobile a {
@@ -245,6 +245,34 @@
             color: #666;
             font-size: 12px;
             margin-top: 8px;
+        }
+        
+        /* Native banner for mobile - placed at very bottom under copyright */
+        .native-banner-mobile {
+            display: none;
+            width: 100%;
+            max-width: 1000px;
+            margin: 4px auto 0;
+            text-align: center;
+            background: transparent;
+            min-height: 260px;
+            overflow: hidden;
+            padding-bottom: 4px;
+        }
+        .native-banner-mobile .ad-label-small {
+            font-size: 9px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .native-banner-mobile #container-98b5b8d275c4b66a5768315d78a65a9d {
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         /* Mobile specific styles - Banner hidden on mobile */
@@ -272,9 +300,14 @@
                 width: 100%;
             }
             
-            /* Hide the banner entirely on mobile */
+            /* Hide the desktop banner on mobile */
             .banner-wrapper {
                 display: none !important;
+            }
+            
+            /* Show native banner on mobile at the very bottom */
+            .native-banner-mobile {
+                display: block !important;
             }
             
             .chat-draw-room { flex-direction: column; height: auto !important; min-height: 0; position: relative !important; inset: auto !important; }
@@ -412,7 +445,7 @@
             </div>
         </div>
         
-        <!-- Banner Ad - 160x600 skyscraper with "Advertisement" label (Desktop only) -->
+        <!-- Desktop Banner Ad - 160x600 skyscraper -->
         <div class="banner-wrapper">
             <span class="ad-label">Advertisement</span>
             <div class="banner-container">
@@ -433,6 +466,7 @@
     <a href="mailto:service@jacklinus.com" class="mobile-email-inline" aria-label="Email service@jacklinus.com">
         <i class="fas fa-envelope"></i><span>service@jacklinus.com</span>
     </a>
+    
     <div class="video-label">Watch Video <span class="arrow-down">↓</span></div>
     <div class="video-section" id="videoSection">
         <div class="video-wrapper">
@@ -458,10 +492,17 @@
         </div>
     </div>
     
-    <!-- Mobile footer under video -->
+    <!-- Mobile footer under video with copyright -->
     <div class="footer-mobile">
         <a href="https://jacklinus.com/Privacy">Privacy Policy & Terms of Service</a>
         <div class="copyright">© 2025 Jacklinus. All rights reserved.</div>
+    </div>
+    
+    <!-- Native Banner for Mobile - placed at very bottom under copyright -->
+    <div class="native-banner-mobile" id="nativeBannerMobile">
+        <span class="ad-label-small">Sponsored</span>
+        <script async="async" data-cfasync="false" src="https://pl30949830.profitableratecpmnetwork.com/98b5b8d275c4b66a5768315d78a65a9d/invoke.js"></script>
+        <div id="container-98b5b8d275c4b66a5768315d78a65a9d"></div>
     </div>
     
     <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
