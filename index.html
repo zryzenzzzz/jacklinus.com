@@ -590,6 +590,15 @@
         let drawOpen = false;
         let canvasInitialized = false;
  
+        // ========== NEW: Setup presence with onDisconnect ==========
+        function setupPresence() {
+            if (!roomRef || !myName) return;
+            const userRef = roomRef.child('activeUsers').child(myName);
+            userRef.set(true);
+            // Auto-remove user when they disconnect (close browser, lose internet, etc.)
+            userRef.onDisconnect().remove();
+        }
+
         function setHandleState() {
             if (!isMobile) {
                 drawOpen = true;
@@ -652,13 +661,59 @@
         promoVideo.volume = 0.8; volumeFill.style.width = '80%'; updateVolumeIcon();
  
         function showScreen(name) { Object.values(screens).forEach(s => s && s.classList.remove('active')); if (screens[name]) screens[name].classList.add('active'); if (name === 'chat') { gameContainer.style.minHeight = isMobile ? '0' : '600px'; terminateBtn.classList.add('visible'); } else { gameContainer.style.minHeight = '480px'; terminateBtn.classList.remove('visible'); chatDrawRoom.style.position = ''; } }
-        function cleanupRoom() { if (roomRef) { if (terminationListener) roomRef.child('termination').off('value', terminationListener); if (myName) roomRef.child('activeUsers').child(myName).remove(); if (isCreator) roomRef.child('peerJoined').set(false); roomRef.off(); } roomRef = null; currentRoomId = null; peerJoined = false; isCreator = false; canvasInitialized = false; }
-        async function terminateSession(isRemote = false, byName = null) { if (!isRemote && roomRef && myName) { try { await roomRef.child('termination').set({ terminatedBy: myName, timestamp: Date.now() }); } catch(_) {} } cleanupRoom(); showScreen('intro'); if (byName && byName !== myName) alert(`${byName} has terminated the session.`); if (ctx) { ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); ctx.fillStyle = '#111'; ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); } messagesList.innerHTML = ''; clearStagedPhotos(); }
+        
+        // ========== UPDATED: cleanupRoom now removes user from activeUsers ==========
+        function cleanupRoom() { 
+            if (roomRef) { 
+                if (terminationListener) roomRef.child('termination').off('value', terminationListener); 
+                if (myName) {
+                    // Remove user from activeUsers when cleaning up
+                    roomRef.child('activeUsers').child(myName).remove();
+                }
+                if (isCreator) roomRef.child('peerJoined').set(false); 
+                roomRef.off(); 
+            } 
+            roomRef = null; 
+            currentRoomId = null; 
+            peerJoined = false; 
+            isCreator = false; 
+            canvasInitialized = false; 
+        }
+
+        // ========== UPDATED: terminateSession now removes user first ==========
+        async function terminateSession(isRemote = false, byName = null) { 
+            if (!isRemote && roomRef && myName) { 
+                try { 
+                    // Remove user from activeUsers before terminating
+                    await roomRef.child('activeUsers').child(myName).remove();
+                    await roomRef.child('termination').set({ terminatedBy: myName, timestamp: Date.now() }); 
+                } catch(_) {} 
+            } 
+            cleanupRoom(); 
+            showScreen('intro'); 
+            if (byName && byName !== myName) alert(`${byName} has terminated the session.`); 
+            if (ctx) { 
+                ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); 
+                ctx.fillStyle = '#111'; 
+                ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height); 
+            } 
+            messagesList.innerHTML = ''; 
+            clearStagedPhotos(); 
+        }
+
         function setupTerminationListener() { if (!roomRef) return; if (terminationListener) roomRef.child('termination').off('value', terminationListener); terminationListener = snap => { const d = snap.val(); if (d && d.terminatedBy && d.terminatedBy !== myName) terminateSession(true, d.terminatedBy); }; roomRef.child('termination').on('value', terminationListener); }
         function generateRoomCode() { const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let c = ''; for (let i=0;i<6;i++) c += chars[Math.floor(Math.random() * chars.length)]; return c; }
-        confirmCreateBtn.addEventListener('click', async () => { const name = createNameInput.value.trim(); if (!name) { createError.innerText = 'Please enter your name'; return; } myName = name; createError.innerText = ''; const code = generateRoomCode(); currentRoomId = code; isCreator = true; roomCodeSpanWait.textContent = code; showScreen('waiting'); roomRef = db.ref(`chat_tabs/${code}`); try { await roomRef.set({ creator: myName, created: Date.now(), peerJoined: false, activeUsers: { [myName]: true } }); setupRoomListeners(); } catch(e) { waitingError.innerText = 'Connection error. Try again.'; console.error(e); } });
+        confirmCreateBtn.addEventListener('click', async () => { const name = createNameInput.value.trim(); if (!name) { createError.innerText = 'Please enter your name'; return; } myName = name; createError.innerText = ''; const code = generateRoomCode(); currentRoomId = code; isCreator = true; roomCodeSpanWait.textContent = code; showScreen('waiting'); roomRef = db.ref(`chat_tabs/${code}`); try { await roomRef.set({ creator: myName, created: Date.now(), peerJoined: false, activeUsers: { [myName]: true } }); 
+            // Setup presence right after room is created
+            setupPresence();
+            setupRoomListeners(); 
+        } catch(e) { waitingError.innerText = 'Connection error. Try again.'; console.error(e); } });
         nextToCodeBtn.addEventListener('click', () => { const name = joinNameInput.value.trim(); if (!name) { joinNameError.innerText = 'Please enter your name'; return; } myName = name; joinNameError.innerText = ''; showScreen('joinCode'); });
-        submitJoinBtn.addEventListener('click', async () => { const code = joinCodeInput.value.trim().toUpperCase(); if (code.length !== 6) { joinCodeError.innerText = 'Enter 6-digit code'; return; } const ref = db.ref(`chat_tabs/${code}`); const snap = await ref.once('value'); if (!snap.exists()) { joinCodeError.innerText = 'Room not found'; return; } const d = snap.val(); if (d.peerJoined && Object.keys(d.activeUsers || {}).length >= 2) { joinCodeError.innerText = 'Room is full'; return; } currentRoomId = code; isCreator = false; roomRef = ref; await roomRef.child('peerJoined').set(true); await roomRef.child('activeUsers').update({ [myName]: true }); setupRoomListeners(); enterChatRoom(); });
+        submitJoinBtn.addEventListener('click', async () => { const code = joinCodeInput.value.trim().toUpperCase(); if (code.length !== 6) { joinCodeError.innerText = 'Enter 6-digit code'; return; } const ref = db.ref(`chat_tabs/${code}`); const snap = await ref.once('value'); if (!snap.exists()) { joinCodeError.innerText = 'Room not found'; return; } const d = snap.val(); if (d.peerJoined && Object.keys(d.activeUsers || {}).length >= 2) { joinCodeError.innerText = 'Room is full'; return; } currentRoomId = code; isCreator = false; roomRef = ref; await roomRef.child('peerJoined').set(true); await roomRef.child('activeUsers').update({ [myName]: true }); 
+            // Setup presence after joining
+            setupPresence();
+            setupRoomListeners(); 
+            enterChatRoom(); });
         function setupRoomListeners() { if (!roomRef) return; roomRef.child('peerJoined').on('value', snap => { if (snap.val() === true && !peerJoined) { peerJoined = true; if (screens.waiting.classList.contains('active')) enterChatRoom(); } }); const seenKeys = new Set(); roomRef.child('messages').once('value', snap => { const raw = snap.val(); if (!raw) return; messagesList.innerHTML = ''; const entries = Object.entries(raw).sort((a, b) => (a[1].timestamp || 0) - (b[1].timestamp || 0)); entries.forEach(([k, msg]) => { seenKeys.add(k); renderMessage(msg, false); }); }); roomRef.child('messages').on('child_added', snap => { if (seenKeys.has(snap.key)) return; seenKeys.add(snap.key); renderMessage(snap.val(), true); }); roomRef.child('photos').on('child_added', snap => { const msgKey = snap.key; setTimeout(() => { const bubble = document.querySelector(`[data-msgkey="${msgKey}"]`); if (bubble && !bubble.querySelector('.msg-photos')) { const photoMap = snap.val(); if (photoMap) { const photosArr = Object.values(photoMap); injectPhotosIntoBubble(bubble, photosArr); } } }, 50); }); 
             
             // Drawing listeners - FIXED for real-time sync
@@ -676,11 +731,37 @@
                     roomRef.child('drawing/clearFlag').set(false); 
                 } 
             }); 
-            roomRef.child('activeUsers').on('value', snap => { const cnt = Object.keys(snap.val() || {}).length; const dot = peerStatus.querySelector('.dot'); if (cnt >= 2) { dot.className = 'dot'; dot.style.background = '#4cd964'; peerStatus.innerHTML = `<span class="dot" style="background:#4cd964"></span> Connected • 2 users`; } else { dot.className = 'dot yellow'; dot.style.background = '#f7b731'; peerStatus.innerHTML = `<span class="dot yellow" style="background:#f7b731"></span> Waiting for peer...`; } }); setupTerminationListener(); }
+            roomRef.child('activeUsers').on('value', snap => { 
+                const users = snap.val() || {};
+                const userNames = Object.keys(users);
+                const cnt = userNames.length;
+                const dot = peerStatus.querySelector('.dot'); 
+                if (cnt >= 2) { 
+                    dot.className = 'dot'; 
+                    dot.style.background = '#4cd964'; 
+                    peerStatus.innerHTML = `<span class="dot" style="background:#4cd964"></span> Connected • ${cnt} users`; 
+                } else { 
+                    dot.className = 'dot yellow'; 
+                    dot.style.background = '#f7b731'; 
+                    peerStatus.innerHTML = `<span class="dot yellow" style="background:#f7b731"></span> Waiting for peer... (${cnt} user${cnt !== 1 ? 's' : ''})`; 
+                } 
+            }); 
+            setupTerminationListener(); 
+        }
         function renderMessage(msg, animate) { if (!msg) return; const isOwn = msg.sender === myName; const div = document.createElement('div'); div.className = `message-bubble${isOwn ? ' message-own' : ''}`; if (msg.msgKey) div.dataset.msgkey = msg.msgKey; if (animate) div.style.animation = 'chatMessageIn 0.32s cubic-bezier(0.2,0.9,0.4,1.1) forwards'; const nameEl = document.createElement('div'); nameEl.className = 'msg-name'; nameEl.textContent = msg.sender || ''; div.appendChild(nameEl); if (msg.text && msg.text.trim()) { const textEl = document.createElement('div'); textEl.className = 'msg-text'; textEl.textContent = msg.text; div.appendChild(textEl); } if (msg.photos && msg.photos.length > 0) { injectPhotosIntoBubble(div, msg.photos); } messagesList.appendChild(div); scrollToBottom(); }
         function injectPhotosIntoBubble(bubble, photosArr) { if (!photosArr || photosArr.length === 0) return; if (bubble.querySelector('.msg-photos')) return; const wrap = document.createElement('div'); wrap.className = 'msg-photos'; const urls = photosArr.map(p => p.dataUrl).filter(Boolean); photosArr.forEach((photo, idx) => { if (!photo || !photo.dataUrl) return; const img = document.createElement('img'); img.className = 'msg-photo'; img.alt = photo.name || 'photo'; img.loading = 'lazy'; img.addEventListener('load', scrollToBottom, { once: true }); img.addEventListener('click', () => openLightbox(urls, idx)); img.src = photo.dataUrl; wrap.appendChild(img); }); bubble.appendChild(wrap); scrollToBottom(); }
         function scrollToBottom() { requestAnimationFrame(() => { messagesList.scrollTop = messagesList.scrollHeight; }); }
-        async function enterChatRoom() { showScreen('chat'); roomCodeDisplay.innerText = `Room: ${currentRoomId}`; initCanvas(); await loadCanvasFromDb(); }
+        
+        // ========== UPDATED: enterChatRoom now calls setupPresence ==========
+        async function enterChatRoom() { 
+            showScreen('chat'); 
+            roomCodeDisplay.innerText = `Room: ${currentRoomId}`; 
+            initCanvas(); 
+            await loadCanvasFromDb();
+            // Setup presence again to ensure onDisconnect is registered
+            setupPresence();
+        }
+
         async function loadCanvasFromDb() { 
             if (!roomRef || !ctx || !canvasInitialized) return; 
             const snap = await roomRef.child('drawing/strokes').once('value'); 
