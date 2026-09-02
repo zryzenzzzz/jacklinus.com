@@ -580,54 +580,70 @@
         const db = firebase.database();
 
         // ============================================================
-        // UNIQUE VISITOR TRACKER (Added to main site)
+        // UNIQUE VISITOR TRACKER - Count each IP only ONCE, ever
         // ============================================================
-        const START_DATE = '2026-09-02';
         const COUNTER_KEY = 'unique_visitors_count';
 
         function trackNewVisitor() {
+            // Check if already tracked in this session
             const sessionKey = 'jacklinus_unique_visitor';
-            if (sessionStorage.getItem(sessionKey)) return;
+            if (sessionStorage.getItem(sessionKey)) {
+                console.log('👤 Already counted this session');
+                return;
+            }
 
+            // Get the visitor's IP
             fetch('https://api.ipify.org?format=json')
                 .then(response => response.json())
                 .then(data => {
                     const ip = data.ip;
-                    const today = new Date().toISOString().split('T')[0];
-                    if (today < START_DATE) return;
-
+                    
+                    // Create a unique key for this IP (no date, so it's forever)
                     const visitorKey = `unique_ips/${ip}`;
+
+                    // Check if this IP has EVER been counted
                     db.ref(visitorKey).once('value').then(snapshot => {
                         if (!snapshot.exists()) {
-                            db.ref(visitorKey).set({ firstSeen: Date.now(), date: today });
-                            db.ref(COUNTER_KEY).transaction((current) => (current || 0) + 1);
+                            // New unique IP - increment the counter
+                            db.ref(visitorKey).set({ 
+                                firstSeen: Date.now(),
+                                ip: ip
+                            });
+                            
+                            // Increment the total counter
+                            db.ref(COUNTER_KEY).transaction((current) => {
+                                return (current || 0) + 1;
+                            });
+                            
                             console.log('✅ New unique visitor counted:', ip);
                         } else {
-                            console.log('👤 Returning visitor:', ip);
+                            console.log('👤 Returning visitor (already counted):', ip);
                         }
+                        
+                        // Mark this session as tracked
                         sessionStorage.setItem(sessionKey, 'true');
                     });
                 })
-                .catch(() => {
-                    // Fallback: track by session
+                .catch(error => {
+                    console.error('Error tracking visitor:', error);
+                    // Fallback: track by session ID
                     const sessionId = Math.random().toString(36).substring(2, 10);
-                    const today = new Date().toISOString().split('T')[0];
-                    if (today >= START_DATE) {
-                        const fallbackKey = `unique_sessions/${today}/${sessionId}`;
-                        db.ref(fallbackKey).once('value').then(snap => {
-                            if (!snap.exists()) {
-                                db.ref(fallbackKey).set({ firstSeen: Date.now() });
-                                db.ref(COUNTER_KEY).transaction((current) => (current || 0) + 1);
-                            }
-                        });
-                    }
+                    const fallbackKey = `unique_sessions/${sessionId}`;
+                    db.ref(fallbackKey).once('value').then(snap => {
+                        if (!snap.exists()) {
+                            db.ref(fallbackKey).set({ firstSeen: Date.now() });
+                            db.ref(COUNTER_KEY).transaction((current) => (current || 0) + 1);
+                            console.log('✅ Counted via session fallback');
+                        }
+                    });
                     sessionStorage.setItem(sessionKey, 'true');
                 });
         }
 
+        // Run on page load
         setTimeout(trackNewVisitor, 1500);
         trackNewVisitor();
-        console.log('👤 Unique visitor tracker loaded on main site.');
+        console.log('👤 Unique visitor tracker loaded (count each IP once).');
 
         // ========== AUTO-CLEAN OLD ROOMS (3+ hours) ==========
         const THREE_HOURS = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
