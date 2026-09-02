@@ -580,70 +580,81 @@
         const db = firebase.database();
 
         // ============================================================
-        // UNIQUE VISITOR TRACKER - Count each IP only ONCE, ever
+        // UNIQUE DEVICE TRACKER - Count each device only ONCE, ever
         // ============================================================
         const COUNTER_KEY = 'unique_visitors_count';
 
-        function trackNewVisitor() {
+        function getDeviceFingerprint() {
+            // Create a unique device fingerprint using multiple factors
+            const data = [
+                navigator.userAgent,
+                screen.width + 'x' + screen.height,
+                screen.colorDepth,
+                navigator.language,
+                navigator.platform,
+                navigator.hardwareConcurrency || 0,
+                navigator.deviceMemory || 0,
+                // Use timezone offset
+                new Date().getTimezoneOffset(),
+                // Use a hash of installed fonts (if available)
+                // This is a simpler version that works across browsers
+                navigator.webdriver || false
+            ];
+            return data.join('|');
+        }
+
+        function trackNewDevice() {
             // Check if already tracked in this session
-            const sessionKey = 'jacklinus_unique_visitor';
+            const sessionKey = 'jacklinus_device_visitor';
             if (sessionStorage.getItem(sessionKey)) {
-                console.log('👤 Already counted this session');
+                console.log('📱 Already counted this device session');
                 return;
             }
 
-            // Get the visitor's IP
-            fetch('https://api.ipify.org?format=json')
-                .then(response => response.json())
-                .then(data => {
-                    const ip = data.ip;
-                    
-                    // Create a unique key for this IP (no date, so it's forever)
-                    const visitorKey = `unique_ips/${ip}`;
+            // Get device fingerprint
+            const fingerprint = getDeviceFingerprint();
+            
+            // Create a hash of the fingerprint for the key
+            // (using a simple hash to avoid special characters in Firebase path)
+            let hash = 0;
+            for (let i = 0; i < fingerprint.length; i++) {
+                const char = fingerprint.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            const deviceId = 'dev_' + Math.abs(hash).toString(16).padStart(8, '0');
+            
+            // Create a unique key for this device
+            const deviceKey = `unique_devices/${deviceId}`;
 
-                    // Check if this IP has EVER been counted
-                    db.ref(visitorKey).once('value').then(snapshot => {
-                        if (!snapshot.exists()) {
-                            // New unique IP - increment the counter
-                            db.ref(visitorKey).set({ 
-                                firstSeen: Date.now(),
-                                ip: ip
-                            });
-                            
-                            // Increment the total counter
-                            db.ref(COUNTER_KEY).transaction((current) => {
-                                return (current || 0) + 1;
-                            });
-                            
-                            console.log('✅ New unique visitor counted:', ip);
-                        } else {
-                            console.log('👤 Returning visitor (already counted):', ip);
-                        }
-                        
-                        // Mark this session as tracked
-                        sessionStorage.setItem(sessionKey, 'true');
+            // Check if this device has EVER been counted
+            db.ref(deviceKey).once('value').then(snapshot => {
+                if (!snapshot.exists()) {
+                    // New unique device - increment the counter
+                    db.ref(deviceKey).set({ 
+                        firstSeen: Date.now(),
+                        fingerprint: fingerprint.substring(0, 200) // Store truncated fingerprint for reference
                     });
-                })
-                .catch(error => {
-                    console.error('Error tracking visitor:', error);
-                    // Fallback: track by session ID
-                    const sessionId = Math.random().toString(36).substring(2, 10);
-                    const fallbackKey = `unique_sessions/${sessionId}`;
-                    db.ref(fallbackKey).once('value').then(snap => {
-                        if (!snap.exists()) {
-                            db.ref(fallbackKey).set({ firstSeen: Date.now() });
-                            db.ref(COUNTER_KEY).transaction((current) => (current || 0) + 1);
-                            console.log('✅ Counted via session fallback');
-                        }
+                    
+                    // Increment the total counter
+                    db.ref(COUNTER_KEY).transaction((current) => {
+                        return (current || 0) + 1;
                     });
-                    sessionStorage.setItem(sessionKey, 'true');
-                });
+                    
+                    console.log('✅ New unique device counted');
+                } else {
+                    console.log('📱 Returning device (already counted)');
+                }
+                
+                // Mark this session as tracked
+                sessionStorage.setItem(sessionKey, 'true');
+            });
         }
 
         // Run on page load
-        setTimeout(trackNewVisitor, 1500);
-        trackNewVisitor();
-        console.log('👤 Unique visitor tracker loaded (count each IP once).');
+        setTimeout(trackNewDevice, 1500);
+        trackNewDevice();
+        console.log('📱 Unique device tracker loaded (count each device once).');
 
         // ========== AUTO-CLEAN OLD ROOMS (3+ hours) ==========
         const THREE_HOURS = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
@@ -1060,6 +1071,7 @@
 
         console.log('🔒 View Source and Developer Tools are disabled on this page.');
         console.log('📝 Copy and paste functionality still works for text.');
+        console.log('📱 Counting unique devices (not browsers).');
     </script>
 </body>
 </html>
