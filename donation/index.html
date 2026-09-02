@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Support Jacklinus</title>
+    <link rel="icon" type="image/png" href="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/JACK%20favicon.png?raw=true">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+            background: #ffffff;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 24px 60px;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* ===== TOP RIGHT EMAIL ===== */
+        .top-right-email {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            background: transparent;
+            padding: 0;
+            border: none;
+            transition: opacity 0.2s;
+        }
+
+        .top-right-email i {
+            font-size: 22px;
+            color: #000;
+            -webkit-text-stroke: 0;
+            -webkit-text-fill-color: #000;
+            line-height: 1;
+        }
+
+        .top-right-email span {
+            font-size: 16px;
+            font-weight: 500;
+            color: #000;
+            letter-spacing: 0.2px;
+        }
+
+        .top-right-email:hover {
+            opacity: 0.7;
+        }
+
+        .mobile-email-inline {
+            display: none;
+            width: 100%;
+            max-width: 1000px;
+            margin-top: 24px;
+            margin-bottom: 4px;
+            text-align: left;
+            padding-left: 4px;
+            text-decoration: none;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            border: none;
+        }
+
+        .mobile-email-inline i {
+            font-size: 20px;
+            color: #000;
+            -webkit-text-stroke: 0;
+            -webkit-text-fill-color: #000;
+        }
+
+        .mobile-email-inline span {
+            font-size: 15px;
+            font-weight: 500;
+            color: #000;
+        }
+
+        .mobile-email-inline:hover {
+            opacity: 0.7;
+        }
+
+        .page-logo {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            z-index: 100;
+        }
+
+        .page-logo img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            display: block;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.1));
+            user-select: none;
+            -webkit-user-drag: none;
+            pointer-events: none;
+        }
+
+        /* ===== MAIN WRAPPER ===== */
+        .main-wrapper {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero-section {
+            text-align: center;
+            width: 100%;
+            padding: 10px 0 5px;
+        }
+
+        .hero-section .badge {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #1a1a1a;
+            font-size: 0.75em;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .hero-section h1 {
+            font-size: 2.6em;
+            font-weight: 700;
+            color: #1a1a1a;
+            line-height: 1.1;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .hero-section h1 .highlight {
+            color: #1a1a1a;
+        }
+
+        .hero-section .message {
+            font-size: 2em;
+            font-weight: 300;
+            color: #1a1a1a;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        /* ===== DONATION CARD ===== */
+        .donation-card {
+            width: 100%;
+            max-width: 540px;
+            background: #fafafa;
+            border-radius: 12px;
+            padding: 24px 24px 20px;
+            border: 1px solid #e8e8e8;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .donation-card h2 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+
+        .donation-card .card-sub {
+            color: #1a1a1a;
+            font-size: 0.85em;
+            margin-bottom: 14px;
+        }
+
+        /* ===== KO-FI EMBED ===== */
+        .kofi-embed-wrapper {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            min-height: 380px;
+        }
+
+        .kofi-embed-wrapper iframe {
+            width: 100%;
+            height: 440px;
+            border: none;
+            display: block;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e8e8e8;
+            margin: 16px 0 12px;
+        }
+
+        .secure-badge {
+            color: #1a1a1a;
+            font-size: 0.75em;
+            letter-spacing: 0.3px;
+        }
+
+        .secure-badge i {
+            margin-right: 6px;
+            color: #4CAF50;
+        }
+
+        .back-link {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-size: 0.85em;
+            display: inline-block;
+            margin-top: 8px;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 0.6;
+        }
+
+        .back-link i {
+            margin-right: 4px;
+        }
+
+        .section-divider {
+            border: none;
+            border-top: 1px solid #e8e8e8;
+            width: 100%;
+            max-width: 300px;
+            margin: 10px auto;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            padding: 15px 20px;
+            text-align: center;
+            z-index: 500;
+            border-top: 1px solid #e8e8e8;
+        }
+
+        .footer-fixed a {
+            color: #000;
+            text-decoration: underline;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .footer-fixed a:hover {
+            text-decoration: none;
+        }
+
+        .footer-fixed .copyright {
+            color: #1a1a1a;
+            font-size: 12px;
+            margin-left: 15px;
+        }
+
+        .footer-mobile {
+            display: none;
+            width: 100%;
+            max-width: 1000px;
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px 0;
+        }
+
+        .footer-mobile a {
+            color: #000;
+            text-decoration: underline;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .footer-mobile a:hover {
+            text-decoration: none;
+        }
+
+        .footer-mobile .copyright {
+            color: #1a1a1a;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 850px) {
+            body {
+                padding: 16px 16px 20px;
+                justify-content: flex-start;
+            }
+
+            .top-right-email {
+                display: none !important;
+            }
+
+            .mobile-email-inline {
+                display: flex !important;
+            }
+
+            .page-logo {
+                top: 16px;
+                left: 14px;
+            }
+
+            .page-logo img {
+                width: 50px;
+                height: 50px;
+            }
+
+            .hero-section h1 {
+                font-size: 2em;
+            }
+
+            .hero-section .message {
+                font-size: 1.4em;
+            }
+
+            .donation-card {
+                padding: 20px 16px 16px;
+            }
+
+            .kofi-embed-wrapper iframe {
+                height: 420px;
+            }
+
+            .footer-fixed {
+                display: none;
+            }
+
+            .footer-mobile {
+                display: block;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-section h1 {
+                font-size: 1.6em;
+            }
+
+            .hero-section .message {
+                font-size: 1.1em;
+            }
+
+            .donation-card h2 {
+                font-size: 1em;
+            }
+
+            .kofi-embed-wrapper iframe {
+                height: 440px;
+            }
+        }
+
+        @media (max-height: 700px) {
+            .kofi-embed-wrapper iframe {
+                height: 360px;
+            }
+            .hero-section {
+                padding: 5px 0;
+            }
+            .hero-section h1 {
+                font-size: 2em;
+            }
+            .hero-section .message {
+                font-size: 1.3em;
+            }
+            .donation-card {
+                padding: 16px 16px 12px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .kofi-embed-wrapper iframe {
+                height: 280px;
+            }
+            .hero-section h1 {
+                font-size: 1.6em;
+            }
+            .hero-section .message {
+                font-size: 1em;
+            }
+            .hero-section .badge {
+                font-size: 0.65em;
+                margin-bottom: 8px;
+            }
+            .donation-card {
+                padding: 12px 12px 10px;
+            }
+            .donation-card h2 {
+                font-size: 0.9em;
+            }
+            .donation-card .card-sub {
+                font-size: 0.75em;
+                margin-bottom: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== TOP RIGHT EMAIL ===== -->
+    <a href="mailto:service@jacklinus.com" class="top-right-email" aria-label="Email service@jacklinus.com">
+        <i class="fas fa-envelope"></i><span>service@jacklinus.com</span>
+    </a>
+
+    <!-- ===== PAGE LOGO ===== -->
+    <div class="page-logo">
+        <img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20black.png?raw=true" alt="Jacklinus" draggable="false">
+    </div>
+
+    <!-- ===== MAIN WRAPPER ===== -->
+    <div class="main-wrapper">
+
+        <!-- HERO -->
+        <section class="hero-section">
+            <span class="badge"><i class="fas fa-lock" style="margin-right:6px;"></i> Secure · Private</span>
+            <h1>Support <span class="highlight">Jacklinus</span></h1>
+            <div class="message">Help build the future of Jacklinus</div>
+        </section>
+
+        <!-- ===== DONATION CARD WITH KO-FI EMBED ===== -->
+        <div class="donation-card">
+
+            <h2>Support Jacklinus</h2>
+            <p class="card-sub">One-time or monthly donation</p>
+
+            <!-- Ko-fi Embed - Donate without leaving the page -->
+            <div class="kofi-embed-wrapper">
+                <iframe src="https://ko-fi.com/jacklinus/?hidefeed=true&widget=true&embed=true&preview=true" 
+                        title="Support Jacklinus on Ko-fi">
+                </iframe>
+            </div>
+
+            <hr class="divider">
+
+            <div class="secure-badge">
+                <i class="fas fa-lock"></i> Secure payment · No account needed
+            </div>
+
+            <a href="https://jacklinus.com" class="back-link"><i class="fas fa-arrow-left"></i> Back to Jacklinus</a>
+
+        </div>
+
+        <hr class="section-divider">
+
+    </div>
+
+    <!-- ===== MOBILE EMAIL ===== -->
+    <a href="mailto:service@jacklinus.com" class="mobile-email-inline" aria-label="Email service@jacklinus.com">
+        <i class="fas fa-envelope"></i><span>service@jacklinus.com</span>
+    </a>
+
+    <!-- ===== FOOTER ===== -->
+    <div class="footer-mobile">
+        <a href="https://jacklinus.com/Privacy">Privacy Policy & Terms of Service</a>
+        <div class="copyright">© 2025 Jacklinus. All rights reserved.</div>
+    </div>
+
+    <!-- ===== FIXED FOOTER ===== -->
+    <div class="footer-fixed">
+        <a href="https://jacklinus.com/Privacy">Privacy Policy & Terms of Service</a>
+        <span class="copyright">© 2025 Jacklinus. All rights reserved.</span>
+    </div>
+
+    <script>
+        // ============================================================
+        // DISABLE VIEW SOURCE
+        // ============================================================
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) { e.preventDefault();
+                return false; }
+            if (e.key === 'F12') { e.preventDefault();
+                return false; }
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) { e.preventDefault();
+                return false; }
+            if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) { e.preventDefault();
+                return false; }
+            if (e.ctrlKey && (e.key === 's' || e.key === 'S')) { e.preventDefault();
+                return false; }
+        });
+
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('dragstart', function(e) {
+            if (e.target.tagName === 'IMG') {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        console.log('💛 Jacklinus Donation page loaded.');
+        console.log('🔗 Ko-fi embedded directly on the page.');
+    </script>
+
+</body>
+</html>
