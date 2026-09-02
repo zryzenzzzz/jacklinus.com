@@ -579,6 +579,56 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        // ============================================================
+        // UNIQUE VISITOR TRACKER (Added to main site)
+        // ============================================================
+        const START_DATE = '2026-09-02';
+        const COUNTER_KEY = 'unique_visitors_count';
+
+        function trackNewVisitor() {
+            const sessionKey = 'jacklinus_unique_visitor';
+            if (sessionStorage.getItem(sessionKey)) return;
+
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    const ip = data.ip;
+                    const today = new Date().toISOString().split('T')[0];
+                    if (today < START_DATE) return;
+
+                    const visitorKey = `unique_ips/${ip}`;
+                    db.ref(visitorKey).once('value').then(snapshot => {
+                        if (!snapshot.exists()) {
+                            db.ref(visitorKey).set({ firstSeen: Date.now(), date: today });
+                            db.ref(COUNTER_KEY).transaction((current) => (current || 0) + 1);
+                            console.log('✅ New unique visitor counted:', ip);
+                        } else {
+                            console.log('👤 Returning visitor:', ip);
+                        }
+                        sessionStorage.setItem(sessionKey, 'true');
+                    });
+                })
+                .catch(() => {
+                    // Fallback: track by session
+                    const sessionId = Math.random().toString(36).substring(2, 10);
+                    const today = new Date().toISOString().split('T')[0];
+                    if (today >= START_DATE) {
+                        const fallbackKey = `unique_sessions/${today}/${sessionId}`;
+                        db.ref(fallbackKey).once('value').then(snap => {
+                            if (!snap.exists()) {
+                                db.ref(fallbackKey).set({ firstSeen: Date.now() });
+                                db.ref(COUNTER_KEY).transaction((current) => (current || 0) + 1);
+                            }
+                        });
+                    }
+                    sessionStorage.setItem(sessionKey, 'true');
+                });
+        }
+
+        setTimeout(trackNewVisitor, 1500);
+        trackNewVisitor();
+        console.log('👤 Unique visitor tracker loaded on main site.');
+
         // ========== AUTO-CLEAN OLD ROOMS (3+ hours) ==========
         const THREE_HOURS = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
 
