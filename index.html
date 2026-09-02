@@ -20,9 +20,9 @@
         .mobile-email-inline:hover { opacity: 0.7; }
         .mobile-draw-handle { display: none; }
         .page-logo { position: fixed; top: 30px; left: 30px; z-index: 100; }
-        .page-logo img { width: 80px; height: 80px; object-fit: contain; display: block; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1)); }
+        .page-logo img { width: 80px; height: 80px; object-fit: contain; display: block; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1)); user-select: none; -webkit-user-drag: none; pointer-events: none; }
         .linkedin-image-wrapper { display: block; text-align: center; margin-bottom: 20px; cursor: default; }
-        .linkedin-image { max-width: 500px; width: 90%; height: auto; display: inline-block; pointer-events: none; }
+        .linkedin-image { max-width: 500px; width: 90%; height: auto; display: inline-block; pointer-events: none; user-select: none; -webkit-user-drag: none; }
         .above-tagline { text-align: center; margin-bottom: 20px; font-size: 16px; font-weight: 500; color: #333; letter-spacing: 0.3px; }
         
         /* Main wrapper for game + banner */
@@ -366,15 +366,15 @@
     <a href="mailto:service@jacklinus.com" class="top-right-email" aria-label="Email service@jacklinus.com">
         <i class="fas fa-envelope"></i><span>service@jacklinus.com</span>
     </a>
-    <div class="page-logo"><img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20black.png?raw=true" alt="Jacklinus"></div>
-    <div class="linkedin-image-wrapper"><img class="linkedin-image" src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Linked%20In%20Redirect.png?raw=true" alt="Jacklinus LinkedIn"></div>
+    <div class="page-logo"><img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20black.png?raw=true" alt="Jacklinus" draggable="false"></div>
+    <div class="linkedin-image-wrapper"><img class="linkedin-image" src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Linked%20In%20Redirect.png?raw=true" alt="Jacklinus LinkedIn" draggable="false"></div>
     <div class="above-tagline">Chat securely with Chat Tab by jacklinus</div>
     
     <div class="game-banner-wrapper">
         <!-- Game Container -->
         <div class="game-container" id="gameContainer">
             <div id="introScreen" class="screen-base intro-screen active">
-                <img class="intro-title-img" src="https://raw.githubusercontent.com/zryzenzzzz/jacklinus.com/main/Photos/smallersecure.png" alt="Secure Encrypted Chats">
+                <img class="intro-title-img" src="https://raw.githubusercontent.com/zryzenzzzz/jacklinus.com/main/Photos/smallersecure.png" alt="Secure Encrypted Chats" draggable="false">
                 <div class="action-buttons">
                     <button class="action-btn" id="createBtn">Create a Chat Tab</button>
                     <button class="action-btn" id="joinBtn">Join a Chat Tab</button>
@@ -562,6 +562,14 @@
         // Disable right-click context menu
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
+        });
+
+        // Disable dragging on all images
+        document.addEventListener('dragstart', function(e) {
+            if (e.target.tagName === 'IMG') {
+                e.preventDefault();
+                return false;
+            }
         });
 
         // =======================================================
