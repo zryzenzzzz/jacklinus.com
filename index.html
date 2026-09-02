@@ -23,7 +23,38 @@
         .page-logo img { width: 80px; height: 80px; object-fit: contain; display: block; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1)); user-select: none; -webkit-user-drag: none; pointer-events: none; }
         .linkedin-image-wrapper { display: block; text-align: center; margin-bottom: 20px; cursor: default; }
         .linkedin-image { max-width: 500px; width: 90%; height: auto; display: inline-block; pointer-events: none; user-select: none; -webkit-user-drag: none; }
-        .above-tagline { text-align: center; margin-bottom: 20px; font-size: 16px; font-weight: 500; color: #333; letter-spacing: 0.3px; }
+        
+        /* ===== UPDATED: Tagline with announcement ===== */
+        .tagline-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .tagline-wrapper .announcement {
+            font-weight: 700;
+            color: #1a1a1a;
+            font-size: 0.9em;
+            letter-spacing: 0.2px;
+        }
+        .tagline-wrapper .tagline {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            letter-spacing: 0.3px;
+        }
+        @media (max-width: 600px) {
+            .tagline-wrapper .announcement {
+                font-size: 0.85em;
+                white-space: normal;
+            }
+            .tagline-wrapper .tagline {
+                font-size: 13px;
+            }
+        }
         
         /* Main wrapper for game + banner */
         .game-banner-wrapper {
@@ -289,9 +320,6 @@
             .page-logo { top: 16px; left: 14px; }
             .page-logo img { width: 50px; height: 50px; }
             .linkedin-image { max-width: 300px; }
-            .above-tagline { font-size: 13px; }
-            .intro-screen { padding: 20px 24px 36px; }
-            .intro-title-img { max-width: 200px; }
             
             .game-banner-wrapper {
                 flex-direction: column;
@@ -368,7 +396,12 @@
     </a>
     <div class="page-logo"><img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20black.png?raw=true" alt="Jacklinus" draggable="false"></div>
     <div class="linkedin-image-wrapper"><img class="linkedin-image" src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Linked%20In%20Redirect.png?raw=true" alt="Jacklinus LinkedIn" draggable="false"></div>
-    <div class="above-tagline">Chat securely with Chat Tab by jacklinus</div>
+    
+    <!-- ===== UPDATED: Tagline with announcement - no emoji, no circle ===== -->
+    <div class="tagline-wrapper">
+        <span class="announcement">You can now send Photo files to other devices in seconds!</span>
+        <span class="tagline">Chat securely with Chat Tab by jacklinus</span>
+    </div>
     
     <div class="game-banner-wrapper">
         <!-- Game Container -->
