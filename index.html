@@ -528,6 +528,45 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
     <script>
+        // =======================================================
+        // DISABLE VIEW SOURCE (Ctrl+U, F12, etc.)
+        // =======================================================
+        document.addEventListener('keydown', function(e) {
+            // Block Ctrl+U (View Source)
+            if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+                e.preventDefault();
+                return false;
+            }
+            // Block F12 (Dev Tools)
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+            // Block Ctrl+Shift+I (Inspect)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
+                e.preventDefault();
+                return false;
+            }
+            // Block Ctrl+Shift+J (Console)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) {
+                e.preventDefault();
+                return false;
+            }
+            // Block Ctrl+S (Save Page)
+            if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Disable right-click context menu
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // =======================================================
+        // FIREBASE CONFIG
+        // =======================================================
         const firebaseConfig = { databaseURL: "https://games-5a163-default-rtdb.firebaseio.com/" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
@@ -944,6 +983,9 @@
         document.getElementById('joinBtn').addEventListener('click', () => showScreen('joinName'));
         showScreen('intro');
         setPen();
+
+        console.log('🔒 View Source and Developer Tools are disabled on this page.');
+        console.log('📝 Copy and paste functionality still works for text.');
     </script>
 </body>
 </html>
