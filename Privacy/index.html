@@ -54,6 +54,9 @@
             height: 50px;
             object-fit: contain;
             display: block;
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-drag: none;
         }
         
         .content {
@@ -220,7 +223,7 @@
             <span>Back to Jacklinus.com</span>
         </a>
         <div class="page-logo">
-            <img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20black.png?raw=true" alt="Jacklinus">
+            <img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/Jacklinus%20black.png?raw=true" alt="Jacklinus" draggable="false">
         </div>
     </div>
     
@@ -237,7 +240,6 @@
             </ul>
         </div>
         
-        <!-- PRIVACY POLICY SECTION -->
         <section id="privacy-policy">
             <h2>Privacy Policy</h2>
             
@@ -298,7 +300,6 @@
         
         <hr class="separator">
         
-        <!-- TERMS OF SERVICE SECTION -->
         <section id="terms-of-service">
             <h2>Terms of Service</h2>
             
@@ -352,7 +353,6 @@
             <p>We reserve the right to modify these terms at any time. Continued use of the service after changes constitutes acceptance of the modified terms.</p>
         </section>
         
-        <!-- CONTACT SECTION -->
         <section id="contact">
             <h2>Contact Information</h2>
             <div class="contact-info">
@@ -366,5 +366,69 @@
     <div class="footer">
         <p>&copy; 2025 <a href="https://jacklinus.com">Jacklinus</a>. All rights reserved.</p>
     </div>
+
+    <script>
+        // Disable View Source shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+                e.preventDefault();
+                return false;
+            }
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
+                e.preventDefault();
+                return false;
+            }
+            if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) {
+                e.preventDefault();
+                return false;
+            }
+            if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c')) {
+                e.preventDefault();
+                return false;
+            }
+            if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
+                e.preventDefault();
+                return false;
+            }
+            if (e.ctrlKey && (e.key === 'p' || e.key === 'P')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Disable right-click context menu
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // Disable dragging on all images
+        document.addEventListener('dragstart', function(e) {
+            if (e.target.tagName === 'IMG') {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Disable image dragging globally
+        document.querySelectorAll('img').forEach(img => {
+            img.setAttribute('draggable', 'false');
+            img.style.pointerEvents = 'none';
+            img.style.userSelect = 'none';
+            img.style.webkitUserDrag = 'none';
+        });
+
+        // Disable text selection
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        console.log('🔒 View Source and Developer Tools are disabled on this page.');
+    </script>
 </body>
 </html>
