@@ -155,7 +155,6 @@
             gap: 20px;
         }
 
-        /* NEW: column wrapper that holds the chat container and IG banner together */
         .game-column {
             flex: 1;
             min-width: 320px;
@@ -602,7 +601,7 @@
             display: flex;
         }
 
-        /* Instagram banner – now INSIDE .game-column, always directly under chat box */
+        /* Instagram banner – inside game-column */
         .ig-banner-desktop {
             display: block;
             width: 100%;
@@ -748,6 +747,54 @@
             margin: 4px auto 0;
             text-align: center;
         }
+
+        /* New mobile contact wrapper with larger spacing */
+        .mobile-contact-wrapper {
+            display: none; /* hidden on desktop */
+            width: 100%;
+            max-width: 1000px;
+            margin-top: 24px;
+            margin-bottom: 4px;
+            text-align: left;
+            padding-left: 4px;
+            align-items: center;
+            gap: 48px; /* increased spacing between email and Instagram icon */
+            background: transparent;
+            border: none;
+        }
+        .mobile-contact-wrapper .mobile-email-inline {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            background: transparent;
+            padding: 0;
+            border: none;
+            color: #000;
+            margin: 0;
+        }
+        .mobile-contact-wrapper .mobile-email-inline i {
+            font-size: 20px;
+            color: #000;
+        }
+        .mobile-contact-wrapper .mobile-email-inline span {
+            font-size: 15px;
+            font-weight: 500;
+            color: #000;
+        }
+        .mobile-contact-wrapper .mobile-instagram-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #000;
+            font-size: 24px; /* small icon */
+            transition: opacity 0.2s;
+        }
+        .mobile-contact-wrapper .mobile-instagram-icon:hover {
+            opacity: 0.7;
+        }
+
         @media (max-width: 850px) {
             body {
                 padding: 16px 12px 20px;
@@ -755,8 +802,12 @@
             .top-right-email {
                 display: none !important;
             }
+            .mobile-contact-wrapper {
+                display: flex !important; /* show on mobile */
+            }
             .mobile-email-inline {
                 display: flex !important;
+                margin: 0;
             }
             .page-logo {
                 top: 16px;
@@ -837,7 +888,6 @@
                 font-size: 11px;
                 text-align: center;
             }
-
             .ig-banner-desktop {
                 display: none !important;
             }
@@ -855,7 +905,6 @@
     </div>
 
     <div class="game-banner-wrapper">
-        <!-- NEW: game-column wraps both the chat container and the IG banner -->
         <div class="game-column">
             <div class="game-container" id="gameContainer">
                 <div id="introScreen" class="screen-base intro-screen active">
@@ -890,7 +939,6 @@
                 </div>
             </div>
 
-            <!-- Instagram banner – now inside game-column, directly under chat box -->
             <div class="ig-banner-desktop" id="igBannerDesktop">
                 <a href="https://www.instagram.com/jacklinusdotcom/" target="_blank" rel="noopener noreferrer">
                     <img src="https://github.com/zryzenzzzz/jacklinus.com/blob/main/Photos/poplab_follow-instagram%20(1).png?raw=true" alt="Follow Jacklinus on Instagram" loading="lazy">
@@ -901,7 +949,15 @@
         <div class="banner-wrapper"><span class="ad-label">Advertisement</span><div class="banner-container"><script>atOptions={'key':'8af4bd7ec358bab836fd0e16c1507030','format':'iframe','height':600,'width':160,'params':{}};</script><script src="https://www.highperformanceformat.com/8af4bd7ec358bab836fd0e16c1507030/invoke.js"></script></div></div>
     </div>
 
-    <a href="mailto:service@jacklinus.com" class="mobile-email-inline"><i class="fas fa-envelope"></i><span>service@jacklinus.com</span></a>
+    <!-- Mobile contact area with email and Instagram icon -->
+    <div class="mobile-contact-wrapper">
+        <a href="mailto:service@jacklinus.com" class="mobile-email-inline">
+            <i class="fas fa-envelope"></i><span>service@jacklinus.com</span>
+        </a>
+        <a href="https://www.instagram.com/jacklinusdotcom/" target="_blank" rel="noopener noreferrer" class="mobile-instagram-icon" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+        </a>
+    </div>
 
     <div class="video-label">Watch Video <span>↓</span></div>
 
