@@ -781,8 +781,6 @@
             margin-bottom: 4px;
             text-align: left;
             padding-left: 4px;
-            align-items: center;
-            gap: 24px;
             background: transparent;
             border: none;
         }
@@ -796,6 +794,7 @@
             border: none;
             color: #000;
             margin: 0;
+            margin-bottom: 20px;
         }
         .mobile-contact-wrapper .mobile-email-inline i {
             font-size: 20px;
@@ -809,24 +808,30 @@
         .mobile-contact-wrapper .mobile-instagram-icon {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             text-decoration: none;
             color: #000;
-            font-size: 24px;
+            font-size: 28px;
             transition: opacity 0.2s;
+            margin-top: 8px;
+            margin-left: 4px;
         }
         .mobile-contact-wrapper .mobile-instagram-icon:hover {
             opacity: 0.7;
         }
-        /* mobile donate button */
         .mobile-contact-wrapper .mobile-donate-button {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-end; /* right side */
+            margin-top: 0;
+            margin-bottom: 8px;
+            position: absolute;
+            right: 12px;
+            top: 24px;
         }
         .mobile-contact-wrapper .mobile-donate-button > div {
             transform: scale(0.7);
-            transform-origin: left center;
+            transform-origin: right center;
         }
 
         @media (max-width: 850px) {
@@ -837,11 +842,13 @@
                 display: none !important;
             }
             .mobile-contact-wrapper {
-                display: flex !important;
+                display: block !important;
+                position: relative;
             }
             .mobile-email-inline {
                 display: flex !important;
                 margin: 0;
+                margin-bottom: 20px;
             }
             .page-logo {
                 top: 16px;
@@ -990,7 +997,7 @@
         <div class="banner-wrapper"><span class="ad-label">Advertisement</span><div class="banner-container"><script>atOptions={'key':'8af4bd7ec358bab836fd0e16c1507030','format':'iframe','height':600,'width':160,'params':{}};</script><script src="https://www.highperformanceformat.com/8af4bd7ec358bab836fd0e16c1507030/invoke.js"></script></div></div>
     </div>
 
-    <!-- Mobile contact wrapper with email, donate button, and Instagram icon -->
+    <!-- Mobile contact area: email and donate on same line, instagram below -->
     <div class="mobile-contact-wrapper">
         <a href="mailto:service@jacklinus.com" class="mobile-email-inline">
             <i class="fas fa-envelope"></i><span>service@jacklinus.com</span>
@@ -1062,7 +1069,6 @@
             slides.forEach(s => { const v = s.querySelector('video'); if (v) v.load(); });
             updateCarouselUI();
 
-            // Load PayPal Donate SDK and render buttons
             function loadPayPalDonate() {
                 if (typeof PayPal === 'undefined') {
                     const script = document.createElement('script');
@@ -1079,7 +1085,6 @@
 
             function renderDonateButtons() {
                 if (typeof PayPal !== 'undefined' && PayPal.Donation && PayPal.Donation.Button) {
-                    // Desktop button
                     const desktopContainer = document.getElementById('donate-button-container-desktop');
                     if (desktopContainer) {
                         PayPal.Donation.Button({
@@ -1092,7 +1097,6 @@
                             }
                         }).render('#donate-button-container-desktop');
                     }
-                    // Mobile button
                     const mobileContainer = document.getElementById('mobile-donate-button-container');
                     if (mobileContainer) {
                         PayPal.Donation.Button({
@@ -1110,7 +1114,6 @@
 
             loadPayPalDonate();
 
-            // ... rest of the original JavaScript code ...
             const gameContainer = document.getElementById('gameContainer');
             const terminateBtn = document.getElementById('terminateBtn');
             const messagesList = document.getElementById('messagesList');
