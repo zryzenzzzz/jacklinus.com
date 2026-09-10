@@ -319,6 +319,12 @@
             color: #fff;
             font-size: 13px;
             cursor: pointer;
+            transition: background 0.4s ease, color 0.4s ease;
+            min-width: 70px;
+        }
+        .copy-code-btn.copied {
+            background: #ffffff;
+            color: #000;
         }
         .error-msg {
             color: #ff8a7a;
@@ -822,7 +828,7 @@
         .mobile-contact-wrapper .mobile-donate-button {
             display: flex;
             align-items: center;
-            justify-content: flex-end; /* right side */
+            justify-content: flex-end;
             margin-top: 0;
             margin-bottom: 8px;
             position: absolute;
@@ -1428,7 +1434,19 @@
             lightboxNext.addEventListener('click', e => { e.stopPropagation();
                 lightboxIndex = (lightboxIndex + 1) % lightboxPhotos.length;
                 showLightboxSlide(); });
-            copyWaitingCodeBtn.addEventListener('click', () => { navigator.clipboard.writeText(currentRoomId); });
+
+            // Copy button with smooth fade to white and back
+            copyWaitingCodeBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(currentRoomId).catch(() => {});
+                const originalText = copyWaitingCodeBtn.textContent;
+                copyWaitingCodeBtn.textContent = 'Copied!';
+                copyWaitingCodeBtn.classList.add('copied');
+                setTimeout(() => {
+                    copyWaitingCodeBtn.textContent = originalText;
+                    copyWaitingCodeBtn.classList.remove('copied');
+                }, 1500);
+            });
+
             document.getElementById('backFromCreate').addEventListener('click', () => showScreen('intro'));
             document.getElementById('backFromJoinName').addEventListener('click', () => showScreen('intro'));
             document.getElementById('backFromJoinCode').addEventListener('click', () => showScreen('joinName'));
