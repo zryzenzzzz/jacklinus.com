@@ -109,9 +109,16 @@ shell = head + '\n<body>\n<script src="assets/desktop.js"></script>\n</body>\n</
 # --- assemble _site ---------------------------------------------------------
 if os.path.exists(OUT):
     shutil.rmtree(OUT)
-shutil.copytree(ROOT, OUT, ignore=lambda d, names: [
-    n for n in names if n in ('.git', '.github', 'index.html', '_site')
-])
+def ignore_func(d, names):
+    # Only exclude root index.html (it's replaced by the shell);
+    # subdirectory index.html files (Privacy/, terms/, etc.) must be kept.
+    ignore_list = ['.git', '.github', '_site']
+    if d == ROOT:
+        ignore_list.append('index.html')
+    return [n for n in names if n in ignore_list]
+
+
+shutil.copytree(ROOT, OUT, ignore=ignore_func)
 
 os.makedirs(os.path.join(OUT, 'assets'), exist_ok=True)
 with open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8') as f:
