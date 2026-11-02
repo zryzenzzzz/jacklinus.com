@@ -34,7 +34,6 @@
   #landing button:hover { background: #3a3f48; }
   #landing .note { margin-top: 14px; font-size: 10px; color: #72767d; }
 
-  /* Hidden kick password prompt */
   #kickPrompt {
     display: none;
     position: fixed;
@@ -62,7 +61,6 @@
   .kick-box button:hover { background: #3a3f48; }
   .kick-box .err { color: #f04747; font-size: 11px; margin-bottom: 8px; display: none; }
 
-  /* Ryan password dropdown */
   #ryanDropdown {
     display: none;
     background: #2c2f33;
@@ -158,7 +156,6 @@
   .lightbox img { max-width: 90vw; max-height: 80vh; border-radius: 4px; }
   .lightbox-close { position: fixed; top: 18px; right: 24px; color: #fff; font-size: 26px; cursor: pointer; background: none; border: none; }
 
-  /* Notification dot & count badge */
   .header-bar .left { display: flex; align-items: center; gap: 8px; }
   .notif-dot {
     display: none;
@@ -185,6 +182,11 @@
     flex-shrink: 0;
   }
   .notif-count.active { display: inline-block; }
+
+  /* Enable spellcheck red underline for editable fields */
+  input[type="text"], textarea, [contenteditable="true"] {
+    spellcheck: true;
+  }
 </style>
 </head>
 <body>
@@ -193,7 +195,7 @@
   <h2>Public Chat Room</h2>
   <p>Enter a username to join. No registration &mdash; anyone can join from anywhere.</p>
   <label for="usernameInput">Username</label>
-  <input type="text" id="usernameInput" maxlength="20" autocomplete="off">
+  <input type="text" id="usernameInput" maxlength="20" autocomplete="off" spellcheck="true">
   <div id="ryanDropdown">
     <div class="dropdown-msg">This username is password protected.</div>
     <input type="password" id="ryanPasswordInput" placeholder="Enter password">
@@ -238,7 +240,7 @@
     <div class="input-area">
       <input type="file" id="photoInput" accept="image/*" multiple>
       <button id="paperclipBtn" title="Attach photos"><i class="fa fa-paperclip"></i></button>
-      <input type="text" id="messageInput" placeholder="Message..." maxlength="500">
+      <input type="text" id="messageInput" placeholder="Message..." maxlength="500" spellcheck="true">
       <button id="sendBtn">Send</button>
     </div>
     <div id="photoPreviewQueue"></div>
@@ -250,7 +252,6 @@
   <img id="lightboxImg" src="" alt="Chat photo">
 </div>
 
-<!-- Hidden kick password prompt -->
 <div id="kickPrompt">
   <div class="kick-box">
     <label for="kickPasswordInput">Password</label>
@@ -263,9 +264,26 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 <script>
-  // Disable right-click context menu
+  // --- Custom context menu: allow spellcheck suggestions only ---
+  // Detect if the right-click target is an editable text field.
+  // If so, let the browser handle the native context menu (with spelling suggestions).
+  // Otherwise, block the context menu entirely (removing Inspect / View Source).
   document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
+    const target = e.target;
+    const isEditable =
+      target.tagName === 'INPUT' ||
+      target.tagName === 'TEXTAREA' ||
+      target.isContentEditable ||
+      target.closest('[contenteditable="true"]');
+
+    if (isEditable) {
+      // Allow native menu so spellcheck suggestions appear (auto-correct red line)
+      return true;
+    } else {
+      // Block context menu everywhere else
+      e.preventDefault();
+      return false;
+    }
   });
 
   // Initialize Firebase
@@ -304,13 +322,11 @@
   const notifDot = document.getElementById('notifDot');
   const notifCount = document.getElementById('notifCount');
 
-  // Ryan password elements
   const ryanDropdown = document.getElementById('ryanDropdown');
   const ryanPasswordInput = document.getElementById('ryanPasswordInput');
   const ryanSubmitBtn = document.getElementById('ryanSubmitBtn');
   const ryanErr = document.getElementById('ryanErr');
 
-  // Kick prompt elements
   const kickPrompt = document.getElementById('kickPrompt');
   const kickPasswordInput = document.getElementById('kickPasswordInput');
   const kickSubmitBtn = document.getElementById('kickSubmitBtn');
@@ -328,7 +344,6 @@
   let isWindowFocused = true;
   let kickTargetName = null;
 
-  // Triple-click tracking
   let clickCount = 0;
   let clickTimer = null;
   let lastClickedName = null;
@@ -486,10 +501,8 @@
 
   function handleKickSubmit() {
     if (kickPasswordInput.value === 'Kick67') {
-      // Kick the target user
       if (kickTargetName) {
         roomRef.child('activeUsers').child(kickTargetName).remove();
-        // Also set a flag to make their client sign out
         roomRef.child('kicked').child(kickTargetName).set(Date.now());
       }
       closeKickPrompt();
@@ -514,10 +527,8 @@
         <span class="user-name">${esc(name)}</span>
       `;
 
-      // Triple-click detection
       row.addEventListener('click', () => {
         if (lastClickedName !== name) {
-          // Different user, reset counter
           clickCount = 0;
           lastClickedName = name;
         }
@@ -525,14 +536,12 @@
 
         if (clickTimer) clearTimeout(clickTimer);
 
-        // Reset after 1 second of no clicks
         clickTimer = setTimeout(() => {
           clickCount = 0;
           lastClickedName = null;
         }, 1000);
 
         if (clickCount >= 3) {
-          // Triple click achieved
           clickCount = 0;
           lastClickedName = null;
           if (clickTimer) clearTimeout(clickTimer);
@@ -563,13 +572,10 @@
     myUserRef.set({ color: myColor, joined: Date.now() });
     myUserRef.onDisconnect().remove();
 
-    // Listen for being kicked
     roomRef.child('kicked').child(myName).on('value', (snap) => {
       if (snap.val()) {
-        // We've been kicked
         roomRef.child('kicked').child(myName).remove();
         myUserRef.remove();
-        // Reset to landing page
         chatApp.style.display = 'none';
         landing.style.display = 'block';
         usernameInput.value = '';
@@ -786,7 +792,6 @@
     if (e.key === 'Enter') handleKickSubmit();
   });
 
-  // Close kick prompt on background click
   kickPrompt.addEventListener('click', (e) => {
     if (e.target === kickPrompt) closeKickPrompt();
   });
