@@ -34,6 +34,55 @@
   #landing button:hover { background: #3a3f48; }
   #landing .note { margin-top: 14px; font-size: 10px; color: #72767d; }
 
+  /* Hidden kick password prompt */
+  #kickPrompt {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+  }
+  #kickPrompt.open { display: flex; }
+  .kick-box {
+    background: #23272a;
+    border: 1px solid #202225;
+    padding: 18px;
+    width: 280px;
+    text-align: left;
+  }
+  .kick-box label { display: block; font-size: 11px; color: #b9bbbe; margin-bottom: 4px; }
+  .kick-box input {
+    width: 100%; height: 30px; border: 1px solid #202225; background: #2c2f33; color: #fff; padding: 0 10px; font-size: 13px; margin-bottom: 12px; box-sizing: border-box;
+  }
+  .kick-box button {
+    width: 100%; height: 30px; border: 1px solid #202225; background: #2c2f33; color: #fff; font-size: 13px; cursor: pointer;
+  }
+  .kick-box button:hover { background: #3a3f48; }
+  .kick-box .err { color: #f04747; font-size: 11px; margin-bottom: 8px; display: none; }
+
+  /* Ryan password dropdown */
+  #ryanDropdown {
+    display: none;
+    background: #2c2f33;
+    border: 1px solid #202225;
+    padding: 10px;
+    margin-top: -8px;
+    margin-bottom: 12px;
+    text-align: left;
+  }
+  #ryanDropdown.open { display: block; }
+  #ryanDropdown .dropdown-msg { font-size: 11px; color: #b9bbbe; margin-bottom: 8px; }
+  #ryanDropdown input {
+    width: 100%; height: 30px; border: 1px solid #202225; background: #23272a; color: #fff; padding: 0 10px; font-size: 13px; margin-bottom: 8px; box-sizing: border-box;
+  }
+  #ryanDropdown button {
+    width: 100%; height: 30px; border: 1px solid #202225; background: #2c2f33; color: #fff; font-size: 13px; cursor: pointer;
+  }
+  #ryanDropdown button:hover { background: #3a3f48; }
+  #ryanDropdown .err { color: #f04747; font-size: 11px; margin-bottom: 8px; display: none; }
+
   #chatApp { display: none; max-width: 980px; margin: 0 auto; }
   .chat-wrap { border: 1px solid #202225; background: #2c2f33; height: 560px; display: flex; flex-direction: column; }
   .header-bar {
@@ -76,7 +125,7 @@
   .sidebar-head { height: 30px; border-bottom: 1px solid #202225; padding: 0 10px; display: flex; align-items: center; font-weight: bold; font-size: 12px; color: #fff; }
   #onlineCount { font-weight: normal; font-size: 11px; color: #72767d; margin-top: 8px; text-align: center; }
   #usersList { flex: 1; overflow-y: auto; padding: 6px 8px; display: flex; flex-direction: column; gap: 4px; }
-  .user-row { display: flex; align-items: center; gap: 8px; padding: 4px 6px; border: 1px solid transparent; border-radius: 3px; font-size: 13px; cursor: default; }
+  .user-row { display: flex; align-items: center; gap: 8px; padding: 4px 6px; border: 1px solid transparent; border-radius: 3px; font-size: 13px; cursor: default; user-select: none; }
   .user-row:hover { background: #2c2f33; border-color: #3a3f48; }
   .user-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
   .user-name { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: #dcddde; }
@@ -145,6 +194,12 @@
   <p>Enter a username to join. No registration &mdash; anyone can join from anywhere.</p>
   <label for="usernameInput">Username</label>
   <input type="text" id="usernameInput" maxlength="20" autocomplete="off">
+  <div id="ryanDropdown">
+    <div class="dropdown-msg">This username is password protected.</div>
+    <input type="password" id="ryanPasswordInput" placeholder="Enter password">
+    <div class="err" id="ryanErr">Incorrect password.</div>
+    <button id="ryanSubmitBtn">Submit</button>
+  </div>
   <button id="joinBtn">Join</button>
   <div class="note">Photos supported &bull; Reply to messages &bull; Clear chats button in sidebar</div>
 </div>
@@ -195,9 +250,24 @@
   <img id="lightboxImg" src="" alt="Chat photo">
 </div>
 
+<!-- Hidden kick password prompt -->
+<div id="kickPrompt">
+  <div class="kick-box">
+    <label for="kickPasswordInput">Password</label>
+    <input type="password" id="kickPasswordInput">
+    <div class="err" id="kickErr">Incorrect password.</div>
+    <button id="kickSubmitBtn">Submit</button>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 <script>
+  // Disable right-click context menu
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+  });
+
   // Initialize Firebase
   const firebaseConfig = {
     databaseURL: "https://games-5a163-default-rtdb.firebaseio.com/"
@@ -231,9 +301,20 @@
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImg');
   const lightboxClose = document.getElementById('lightboxClose');
-  // Notification elements
   const notifDot = document.getElementById('notifDot');
   const notifCount = document.getElementById('notifCount');
+
+  // Ryan password elements
+  const ryanDropdown = document.getElementById('ryanDropdown');
+  const ryanPasswordInput = document.getElementById('ryanPasswordInput');
+  const ryanSubmitBtn = document.getElementById('ryanSubmitBtn');
+  const ryanErr = document.getElementById('ryanErr');
+
+  // Kick prompt elements
+  const kickPrompt = document.getElementById('kickPrompt');
+  const kickPasswordInput = document.getElementById('kickPasswordInput');
+  const kickSubmitBtn = document.getElementById('kickSubmitBtn');
+  const kickErr = document.getElementById('kickErr');
 
   // --- State Variables ---
   let myName = '';
@@ -244,10 +325,13 @@
   let knownUsers = {};
   let isConnected = false;
   let unreadCount = 0;
-  let lastMessageCount = 0;
-  let lastSnapshotKeys = new Set();
   let isWindowFocused = true;
-  let initialLoadDone = false;
+  let kickTargetName = null;
+
+  // Triple-click tracking
+  let clickCount = 0;
+  let clickTimer = null;
+  let lastClickedName = null;
 
   const NAME_COLORS = ['#7289da','#43b581','#faa61a','#f04747','#a040a0','#4267b2','#ff8fab','#3ba55d','#a84300','#4f545c','#e0e0e0','#ff9500','#b03a2e','#7d3c98','#5794f2'];
 
@@ -281,7 +365,6 @@
       notifDot.classList.add('active');
       notifCount.classList.add('active');
       notifCount.textContent = unreadCount > 99 ? '99+' : unreadCount;
-      // Update page title
       document.title = `(${unreadCount > 99 ? '99+' : unreadCount}) Public Chat Room`;
     } else {
       notifDot.classList.remove('active');
@@ -296,11 +379,9 @@
     updateNotificationDisplay();
   }
 
-  // When the window gains focus, reset the counter
   window.addEventListener('focus', () => {
     isWindowFocused = true;
     resetUnread();
-    // Also scroll to bottom to see the latest
     scrollBottom();
   });
 
@@ -389,6 +470,80 @@
     scrollBottom();
   }
 
+  // --- Kick Functionality ---
+  function openKickPrompt(targetName) {
+    kickTargetName = targetName;
+    kickPasswordInput.value = '';
+    kickErr.style.display = 'none';
+    kickPrompt.classList.add('open');
+    kickPasswordInput.focus();
+  }
+
+  function closeKickPrompt() {
+    kickPrompt.classList.remove('open');
+    kickTargetName = null;
+  }
+
+  function handleKickSubmit() {
+    if (kickPasswordInput.value === 'Kick67') {
+      // Kick the target user
+      if (kickTargetName) {
+        roomRef.child('activeUsers').child(kickTargetName).remove();
+        // Also set a flag to make their client sign out
+        roomRef.child('kicked').child(kickTargetName).set(Date.now());
+      }
+      closeKickPrompt();
+    } else {
+      kickErr.style.display = 'block';
+      kickPasswordInput.value = '';
+      kickPasswordInput.focus();
+    }
+  }
+
+  // --- User Row Rendering with Triple-Click ---
+  function renderUsers(users) {
+    usersList.innerHTML = '';
+    const userArr = Object.entries(users);
+    onlineCount.textContent = `${userArr.length} online`;
+    
+    userArr.forEach(([name, data]) => {
+      const row = document.createElement('div');
+      row.className = 'user-row';
+      row.innerHTML = `
+        <span class="user-dot" style="background-color: ${data.color || '#72767d'};"></span>
+        <span class="user-name">${esc(name)}</span>
+      `;
+
+      // Triple-click detection
+      row.addEventListener('click', () => {
+        if (lastClickedName !== name) {
+          // Different user, reset counter
+          clickCount = 0;
+          lastClickedName = name;
+        }
+        clickCount++;
+
+        if (clickTimer) clearTimeout(clickTimer);
+
+        // Reset after 1 second of no clicks
+        clickTimer = setTimeout(() => {
+          clickCount = 0;
+          lastClickedName = null;
+        }, 1000);
+
+        if (clickCount >= 3) {
+          // Triple click achieved
+          clickCount = 0;
+          lastClickedName = null;
+          if (clickTimer) clearTimeout(clickTimer);
+          openKickPrompt(name);
+        }
+      });
+
+      usersList.appendChild(row);
+    });
+  }
+
   // --- Core Chat Logic ---
   function joinChat() {
     const name = usernameInput.value.trim();
@@ -401,16 +556,33 @@
     landing.style.display = 'none';
     chatApp.style.display = 'block';
 
-    // Reset notification state
     unreadCount = 0;
     updateNotificationDisplay();
 
-    // 1. Set presence
     const myUserRef = roomRef.child('activeUsers').child(myName);
     myUserRef.set({ color: myColor, joined: Date.now() });
     myUserRef.onDisconnect().remove();
 
-    // 2. Listen for messages — this is where we detect new messages
+    // Listen for being kicked
+    roomRef.child('kicked').child(myName).on('value', (snap) => {
+      if (snap.val()) {
+        // We've been kicked
+        roomRef.child('kicked').child(myName).remove();
+        myUserRef.remove();
+        // Reset to landing page
+        chatApp.style.display = 'none';
+        landing.style.display = 'block';
+        usernameInput.value = '';
+        messagesContainer.innerHTML = '';
+        seenKeys = {};
+        knownUsers = {};
+        myName = '';
+        isConnected = false;
+        resetUnread();
+        usernameInput.focus();
+      }
+    });
+
     roomRef.child('messages').on('child_added', (snap) => {
       const key = snap.key;
       if (seenKeys[key]) return;
@@ -419,7 +591,6 @@
       const msg = snap.val();
       renderMessage(msg);
 
-      // Notification logic: if this is a real message (not system) from someone else, count it
       if (msg && msg.sender && msg.sender !== myName && msg.type !== 'system') {
         if (!isWindowFocused) {
           unreadCount++;
@@ -428,7 +599,6 @@
       }
     });
 
-    // 3. Listen for chat clear
     roomRef.child('messages').on('value', (snap) => {
       if (snap.val() === null) {
         messagesContainer.innerHTML = '';
@@ -437,23 +607,10 @@
       }
     });
 
-    // 4. Listen for active users changes
     roomRef.child('activeUsers').on('value', (snap) => {
       const users = snap.val() || {};
       
-      usersList.innerHTML = '';
-      const userArr = Object.entries(users);
-      onlineCount.textContent = `${userArr.length} online`;
-      
-      userArr.forEach(([name, data]) => {
-        const row = document.createElement('div');
-        row.className = 'user-row';
-        row.innerHTML = `
-          <span class="user-dot" style="background-color: ${data.color || '#72767d'};"></span>
-          <span class="user-name">${esc(name)}</span>
-        `;
-        usersList.appendChild(row);
-      });
+      renderUsers(users);
 
       if (Object.keys(knownUsers).length > 0) {
         for (const name in users) {
@@ -568,10 +725,72 @@
     });
   }
 
+  // --- Ryan Password Logic ---
+  let ryanUnlocked = false;
+
+  function checkRyanUsername() {
+    const val = usernameInput.value.trim();
+    if (val === 'Ryan' && !ryanUnlocked) {
+      ryanDropdown.classList.add('open');
+    } else if (val !== 'Ryan') {
+      ryanDropdown.classList.remove('open');
+      ryanErr.style.display = 'none';
+    }
+  }
+
+  function handleRyanSubmit() {
+    if (ryanPasswordInput.value === 'goodandevildontexist') {
+      ryanUnlocked = true;
+      ryanDropdown.classList.remove('open');
+      ryanErr.style.display = 'none';
+      joinChat();
+    } else {
+      ryanErr.style.display = 'block';
+      ryanPasswordInput.value = '';
+      ryanPasswordInput.focus();
+    }
+  }
+
   // --- Event Listeners ---
-  joinBtn.addEventListener('click', joinChat);
-  usernameInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') joinChat(); });
-  
+  joinBtn.addEventListener('click', () => {
+    const val = usernameInput.value.trim();
+    if (val === 'Ryan' && !ryanUnlocked) {
+      ryanDropdown.classList.add('open');
+      ryanPasswordInput.focus();
+    } else {
+      joinChat();
+    }
+  });
+
+  usernameInput.addEventListener('input', checkRyanUsername);
+
+  usernameInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      const val = usernameInput.value.trim();
+      if (val === 'Ryan' && !ryanUnlocked) {
+        ryanDropdown.classList.add('open');
+        ryanPasswordInput.focus();
+      } else {
+        joinChat();
+      }
+    }
+  });
+
+  ryanSubmitBtn.addEventListener('click', handleRyanSubmit);
+  ryanPasswordInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleRyanSubmit();
+  });
+
+  kickSubmitBtn.addEventListener('click', handleKickSubmit);
+  kickPasswordInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleKickSubmit();
+  });
+
+  // Close kick prompt on background click
+  kickPrompt.addEventListener('click', (e) => {
+    if (e.target === kickPrompt) closeKickPrompt();
+  });
+
   sendBtn.addEventListener('click', sendMessage);
   messageInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
   
@@ -595,9 +814,7 @@
     }
   });
 
-  // Initialize notification display
   updateNotificationDisplay();
-
   usernameInput.focus();
 </script>
 
