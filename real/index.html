@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Working on it</title>
+  <style>
+    /* Reset default margins and ensure full viewport height */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      /* White background */
+      background-color: #ffffff;
+      /* Use flexbox to center content both horizontally and vertically */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* Full viewport height */
+      min-height: 100vh;
+      /* Optional: prevent scrolling if not needed */
+      overflow: hidden;
+      /* Font setup: black letters, simple, clean */
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      color: #000000;
+    }
+
+    /* The main text styling */
+    .message {
+      font-size: 4rem;          /* large, readable text */
+      font-weight: 600;         /* semi-bold, crisp letters */
+      letter-spacing: 0.02em;   /* slight spacing for readability */
+      text-align: center;
+      /* In case text wraps on small screens */
+      line-height: 1.2;
+      /* Ensure black color */
+      color: #000000;
+      /* Optional: subtle softness – but keep pure black */
+    }
+
+    /* Small screens: reduce font size so it stays nicely centered */
+    @media (max-width: 600px) {
+      .message {
+        font-size: 2.5rem;
+      }
+    }
+
+    /* Even smaller screens */
+    @media (max-width: 400px) {
+      .message {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Just the text, exactly as requested: "working on it" in black letters -->
+  <div class="message">working on it</div>
+</body>
+</html>
