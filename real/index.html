@@ -1,63 +1,525 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Working on it</title>
-  <style>
-    /* Reset default margins and ensure full viewport height */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<title>Public Chat Room</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+  body {
+    background: #2c2f33;
+    color: #dcddde;
+    font-family: Tahoma, "Segoe UI", Arial, sans-serif;
+    font-size: 13px;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+  }
+  #landing {
+    width: 360px;
+    margin: 60px auto;
+    border: 1px solid #202225;
+    background: #23272a;
+    padding: 18px;
+    text-align: left;
+  }
+  #landing h2 { font-size: 16px; margin: 0 0 8px 0; font-weight: bold; color: #fff; }
+  #landing p { font-size: 11px; color: #72767d; margin: 0 0 16px 0; }
+  #landing label { display: block; font-size: 11px; color: #b9bbbe; margin-bottom: 4px; }
+  #landing input {
+    width: 100%; height: 30px; border: 1px solid #202225; background: #2c2f33; color: #fff; padding: 0 10px; font-size: 13px; margin-bottom: 12px; box-sizing: border-box;
+  }
+  #landing button {
+    width: 100%; height: 30px; border: 1px solid #202225; background: #2c2f33; color: #fff; font-size: 13px; cursor: pointer;
+  }
+  #landing button:hover { background: #3a3f48; }
+  #landing .note { margin-top: 14px; font-size: 10px; color: #72767d; }
 
-    body {
-      /* White background */
-      background-color: #ffffff;
-      /* Use flexbox to center content both horizontally and vertically */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      /* Full viewport height */
-      min-height: 100vh;
-      /* Optional: prevent scrolling if not needed */
-      overflow: hidden;
-      /* Font setup: black letters, simple, clean */
-      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
-      color: #000000;
-    }
-
-    /* The main text styling */
-    .message {
-      font-size: 4rem;          /* large, readable text */
-      font-weight: 600;         /* semi-bold, crisp letters */
-      letter-spacing: 0.02em;   /* slight spacing for readability */
-      text-align: center;
-      /* In case text wraps on small screens */
-      line-height: 1.2;
-      /* Ensure black color */
-      color: #000000;
-      /* Optional: subtle softness – but keep pure black */
-    }
-
-    /* Small screens: reduce font size so it stays nicely centered */
-    @media (max-width: 600px) {
-      .message {
-        font-size: 2.5rem;
-      }
-    }
-
-    /* Even smaller screens */
-    @media (max-width: 400px) {
-      .message {
-        font-size: 2rem;
-      }
-    }
-  </style>
+  #chatApp { display: none; max-width: 980px; margin: 0 auto; }
+  .chat-wrap { border: 1px solid #202225; background: #2c2f33; height: 560px; display: flex; flex-direction: column; }
+  .header-bar {
+    height: 38px; background: #23272a; border-bottom: 1px solid #202225; padding: 0 12px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: bold; color: #fff;
+  }
+  .header-bar .right { font-weight: normal; font-size: 11px; color: #72767d; }
+  .chat-inner { flex: 1; display: flex; overflow: hidden; }
+  .messages-pane { flex: 1; background: #23272a; border-right: 1px solid #202225; display: flex; flex-direction: column; min-width: 0; position: relative; }
+  #messages {
+    flex: 1; overflow-y: auto; padding: 14px 16px 10px 16px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-width: 0;
+  }
+  #messages::-webkit-scrollbar { width: 10px; }
+  #messages::-webkit-scrollbar-track { background: #23272a; }
+  #messages::-webkit-scrollbar-thumb { background: #2c2f33; border: 2px solid #23272a; }
+  .msg {
+    display: flex; flex-direction: column; align-items: flex-start; animation: popIn 0.25s ease; max-width: 75%; min-width: 0; position: relative; padding: 4px 8px; border-radius: 6px;
+  }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+  .msg:hover { background: rgba(114, 137, 218, 0.08); }
+  .msg.system { align-self: center; align-items: center; color: #72767d; font-size: 11px; font-style: italic; max-width: 100%; text-align: center; }
+  .msg-header { display: flex; flex-direction: row; align-items: center; gap: 8px; width: 100%; margin-bottom: 2px; }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: #fff; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.3); }
+  .msg-name { font-weight: bold; font-size: 13px; }
+  .msg-time { font-size: 10px; color: #72767d; white-space: nowrap; margin-left: auto; }
+  .msg-reply {
+    font-size: 11px; color: #b9bbbe; background: rgba(255,255,255,0.04); padding: 4px 8px; border-radius: 4px; margin-bottom: 4px; border-left: 2px solid #7289da; display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+  }
+  .msg-reply .reply-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.4px; color: #72767d; }
+  .msg-reply .reply-sender { font-weight: bold; color: inherit; }
+  .msg-reply .reply-text { font-style: italic; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 160px; }
+  .msg-text { font-size: 13px; line-height: 1.45; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: anywhere; color: inherit; }
+  .msg.system .msg-text { color: #72767d; margin-bottom: 0; }
+  .msg-photos { display: flex; gap: 6px; justify-content: flex-start; margin-top: 6px; flex-wrap: wrap; }
+  .msg-photos img { max-width: 200px; max-height: 200px; border-radius: 4px; border: 1px solid #3a3f48; background: #000; cursor: pointer; display: block; }
+  .msg-photos img:hover { border-color: #7289da; }
+  .reply-btn { display: none; font-size: 10px; color: #72767d; cursor: pointer; background: none; border: none; padding: 2px 6px; border-radius: 3px; white-space: nowrap; margin-left: 8px; }
+  .msg:hover .reply-btn { display: block; }
+  .reply-btn:hover { background: rgba(114, 137, 218, 0.2); color: #fff; }
+  .sidebar-pane { width: 220px; background: #23272a; border-left: 1px solid #202225; display: flex; flex-direction: column; flex-shrink: 0; }
+  .sidebar-head { height: 30px; border-bottom: 1px solid #202225; padding: 0 10px; display: flex; align-items: center; font-weight: bold; font-size: 12px; color: #fff; }
+  #onlineCount { font-weight: normal; font-size: 11px; color: #72767d; margin-top: 8px; text-align: center; }
+  #usersList { flex: 1; overflow-y: auto; padding: 6px 8px; display: flex; flex-direction: column; gap: 4px; }
+  .user-row { display: flex; align-items: center; gap: 8px; padding: 4px 6px; border: 1px solid transparent; border-radius: 3px; font-size: 13px; cursor: default; }
+  .user-row:hover { background: #2c2f33; border-color: #3a3f48; }
+  .user-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .user-name { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: #dcddde; }
+  .clear-wrap { border-top: 1px solid #202225; padding: 8px 12px; background: #23272a; text-align: center; }
+  #clearChatBtn { width: 100%; height: 28px; border: 1px solid #202225; background: #2c2f33; color: #dcddde; font-size: 12px; cursor: pointer; border-radius: 3px; }
+  #clearChatBtn:hover { border-color: #4f545c; }
+  #replyBar { display: none; align-items: center; gap: 8px; padding: 6px 10px; background: #23272a; border: 1px solid #202225; border-radius: 6px; margin: 0 12px 8px 12px; max-width: 75%; }
+  #replyBar.show { display: flex; }
+  .reply-bar-inner { flex: 1; display: flex; gap: 6px; align-items: center; overflow: hidden; }
+  .reply-bar-label { font-size: 10px; color: #72767d; text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; }
+  .reply-bar-sender { font-weight: bold; color: #7289da; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .reply-bar-text { color: #b9bbbe; font-style: italic; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex: 1; }
+  #cancelReplyBtn { background: #f04747; border: none; border-radius: 3px; color: #fff; width: 24px; height: 24px; cursor: pointer; font-size: 14px; line-height: 1; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  #cancelReplyBtn:hover { background: #c53e3e; }
+  .input-area { height: 52px; background: #23272a; border-top: 1px solid #202225; padding: 8px 12px; display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  #photoInput { display: none; }
+  #paperclipBtn { width: 34px; height: 34px; border: 1px solid #202225; background: #2c2f33; color: #fff; border-radius: 3px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  #paperclipBtn:hover { background: #3a3f48; }
+  #messageInput { flex: 1; height: 34px; border: 1px solid #202225; background: #2c2f33; color: #fff; padding: 0 10px; font-size: 13px; border-radius: 3px; box-sizing: border-box; }
+  #messageInput:focus { outline: none; border-color: #7289da; }
+  #sendBtn { width: 70px; height: 34px; border: 1px solid #202225; background: #2c2f33; color: #fff; font-size: 13px; font-weight: bold; border-radius: 3px; cursor: pointer; }
+  #sendBtn:hover { background: #3a3f48; }
+  #photoPreviewQueue { display: none; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; justify-content: center; }
+  #photoPreviewQueue.has-photos { display: flex; }
+  .preview-wrap { position: relative; width: 56px; height: 56px; }
+  .preview-img { width: 56px; height: 56px; object-fit: cover; border-radius: 4px; border: 1px solid #3a3f48; display: block; }
+  .preview-remove { position: absolute; top: -4px; right: -4px; background: #f04747; border: none; border-radius: 50%; width: 18px; height: 18px; color: #fff; font-size: 12px; font-weight: bold; cursor: pointer; line-height: 1; }
+  .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 1000; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 90vw; max-height: 80vh; border-radius: 4px; }
+  .lightbox-close { position: fixed; top: 18px; right: 24px; color: #fff; font-size: 26px; cursor: pointer; background: none; border: none; }
+</style>
 </head>
 <body>
-  <!-- Just the text, exactly as requested: "working on it" in black letters -->
-  <div class="message">working on it</div>
+
+<div id="landing">
+  <h2>Public Chat Room</h2>
+  <p>Enter a username to join. No registration &mdash; anyone can join from anywhere.</p>
+  <label for="usernameInput">Username</label>
+  <input type="text" id="usernameInput" maxlength="20" autocomplete="off">
+  <button id="joinBtn">Join</button>
+  <div class="note">Photos supported &bull; Reply to messages &bull; Clear chats button in sidebar</div>
+</div>
+
+<div id="chatApp">
+  <div class="chat-wrap">
+    <div class="header-bar">
+      <div>#public-chat</div>
+      <div class="right">Live chat</div>
+    </div>
+    <div class="chat-inner">
+      <div class="messages-pane">
+        <div id="messages"></div>
+      </div>
+      <div class="sidebar-pane">
+        <div class="sidebar-head">Members</div>
+        <div id="onlineCount">0 online</div>
+        <div id="usersList"></div>
+        <div class="clear-wrap">
+          <button id="clearChatBtn">Clear Chats</button>
+        </div>
+      </div>
+    </div>
+    <div id="replyBar">
+      <div class="reply-bar-inner">
+        <span class="reply-bar-label">Replying to</span>
+        <span class="reply-bar-sender" id="replyBarSender"></span>
+        <span class="reply-bar-text" id="replyBarText"></span>
+      </div>
+      <button id="cancelReplyBtn">&times;</button>
+    </div>
+    <div class="input-area">
+      <input type="file" id="photoInput" accept="image/*" multiple>
+      <button id="paperclipBtn" title="Attach photos"><i class="fa fa-paperclip"></i></button>
+      <input type="text" id="messageInput" placeholder="Message..." maxlength="500">
+      <button id="sendBtn">Send</button>
+    </div>
+    <div id="photoPreviewQueue"></div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">&times;</button>
+  <img id="lightboxImg" src="" alt="Chat photo">
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script>
+  // Initialize Firebase
+  const firebaseConfig = {
+    databaseURL: "https://games-5a163-default-rtdb.firebaseio.com/"
+  };
+
+  // Only initialize if not already initialized
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  
+  const db = firebase.database();
+  const roomRef = db.ref('public_chat'); // Main room reference
+
+  // --- UI Elements ---
+  const landing = document.getElementById('landing');
+  const chatApp = document.getElementById('chatApp');
+  const usernameInput = document.getElementById('usernameInput');
+  const joinBtn = document.getElementById('joinBtn');
+  const messagesContainer = document.getElementById('messages');
+  const usersList = document.getElementById('usersList');
+  const onlineCount = document.getElementById('onlineCount');
+  const messageInput = document.getElementById('messageInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const clearChatBtn = document.getElementById('clearChatBtn');
+  const photoInput = document.getElementById('photoInput');
+  const paperclipBtn = document.getElementById('paperclipBtn');
+  const photoPreviewQueue = document.getElementById('photoPreviewQueue');
+  const replyBar = document.getElementById('replyBar');
+  const replyBarSender = document.getElementById('replyBarSender');
+  const replyBarText = document.getElementById('replyBarText');
+  const cancelReplyBtn = document.getElementById('cancelReplyBtn');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxClose = document.getElementById('lightboxClose');
+
+  // --- State Variables ---
+  let myName = '';
+  let myColor = '';
+  let stagedPhotos = [];
+  let replyingTo = null;
+  let seenKeys = {};
+  let knownUsers = {};
+  let isConnected = false;
+
+  const NAME_COLORS = ['#7289da','#43b581','#faa61a','#f04747','#a040a0','#4267b2','#ff8fab','#3ba55d','#a84300','#4f545c','#e0e0e0','#ff9500','#b03a2e','#7d3c98','#5794f2'];
+
+  // --- Helper Functions ---
+  function userColor(name) {
+    let h = 0;
+    for (let i = 0; i < name.length; i++) {
+      h = ((h << 5) - h) + name.charCodeAt(i);
+      h = h & h;
+    }
+    return NAME_COLORS[Math.abs(h) % NAME_COLORS.length];
+  }
+
+  function esc(text) {
+    const d = document.createElement('div');
+    d.textContent = text;
+    return d.innerHTML;
+  }
+
+  function fmtTime() {
+    return new Date().toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
+  }
+
+  function scrollBottom() {
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+
+  // --- Rendering Functions ---
+  function renderSystem(text) {
+    const div = document.createElement('div');
+    div.className = 'msg system';
+    div.innerHTML = `<div class="msg-time">${fmtTime()}</div><div class="msg-text">${esc(text)}</div>`;
+    messagesContainer.appendChild(div);
+    scrollBottom();
+  }
+
+  function renderMessage(msg) {
+    if (!msg || !msg.sender) return;
+    
+    const isOwn = (msg.sender === myName);
+    const color = msg.color || '#72767d';
+    const initial = msg.sender.charAt(0).toUpperCase();
+    const isSystem = (msg.type === 'system');
+
+    const div = document.createElement('div');
+    div.className = 'msg' + (isOwn ? ' own' : '') + (isSystem ? ' system' : '');
+    if (msg.msgKey) div.dataset.key = msg.msgKey;
+
+    if (!isSystem) {
+      // Header (Avatar, Name, Time, Reply Button)
+      const header = document.createElement('div');
+      header.className = 'msg-header';
+      header.innerHTML = `
+        <div class="avatar" style="background-color: ${color};">${initial}</div>
+        <div class="msg-name" style="color: ${color};">${esc(msg.sender)}</div>
+        <div class="msg-time">${msg.time || ''}</div>
+        <button class="reply-btn">Reply</button>
+      `;
+      
+      // Add reply functionality to the button
+      header.querySelector('.reply-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        setReply(msg);
+      });
+      
+      div.appendChild(header);
+
+      // Reply Preview
+      if (msg.replyTo) {
+        const replyWrap = document.createElement('div');
+        replyWrap.className = 'msg-reply';
+        replyWrap.innerHTML = `
+          <span class="reply-label">Replying to</span>
+          <span class="reply-sender" style="color: ${msg.replyTo.color || '#72767d'};">@${esc(msg.replyTo.sender)}</span>
+          <span class="reply-text">${esc(msg.replyTo.text || '')}</span>
+        `;
+        div.appendChild(replyWrap);
+      }
+
+      // Message Text
+      if (msg.text) {
+        const textEl = document.createElement('div');
+        textEl.className = 'msg-text';
+        textEl.textContent = msg.text;
+        div.appendChild(textEl);
+      }
+
+      // Photos
+      if (msg.photos && msg.photos.length > 0) {
+        const wrap = document.createElement('div');
+        wrap.className = 'msg-photos';
+        const urls = msg.photos.map(p => p.dataUrl);
+        
+        msg.photos.forEach((photo, index) => {
+          const img = document.createElement('img');
+          img.src = photo.dataUrl;
+          img.alt = photo.name || 'Chat photo';
+          img.addEventListener('click', () => {
+            lightboxImg.src = urls[index];
+            lightbox.classList.add('open');
+          });
+          wrap.appendChild(img);
+        });
+        div.appendChild(wrap);
+      }
+    } else {
+      // System Message
+      div.innerHTML = `<div class="msg-time">${fmtTime()}</div><div class="msg-text">${esc(msg.text || '')}</div>`;
+    }
+
+    messagesContainer.appendChild(div);
+    scrollBottom();
+  }
+
+  // --- Core Chat Logic ---
+  function joinChat() {
+    const name = usernameInput.value.trim();
+    if (!name) return;
+    
+    myName = name;
+    myColor = userColor(name);
+    isConnected = true;
+
+    landing.style.display = 'none';
+    chatApp.style.display = 'block';
+
+    // 1. Set presence (online status)
+    const myUserRef = roomRef.child('activeUsers').child(myName);
+    myUserRef.set({ color: myColor, joined: Date.now() });
+    myUserRef.onDisconnect().remove();
+
+    // 2. Listen for messages
+    roomRef.child('messages').on('child_added', (snap) => {
+      const key = snap.key;
+      if (seenKeys[key]) return;
+      seenKeys[key] = true;
+      renderMessage(snap.val());
+    });
+
+    // 3. Listen for chat clear
+    roomRef.child('messages').on('value', (snap) => {
+      if (snap.val() === null) {
+        messagesContainer.innerHTML = '';
+        seenKeys = {};
+      }
+    });
+
+    // 4. Listen for active users changes
+    roomRef.child('activeUsers').on('value', (snap) => {
+      const users = snap.val() || {};
+      
+      // Update sidebar UI
+      usersList.innerHTML = '';
+      const userArr = Object.entries(users);
+      onlineCount.textContent = `${userArr.length} online`;
+      
+      userArr.forEach(([name, data]) => {
+        const row = document.createElement('div');
+        row.className = 'user-row';
+        row.innerHTML = `
+          <span class="user-dot" style="background-color: ${data.color || '#72767d'};"></span>
+          <span class="user-name">${esc(name)}</span>
+        `;
+        usersList.appendChild(row);
+      });
+
+      // Announce joins/leaves (skip initial load)
+      if (Object.keys(knownUsers).length > 0) {
+        for (const name in users) {
+          if (!knownUsers[name] && name !== myName) renderSystem(`${name} joined the chat`);
+        }
+        for (const name in knownUsers) {
+          if (!(name in users) && name !== myName) renderSystem(`${name} left the chat`);
+        }
+      }
+      knownUsers = users;
+    });
+
+    messageInput.focus();
+  }
+
+  function sendMessage() {
+    const text = messageInput.value.trim();
+    if (!text && stagedPhotos.length === 0) return;
+
+    const msgKey = 'msg_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+    const msg = {
+      sender: myName,
+      text: text,
+      color: myColor,
+      time: fmtTime(),
+      msgKey: msgKey,
+      photos: stagedPhotos,
+      replyTo: replyingTo,
+      timestamp: Date.now()
+    };
+
+    // Send to Firebase
+    roomRef.child('messages').child(msgKey).set(msg);
+
+    // Reset UI
+    messageInput.value = '';
+    stagedPhotos = [];
+    photoPreviewQueue.innerHTML = '';
+    photoPreviewQueue.classList.remove('has-photos');
+    photoInput.value = '';
+    cancelReply();
+  }
+
+  function clearChat() {
+    if (!myName) return;
+    if (confirm("Are you sure you want to clear the chat for EVERYONE?")) {
+      roomRef.child('messages').remove().then(() => {
+        // Add a system message indicating who cleared it
+        roomRef.child('messages').push({
+          sender: 'System',
+          text: `${myName} has cleared the chat`,
+          color: '#f04747',
+          time: fmtTime(),
+          type: 'system',
+          timestamp: Date.now()
+        });
+      });
+    }
+  }
+
+  function setReply(msg) {
+    replyingTo = {
+      key: msg.msgKey,
+      sender: msg.sender,
+      text: msg.text,
+      color: msg.color
+    };
+    replyBarSender.textContent = '@' + msg.sender;
+    replyBarText.textContent = msg.text;
+    replyBar.classList.add('show');
+    messageInput.focus();
+  }
+
+  function cancelReply() {
+    replyingTo = null;
+    replyBar.classList.remove('show');
+  }
+
+  // --- Photo Handling ---
+  function stageFiles(files) {
+    const images = Array.from(files).filter(f => f.type.startsWith('image/'));
+    images.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        stagedPhotos.push({ dataUrl: e.target.result, name: file.name });
+        renderPhotoQueue();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function renderPhotoQueue() {
+    photoPreviewQueue.innerHTML = '';
+    if (!stagedPhotos.length) {
+      photoPreviewQueue.classList.remove('has-photos');
+      return;
+    }
+    photoPreviewQueue.classList.add('has-photos');
+    
+    stagedPhotos.forEach((photo, index) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'preview-wrap';
+      wrap.innerHTML = `
+        <img class="preview-img" src="${photo.dataUrl}">
+        <button class="preview-remove">&times;</button>
+      `;
+      
+      wrap.querySelector('.preview-remove').addEventListener('click', () => {
+        stagedPhotos.splice(index, 1);
+        renderPhotoQueue();
+      });
+      
+      photoPreviewQueue.appendChild(wrap);
+    });
+  }
+
+  // --- Event Listeners ---
+  joinBtn.addEventListener('click', joinChat);
+  usernameInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') joinChat(); });
+  
+  sendBtn.addEventListener('click', sendMessage);
+  messageInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+  
+  clearChatBtn.addEventListener('click', clearChat);
+  
+  paperclipBtn.addEventListener('click', () => photoInput.click());
+  photoInput.addEventListener('change', (e) => {
+    if (e.target.files.length) stageFiles(e.target.files);
+  });
+  
+  cancelReplyBtn.addEventListener('click', cancelReply);
+
+  lightboxClose.addEventListener('click', () => {
+    lightbox.classList.remove('open');
+    lightboxImg.src = '';
+  });
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) {
+      lightbox.classList.remove('open');
+      lightboxImg.src = '';
+    }
+  });
+
+  usernameInput.focus();
+</script>
+
 </body>
 </html>
