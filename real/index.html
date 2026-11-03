@@ -201,20 +201,27 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 10px;
     margin-bottom: 8px;
     font-size: 12px;
     color: #fff;
     font-weight: bold;
   }
-  .drawing-head .hint { font-weight: normal; font-size: 10px; color: #72767d; }
+  .drawing-head .hint { font-weight: normal; font-size: 10px; color: #72767d; text-align: right; }
+  .drawing-head .hint.live { color: #43b581; }
+  .drawing-head .hint.error { color: #f04747; }
   #drawingCanvas {
     display: block;
     width: 100%;
-    height: 260px;
+    /* Locked aspect ratio: everyone sees the exact same board, just scaled */
+    aspect-ratio: 1000 / 300;
+    height: auto;
     background: #ffffff;
     border-radius: 10px;
     cursor: crosshair;
     touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
     box-sizing: border-box;
     border: 1px solid #202225;
   }
@@ -313,9 +320,9 @@
 <div id="drawingBoardWrap" style="display:none;">
   <div class="drawing-head">
     <span>Live Drawing Board</span>
-    <span class="hint">Now we can draw at the same time</span>
+    <span class="hint" id="drawStatus">Connecting live board...</span>
   </div>
-  <canvas id="drawingCanvas" width="956" height="260"></canvas>
+  <canvas id="drawingCanvas" width="1000" height="300"></canvas>
   <div class="drawing-tools">
     <span style="font-size:11px;color:#b9bbbe;">Color:</span>
     <span class="swatch active" data-color="#000000" style="background:#000000;"></span>
@@ -372,10 +379,14 @@
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
   }
-  
+
   const db = firebase.database();
   const roomRef = db.ref('public_chat');
-  const drawRef = db.ref('public_chat_drawing');
+
+  // Drawing data lives INSIDE public_chat so it inherits the exact same
+  // read/write rules the chat already uses (this was a common cause of the
+  // board silently failing for everyone else when it was a sibling node).
+  const drawBoardRef = db.ref('public_chat/drawing');
 
   // --- UI Elements ---
   const landing = document.getElementById('landing');
@@ -418,6 +429,7 @@
   const brushSizeInput = document.getElementById('brushSize');
   const clearBoardBtn = document.getElementById('clearBoardBtn');
   const swatches = document.querySelectorAll('.swatch');
+  const drawStatus = document.getElementById('drawStatus');
 
   // --- State Variables ---
   let myName = '';
@@ -438,11 +450,6 @@
   // Drawing state
   let drawColor = '#000000';
   let brushSize = 4;
-  let isDrawing = false;
-  let lastX = 0;
-  let lastY = 0;
-  let drawListenerAttached = false;
-  let remoteDrawingInProgress = false;
 
   const NAME_COLORS = ['#7289da','#43b581','#faa61a','#f04747','#a040a0','#4267b2','#ff8fab','#3ba55d','#a84300','#4f545c','#e0e0e0','#ff9500','#b03a2e','#7d3c98','#5794f2'];
 
@@ -511,7 +518,7 @@
 
   function renderMessage(msg) {
     if (!msg || !msg.sender) return;
-    
+
     const isOwn = (msg.sender === myName);
     const color = msg.color || '#72767d';
     const initial = msg.sender.charAt(0).toUpperCase();
@@ -530,12 +537,12 @@
         <div class="msg-time">${msg.time || ''}</div>
         <button class="reply-btn">Reply</button>
       `;
-      
+
       header.querySelector('.reply-btn').addEventListener('click', (e) => {
         e.stopPropagation();
         setReply(msg);
       });
-      
+
       div.appendChild(header);
 
       if (msg.replyTo) {
@@ -560,7 +567,7 @@
         const wrap = document.createElement('div');
         wrap.className = 'msg-photos';
         const urls = msg.photos.map(p => p.dataUrl);
-        
+
         msg.photos.forEach((photo, index) => {
           const img = document.createElement('img');
           img.src = photo.dataUrl;
@@ -614,7 +621,7 @@
     usersList.innerHTML = '';
     const userArr = Object.entries(users);
     onlineCount.textContent = `${userArr.length} online`;
-    
+
     userArr.forEach(([name, data]) => {
       const row = document.createElement('div');
       row.className = 'user-row';
@@ -650,144 +657,351 @@
   }
 
   // ============================================================
-  // LIVE DRAWING BOARD
+  // LIVE DRAWING BOARD  (shared + real-time, resize-safe)
+  // ------------------------------------------------------------
+  // How the sync works:
+  //  * Every point is sent in a fixed 1000 x 300 *virtual* board space,
+  //    never in screen pixels, so people with different window sizes
+  //    still see the strokes in the same place.
+  //  * Points are batched and flushed about 22x/sec (instead of one
+  //    Firebase write per mousemove) so the board can keep up and the
+  //    database doesn't throttle you.
+  //  * Each browser tab gets its own client id, so two people with the
+  //    same username (or one person in two tabs) still sync correctly.
+  //  * Strokes are stored in memory and redrawn on resize, so changing
+  //    the window never wipes the board.
   // ============================================================
-  function setupDrawing() {
-    // Fit canvas to its display size for crisp lines
-    function resizeCanvas() {
-      const rect = drawingCanvas.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      // Only resize if dimensions changed to avoid clearing the board
-      const newW = Math.round(rect.width * dpr);
-      const newH = Math.round(rect.height * dpr);
-      if (drawingCanvas.width !== newW || drawingCanvas.height !== newH) {
-        // Save current image
-        const imgData = drawCtx.getImageData(0, 0, drawingCanvas.width, drawingCanvas.height);
-        drawingCanvas.width = newW;
-        drawingCanvas.height = newH;
-        drawCtx.putImageData(imgData, 0, 0);
-      }
-    }
-    window.addEventListener('resize', resizeCanvas);
-    // Initial sizing after display
-    setTimeout(resizeCanvas, 50);
+  const VW = 1000;                            // virtual board width
+  const VH = 300;                             // virtual board height
+  const MY_CLIENT = 'c' + Math.random().toString(36).slice(2, 10);
+  const FLUSH_MS = 45;
 
-    // --- Local drawing input ---
-    function getCanvasPoint(e) {
-      const rect = drawingCanvas.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-      const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-      return { x: cx * (drawingCanvas.width / rect.width), y: cy * (drawingCanvas.height / rect.height) };
-    }
+  const strokes = new Map();                  // strokeId -> { color, size, pts: [[x,y],...] }
+  let activeStroke = null;
+  let lastSentPoint = null;
+  let flushTimer = null;
+  let drawListenerAttached = false;
+  let lastClearedAt = null;
+  let drawErrorShown = false;
 
-    function startDraw(e) {
-      e.preventDefault();
-      isDrawing = true;
-      const pt = getCanvasPoint(e);
-      lastX = pt.x;
-      lastY = pt.y;
-    }
+  function setDrawStatus(text, kind) {
+    if (!drawStatus) return;
+    drawStatus.textContent = text;
+    drawStatus.className = 'hint' + (kind ? ' ' + kind : '');
+  }
 
-    function moveDraw(e) {
-      if (!isDrawing) return;
-      e.preventDefault();
-      const pt = getCanvasPoint(e);
-      drawSegment(lastX, lastY, pt.x, pt.y, drawColor, brushSize, false);
-      // Send to Firebase
-      drawRef.push({
-        x1: lastX, y1: lastY, x2: pt.x, y2: pt.y,
-        color: drawColor, size: brushSize,
-        sender: myName,
-        ts: Date.now()
-      });
-      lastX = pt.x;
-      lastY = pt.y;
-    }
+  function reportDrawError(err) {
+    console.warn('[drawing] sync error:', err);
+    if (drawErrorShown) return;
+    drawErrorShown = true;
+    const code = (err && (err.code || err.message)) || 'unknown error';
+    setDrawStatus('Live sync blocked (' + code + ') — check the Firebase rules for public_chat', 'error');
+  }
 
-    function endDraw(e) {
-      if (!isDrawing) return;
-      isDrawing = false;
-    }
+  function canvasRect() {
+    return drawingCanvas.getBoundingClientRect();
+  }
 
-    // Draw a line segment locally with optional glow
-    function drawSegment(x1, y1, x2, y2, color, size, remote) {
-      drawCtx.save();
-      drawCtx.strokeStyle = color;
-      drawCtx.lineWidth = size;
-      drawCtx.lineCap = 'round';
-      drawCtx.lineJoin = 'round';
-      if (remote) {
-        drawCtx.globalAlpha = 0.95;
-      }
+  // Size the backing store to the CSS box (crisp lines on any screen).
+  function fitCanvas() {
+    const rect = canvasRect();
+    if (!rect.width || !rect.height) return;
+    const dpr = window.devicePixelRatio || 1;
+    const w = Math.round(rect.width * dpr);
+    const h = Math.round(rect.height * dpr);
+    if (drawingCanvas.width === w && drawingCanvas.height === h) return;
+    drawingCanvas.width = w;
+    drawingCanvas.height = h;
+    drawCtx.setTransform(dpr, 0, 0, dpr, 0, 0);  // draw in CSS pixels
+    redrawAll();
+  }
+
+  function clearSurface() {
+    drawCtx.save();
+    drawCtx.setTransform(1, 0, 0, 1, 0, 0);
+    drawCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+    drawCtx.restore();
+  }
+
+  function strokeScale() {
+    const rect = canvasRect();
+    const sx = rect.width / VW;
+    const sy = rect.height / VH;
+    return { sx: sx, sy: sy, lw: Math.max(0.6, (sx + sy) / 2) };
+  }
+
+  // Draws a whole stroke, or only the new tail when fromIdx is given.
+  function drawStroke(stroke, fromIdx) {
+    const rect = canvasRect();
+    if (!rect.width || !rect.height || !stroke.pts.length) return;
+    const s = strokeScale();
+    const lineWidth = Math.max(0.6, stroke.size * s.lw);
+
+    drawCtx.save();
+    drawCtx.strokeStyle = stroke.color;
+    drawCtx.fillStyle = stroke.color;
+    drawCtx.lineWidth = lineWidth;
+    drawCtx.lineCap = 'round';
+    drawCtx.lineJoin = 'round';
+
+    const pts = stroke.pts;
+    if (pts.length === 1) {
       drawCtx.beginPath();
-      drawCtx.moveTo(x1, y1);
-      drawCtx.lineTo(x2, y2);
+      drawCtx.arc(pts[0][0] * s.sx, pts[0][1] * s.sy, lineWidth / 2, 0, Math.PI * 2);
+      drawCtx.fill();
+    } else {
+      const start = Math.max(0, fromIdx | 0);
+      drawCtx.beginPath();
+      drawCtx.moveTo(pts[start][0] * s.sx, pts[start][1] * s.sy);
+      for (let i = start + 1; i < pts.length; i++) {
+        drawCtx.lineTo(pts[i][0] * s.sx, pts[i][1] * s.sy);
+      }
       drawCtx.stroke();
-      drawCtx.restore();
+    }
+    drawCtx.restore();
+  }
+
+  function redrawAll() {
+    clearSurface();
+    strokes.forEach(function (stroke) { drawStroke(stroke, 0); });
+  }
+
+  function pointFromEvent(e) {
+    const rect = canvasRect();
+    const x = ((e.clientX - rect.left) / rect.width) * VW;
+    const y = ((e.clientY - rect.top) / rect.height) * VH;
+    return [Math.round(x * 10) / 10, Math.round(y * 10) / 10];
+  }
+
+  // --- Sending my strokes ---
+  function flushStrokeChunk() {
+    if (!activeStroke) return;
+    const unsent = activeStroke.unsent;
+    if (!unsent || !unsent.length) return;
+
+    // Flat [x1,y1,x2,y2,...] keeps the payload small and avoids any
+    // array/object weirdness when Firebase serialises it.
+    const flat = [];
+    // Repeat the previous point so the remote line connects seamlessly.
+    if (lastSentPoint) { flat.push(lastSentPoint[0], lastSentPoint[1]); }
+    for (let i = 0; i < unsent.length; i++) {
+      flat.push(unsent[i][0], unsent[i][1]);
+    }
+    lastSentPoint = unsent[unsent.length - 1];
+    unsent.length = 0;
+
+    drawBoardRef.child('ops').push({
+      cid: MY_CLIENT,
+      sid: activeStroke.id,
+      color: activeStroke.color,
+      size: activeStroke.size,
+      p: flat,
+      t: Date.now()
+    }).catch(reportDrawError);
+  }
+
+  function startFlushLoop() {
+    stopFlushLoop();
+    flushTimer = setInterval(flushStrokeChunk, FLUSH_MS);
+  }
+
+  function stopFlushLoop() {
+    if (flushTimer) { clearInterval(flushTimer); flushTimer = null; }
+  }
+
+  // --- Receiving other people's strokes ---
+  function applyRemoteOp(op) {
+    if (!op || !op.p || !op.sid) return;
+    if (op.cid === MY_CLIENT) return;   // already on my screen
+
+    let stroke = strokes.get(op.sid);
+    if (!stroke) {
+      stroke = { color: op.color || '#000000', size: Number(op.size) || 4, pts: [] };
+      strokes.set(op.sid, stroke);
     }
 
-    // Mouse events
-    drawingCanvas.addEventListener('mousedown', startDraw);
-    drawingCanvas.addEventListener('mousemove', moveDraw);
-    drawingCanvas.addEventListener('mouseup', endDraw);
-    drawingCanvas.addEventListener('mouseleave', endDraw);
+    const startIdx = stroke.pts.length;
+    for (let i = 0; i + 1 < op.p.length; i += 2) {
+      stroke.pts.push([op.p[i], op.p[i + 1]]);
+    }
+    if (stroke.pts.length > startIdx) {
+      drawStroke(stroke, Math.max(0, startIdx - 1));
+    }
 
-    // Touch events
-    drawingCanvas.addEventListener('touchstart', startDraw, { passive: false });
-    drawingCanvas.addEventListener('touchmove', moveDraw, { passive: false });
-    drawingCanvas.addEventListener('touchend', endDraw);
-
-    // --- Listen for remote drawing from Firebase ---
-    drawRef.limitToLast(200).on('child_added', (snap) => {
-      const d = snap.val();
-      if (!d || d.sender === myName) return;
-      drawSegment(d.x1, d.y1, d.x2, d.y2, d.color, d.size, true);
-    });
-
-    // --- Clear board for everyone ---
-    clearBoardBtn.addEventListener('click', () => {
-      if (confirm("Clear the drawing board for everyone?")) {
-        // Clear local
-        drawCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
-        // Notify others via a special "clear" record
-        drawRef.push({ type: 'clear', ts: Date.now(), sender: myName });
-        // Also prune old entries
-        drawRef.remove();
+    // Keep memory sane on very long sessions.
+    if (strokes.size > 3000) {
+      const oldest = strokes.keys().next().value;
+      if (oldest !== undefined && (!activeStroke || oldest !== activeStroke.id)) {
+        strokes.delete(oldest);
       }
-    });
+    }
+  }
 
-    // Listen for clear events
-    drawRef.on('child_added', (snap) => {
-      const d = snap.val();
-      if (d && d.type === 'clear') {
-        drawCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+  function resetBoardLocally() {
+    strokes.clear();
+    activeStroke = null;
+    lastSentPoint = null;
+    stopFlushLoop();
+    clearSurface();
+  }
+
+  // --- Pointer input (mouse, trackpad, touch, stylus) ---
+  function startStroke(e) {
+    if (e.button !== undefined && e.button !== 0) return;   // left click / touch only
+    if (activeStroke) return;
+    e.preventDefault();
+    fitCanvas();
+
+    try {
+      if (drawingCanvas.setPointerCapture && e.pointerId !== undefined) {
+        drawingCanvas.setPointerCapture(e.pointerId);
       }
-    });
+    } catch (_) {}
+
+    const id = MY_CLIENT + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    const pt = pointFromEvent(e);
+    activeStroke = { id: id, color: drawColor, size: brushSize, pts: [pt], unsent: [pt] };
+    lastSentPoint = null;
+    strokes.set(id, activeStroke);
+
+    drawStroke(activeStroke, 0);   // instant local feedback
+    startFlushLoop();
+  }
+
+  function moveStroke(e) {
+    if (!activeStroke) return;
+    e.preventDefault();
+    const pt = pointFromEvent(e);
+    const prev = activeStroke.pts[activeStroke.pts.length - 1];
+    if (prev && Math.abs(prev[0] - pt[0]) < 0.35 && Math.abs(prev[1] - pt[1]) < 0.35) return;
+
+    activeStroke.pts.push(pt);
+    activeStroke.unsent.push(pt);
+    drawStroke(activeStroke, activeStroke.pts.length - 2);
+  }
+
+  function endStroke(e) {
+    if (!activeStroke) return;
+    flushStrokeChunk();     // always send the tail
+    stopFlushLoop();
+    activeStroke = null;
+    lastSentPoint = null;
+    try {
+      if (drawingCanvas.releasePointerCapture && e && e.pointerId !== undefined && drawingCanvas.hasPointerCapture && drawingCanvas.hasPointerCapture(e.pointerId)) {
+        drawingCanvas.releasePointerCapture(e.pointerId);
+      }
+    } catch (_) {}
+  }
+
+  // --- Board setup (runs once) ---
+  let boardInputReady = false;
+
+  function setupDrawing() {
+    fitCanvas();
+    setTimeout(fitCanvas, 60);
+    setTimeout(fitCanvas, 300);
+
+    // --- Input + tool listeners: attach exactly once ---
+    if (boardInputReady) {
+      setupDrawSyncListeners();
+      return;
+    }
+    boardInputReady = true;
+
+    window.addEventListener('resize', fitCanvas);
+    window.addEventListener('orientationchange', function () { setTimeout(fitCanvas, 150); });
+    if (window.ResizeObserver) {
+      new ResizeObserver(function () { fitCanvas(); }).observe(drawingBoardWrap);
+    }
+
+    drawingCanvas.addEventListener('pointerdown', startStroke);
+    drawingCanvas.addEventListener('pointermove', moveStroke);
+    drawingCanvas.addEventListener('pointerup', endStroke);
+    drawingCanvas.addEventListener('pointercancel', endStroke);
+    window.addEventListener('pointerup', endStroke);
+
+    // Fallback for very old browsers without Pointer Events
+    if (!window.PointerEvent) {
+      drawingCanvas.addEventListener('mousedown', startStroke);
+      drawingCanvas.addEventListener('mousemove', moveStroke);
+      drawingCanvas.addEventListener('mouseup', endStroke);
+      drawingCanvas.addEventListener('touchstart', function (e) {
+        startStroke({ clientX: e.touches[0].clientX, clientY: e.touches[0].clientY, preventDefault: function () { e.preventDefault(); } });
+      }, { passive: false });
+      drawingCanvas.addEventListener('touchmove', function (e) {
+        moveStroke({ clientX: e.touches[0].clientX, clientY: e.touches[0].clientY, preventDefault: function () { e.preventDefault(); } });
+      }, { passive: false });
+      drawingCanvas.addEventListener('touchend', endStroke);
+    }
 
     // --- Color swatches ---
-    swatches.forEach(sw => {
-      sw.addEventListener('click', () => {
-        swatches.forEach(s => s.classList.remove('active'));
+    swatches.forEach(function (sw) {
+      sw.addEventListener('click', function () {
+        swatches.forEach(function (s) { s.classList.remove('active'); });
         sw.classList.add('active');
         drawColor = sw.dataset.color;
       });
     });
 
-    // Brush size
-    brushSizeInput.addEventListener('input', () => {
-      brushSize = parseInt(brushSizeInput.value, 10);
+    // --- Brush size ---
+    brushSizeInput.addEventListener('input', function () {
+      brushSize = parseInt(brushSizeInput.value, 10) || 4;
     });
 
-    // Prevent canvas from causing page scroll on touch drag
-    drawingCanvas.style.touchAction = 'none';
+    // --- Clear for everyone ---
+    clearBoardBtn.addEventListener('click', function () {
+      if (!confirm('Clear the drawing board for everyone?')) return;
+      resetBoardLocally();
+      drawBoardRef.child('ops').remove().catch(reportDrawError);
+      drawBoardRef.child('meta/clearedAt').set(Date.now()).catch(reportDrawError);
+      setDrawStatus('Everyone in the room sees your strokes live', 'live');
+    });
+
+    setupDrawSyncListeners();
+  }
+
+  // --- Live database listeners (attached exactly once, ever) ---
+  function setupDrawSyncListeners() {
+    if (drawListenerAttached) return;
+    drawListenerAttached = true;
+
+    // Last 3000 chunks = everything currently on the board, so people who
+    // join later still see the existing drawing instead of a blank page.
+    drawBoardRef.child('ops').limitToLast(3000).on('child_added', function (snap) {
+      if (!drawErrorShown) setDrawStatus('Everyone in the room sees your strokes live', 'live');
+      applyRemoteOp(snap.val());
+    }, reportDrawError);
+
+    // Everyone clears together.
+    drawBoardRef.child('meta/clearedAt').on('value', function (snap) {
+      const t = Number(snap.val()) || 0;
+      // First read is just the current value (the old drawing was already
+      // deleted when it was cleared) - don't wipe the freshly loaded board.
+      if (lastClearedAt === null) { lastClearedAt = t; return; }
+      if (t > lastClearedAt) {
+        lastClearedAt = t;
+        resetBoardLocally();
+      }
+    }, reportDrawError);
+
+    // Small live indicator so you can tell at a glance that the board is
+    // actually talking to the database.
+    setDrawStatus('Live - everyone sees your strokes as you draw', 'live');
+    db.ref('.info/connected').on('value', function (snap) {
+      if (drawErrorShown) return;
+      if (snap.val() === true) {
+        setDrawStatus('Live - everyone sees your strokes as you draw', 'live');
+      } else {
+        setDrawStatus('Reconnecting to the live board...', '');
+      }
+    });
   }
 
   // --- Core Chat Logic ---
   function joinChat() {
     const name = usernameInput.value.trim();
     if (!name) return;
-    
+
     myName = name;
     myColor = userColor(name);
     isConnected = true;
@@ -825,7 +1039,7 @@
       const key = snap.key;
       if (seenKeys[key]) return;
       seenKeys[key] = true;
-      
+
       const msg = snap.val();
       renderMessage(msg);
 
@@ -847,7 +1061,7 @@
 
     roomRef.child('activeUsers').on('value', (snap) => {
       const users = snap.val() || {};
-      
+
       renderUsers(users);
 
       if (Object.keys(knownUsers).length > 0) {
@@ -862,10 +1076,8 @@
     });
 
     // Set up drawing board (only once)
-    if (!drawListenerAttached) {
-      drawListenerAttached = true;
-      setupDrawing();
-    }
+    setupDrawing();
+    fitCanvas();
 
     messageInput.focus();
   }
@@ -951,7 +1163,7 @@
       return;
     }
     photoPreviewQueue.classList.add('has-photos');
-    
+
     stagedPhotos.forEach((photo, index) => {
       const wrap = document.createElement('div');
       wrap.className = 'preview-wrap';
@@ -959,12 +1171,12 @@
         <img class="preview-img" src="${photo.dataUrl}">
         <button class="preview-remove">&times;</button>
       `;
-      
+
       wrap.querySelector('.preview-remove').addEventListener('click', () => {
         stagedPhotos.splice(index, 1);
         renderPhotoQueue();
       });
-      
+
       photoPreviewQueue.appendChild(wrap);
     });
   }
@@ -1036,14 +1248,14 @@
 
   sendBtn.addEventListener('click', sendMessage);
   messageInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
-  
+
   clearChatBtn.addEventListener('click', clearChat);
-  
+
   paperclipBtn.addEventListener('click', () => photoInput.click());
   photoInput.addEventListener('change', (e) => {
     if (e.target.files.length) stageFiles(e.target.files);
   });
-  
+
   cancelReplyBtn.addEventListener('click', cancelReply);
 
   lightboxClose.addEventListener('click', () => {
