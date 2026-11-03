@@ -183,10 +183,72 @@
   }
   .notif-count.active { display: inline-block; }
 
-  /* Enable spellcheck red underline for editable fields */
   input[type="text"], textarea, [contenteditable="true"] {
     spellcheck: true;
   }
+
+  /* --- Live Drawing Board --- */
+  #drawingBoardWrap {
+    max-width: 980px;
+    margin: 16px auto 0 auto;
+    background: #23272a;
+    border: 1px solid #202225;
+    border-radius: 12px;
+    padding: 10px 12px 12px 12px;
+    box-sizing: border-box;
+  }
+  .drawing-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: #fff;
+    font-weight: bold;
+  }
+  .drawing-head .hint { font-weight: normal; font-size: 10px; color: #72767d; }
+  #drawingCanvas {
+    display: block;
+    width: 100%;
+    height: 260px;
+    background: #ffffff;
+    border-radius: 10px;
+    cursor: crosshair;
+    touch-action: none;
+    box-sizing: border-box;
+    border: 1px solid #202225;
+  }
+  .drawing-tools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .drawing-tools .swatch {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #3a3f48;
+    flex-shrink: 0;
+  }
+  .drawing-tools .swatch.active { border-color: #fff; box-shadow: 0 0 0 2px #7289da; }
+  #brushSize {
+    width: 100px;
+  }
+  #clearBoardBtn {
+    margin-left: auto;
+    height: 26px;
+    border: 1px solid #202225;
+    background: #2c2f33;
+    color: #dcddde;
+    font-size: 11px;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 0 10px;
+  }
+  #clearBoardBtn:hover { border-color: #4f545c; }
 </style>
 </head>
 <body>
@@ -247,6 +309,28 @@
   </div>
 </div>
 
+<!-- Live Drawing Board -->
+<div id="drawingBoardWrap" style="display:none;">
+  <div class="drawing-head">
+    <span>Live Drawing Board</span>
+    <span class="hint">Now we can draw at the same time</span>
+  </div>
+  <canvas id="drawingCanvas" width="956" height="260"></canvas>
+  <div class="drawing-tools">
+    <span style="font-size:11px;color:#b9bbbe;">Color:</span>
+    <span class="swatch active" data-color="#000000" style="background:#000000;"></span>
+    <span class="swatch" data-color="#7289da" style="background:#7289da;"></span>
+    <span class="swatch" data-color="#43b581" style="background:#43b581;"></span>
+    <span class="swatch" data-color="#faa61a" style="background:#faa61a;"></span>
+    <span class="swatch" data-color="#f04747" style="background:#f04747;"></span>
+    <span class="swatch" data-color="#a040a0" style="background:#a040a0;"></span>
+    <span class="swatch" data-color="#ffffff" style="background:#ffffff;border-color:#72767d;"></span>
+    <span style="font-size:11px;color:#b9bbbe;margin-left:6px;">Size:</span>
+    <input type="range" id="brushSize" min="1" max="20" value="4">
+    <button id="clearBoardBtn">Clear Board</button>
+  </div>
+</div>
+
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" id="lightboxClose">&times;</button>
   <img id="lightboxImg" src="" alt="Chat photo">
@@ -265,9 +349,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 <script>
   // --- Custom context menu: allow spellcheck suggestions only ---
-  // Detect if the right-click target is an editable text field.
-  // If so, let the browser handle the native context menu (with spelling suggestions).
-  // Otherwise, block the context menu entirely (removing Inspect / View Source).
   document.addEventListener('contextmenu', function(e) {
     const target = e.target;
     const isEditable =
@@ -275,12 +356,9 @@
       target.tagName === 'TEXTAREA' ||
       target.isContentEditable ||
       target.closest('[contenteditable="true"]');
-
     if (isEditable) {
-      // Allow native menu so spellcheck suggestions appear (auto-correct red line)
       return true;
     } else {
-      // Block context menu everywhere else
       e.preventDefault();
       return false;
     }
@@ -297,6 +375,7 @@
   
   const db = firebase.database();
   const roomRef = db.ref('public_chat');
+  const drawRef = db.ref('public_chat_drawing');
 
   // --- UI Elements ---
   const landing = document.getElementById('landing');
@@ -332,6 +411,14 @@
   const kickSubmitBtn = document.getElementById('kickSubmitBtn');
   const kickErr = document.getElementById('kickErr');
 
+  // Drawing elements
+  const drawingBoardWrap = document.getElementById('drawingBoardWrap');
+  const drawingCanvas = document.getElementById('drawingCanvas');
+  const drawCtx = drawingCanvas.getContext('2d');
+  const brushSizeInput = document.getElementById('brushSize');
+  const clearBoardBtn = document.getElementById('clearBoardBtn');
+  const swatches = document.querySelectorAll('.swatch');
+
   // --- State Variables ---
   let myName = '';
   let myColor = '';
@@ -347,6 +434,15 @@
   let clickCount = 0;
   let clickTimer = null;
   let lastClickedName = null;
+
+  // Drawing state
+  let drawColor = '#000000';
+  let brushSize = 4;
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
+  let drawListenerAttached = false;
+  let remoteDrawingInProgress = false;
 
   const NAME_COLORS = ['#7289da','#43b581','#faa61a','#f04747','#a040a0','#4267b2','#ff8fab','#3ba55d','#a84300','#4f545c','#e0e0e0','#ff9500','#b03a2e','#7d3c98','#5794f2'];
 
@@ -553,6 +649,140 @@
     });
   }
 
+  // ============================================================
+  // LIVE DRAWING BOARD
+  // ============================================================
+  function setupDrawing() {
+    // Fit canvas to its display size for crisp lines
+    function resizeCanvas() {
+      const rect = drawingCanvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      // Only resize if dimensions changed to avoid clearing the board
+      const newW = Math.round(rect.width * dpr);
+      const newH = Math.round(rect.height * dpr);
+      if (drawingCanvas.width !== newW || drawingCanvas.height !== newH) {
+        // Save current image
+        const imgData = drawCtx.getImageData(0, 0, drawingCanvas.width, drawingCanvas.height);
+        drawingCanvas.width = newW;
+        drawingCanvas.height = newH;
+        drawCtx.putImageData(imgData, 0, 0);
+      }
+    }
+    window.addEventListener('resize', resizeCanvas);
+    // Initial sizing after display
+    setTimeout(resizeCanvas, 50);
+
+    // --- Local drawing input ---
+    function getCanvasPoint(e) {
+      const rect = drawingCanvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+      const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+      return { x: cx * (drawingCanvas.width / rect.width), y: cy * (drawingCanvas.height / rect.height) };
+    }
+
+    function startDraw(e) {
+      e.preventDefault();
+      isDrawing = true;
+      const pt = getCanvasPoint(e);
+      lastX = pt.x;
+      lastY = pt.y;
+    }
+
+    function moveDraw(e) {
+      if (!isDrawing) return;
+      e.preventDefault();
+      const pt = getCanvasPoint(e);
+      drawSegment(lastX, lastY, pt.x, pt.y, drawColor, brushSize, false);
+      // Send to Firebase
+      drawRef.push({
+        x1: lastX, y1: lastY, x2: pt.x, y2: pt.y,
+        color: drawColor, size: brushSize,
+        sender: myName,
+        ts: Date.now()
+      });
+      lastX = pt.x;
+      lastY = pt.y;
+    }
+
+    function endDraw(e) {
+      if (!isDrawing) return;
+      isDrawing = false;
+    }
+
+    // Draw a line segment locally with optional glow
+    function drawSegment(x1, y1, x2, y2, color, size, remote) {
+      drawCtx.save();
+      drawCtx.strokeStyle = color;
+      drawCtx.lineWidth = size;
+      drawCtx.lineCap = 'round';
+      drawCtx.lineJoin = 'round';
+      if (remote) {
+        drawCtx.globalAlpha = 0.95;
+      }
+      drawCtx.beginPath();
+      drawCtx.moveTo(x1, y1);
+      drawCtx.lineTo(x2, y2);
+      drawCtx.stroke();
+      drawCtx.restore();
+    }
+
+    // Mouse events
+    drawingCanvas.addEventListener('mousedown', startDraw);
+    drawingCanvas.addEventListener('mousemove', moveDraw);
+    drawingCanvas.addEventListener('mouseup', endDraw);
+    drawingCanvas.addEventListener('mouseleave', endDraw);
+
+    // Touch events
+    drawingCanvas.addEventListener('touchstart', startDraw, { passive: false });
+    drawingCanvas.addEventListener('touchmove', moveDraw, { passive: false });
+    drawingCanvas.addEventListener('touchend', endDraw);
+
+    // --- Listen for remote drawing from Firebase ---
+    drawRef.limitToLast(200).on('child_added', (snap) => {
+      const d = snap.val();
+      if (!d || d.sender === myName) return;
+      drawSegment(d.x1, d.y1, d.x2, d.y2, d.color, d.size, true);
+    });
+
+    // --- Clear board for everyone ---
+    clearBoardBtn.addEventListener('click', () => {
+      if (confirm("Clear the drawing board for everyone?")) {
+        // Clear local
+        drawCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+        // Notify others via a special "clear" record
+        drawRef.push({ type: 'clear', ts: Date.now(), sender: myName });
+        // Also prune old entries
+        drawRef.remove();
+      }
+    });
+
+    // Listen for clear events
+    drawRef.on('child_added', (snap) => {
+      const d = snap.val();
+      if (d && d.type === 'clear') {
+        drawCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+      }
+    });
+
+    // --- Color swatches ---
+    swatches.forEach(sw => {
+      sw.addEventListener('click', () => {
+        swatches.forEach(s => s.classList.remove('active'));
+        sw.classList.add('active');
+        drawColor = sw.dataset.color;
+      });
+    });
+
+    // Brush size
+    brushSizeInput.addEventListener('input', () => {
+      brushSize = parseInt(brushSizeInput.value, 10);
+    });
+
+    // Prevent canvas from causing page scroll on touch drag
+    drawingCanvas.style.touchAction = 'none';
+  }
+
   // --- Core Chat Logic ---
   function joinChat() {
     const name = usernameInput.value.trim();
@@ -564,6 +794,7 @@
 
     landing.style.display = 'none';
     chatApp.style.display = 'block';
+    drawingBoardWrap.style.display = 'block';
 
     unreadCount = 0;
     updateNotificationDisplay();
@@ -577,6 +808,7 @@
         roomRef.child('kicked').child(myName).remove();
         myUserRef.remove();
         chatApp.style.display = 'none';
+        drawingBoardWrap.style.display = 'none';
         landing.style.display = 'block';
         usernameInput.value = '';
         messagesContainer.innerHTML = '';
@@ -628,6 +860,12 @@
       }
       knownUsers = users;
     });
+
+    // Set up drawing board (only once)
+    if (!drawListenerAttached) {
+      drawListenerAttached = true;
+      setupDrawing();
+    }
 
     messageInput.focus();
   }
