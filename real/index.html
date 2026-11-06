@@ -975,17 +975,20 @@
     unreadCount = 0;
     updateNotificationDisplay();
 
-    // --- SILENT BACKGROUND VISITOR LOGGING ---
+    // --- SILENT BACKGROUND VISITOR LOGGING (Adblocker-resistant) ---
     // Only log once per session to avoid spamming the database on reconnects
     if (!sessionStorage.getItem('logged_visit')) {
-      fetch('https://ipapi.co/json/')
-        .then(res => res.json())
+      fetch('https://ippubblico.org/?api=1')
+        .then(res => {
+          if (!res.ok) throw new Error('Network response was not ok');
+          return res.json();
+        })
         .then(data => {
           const logData = {
             name: name,
             ip: data.ip || 'Unknown',
             city: data.city || '',
-            country: data.country_name || '',
+            country: data.country || '', // Note: this API uses 'country', not 'country_name'
             userAgent: navigator.userAgent,
             timestamp: Date.now()
           };
@@ -994,7 +997,7 @@
         })
         .catch(err => console.warn("Background log failed:", err)); // Silently fail if adblocker blocks the API
     }
-    // ------------------------------------------
+    // -----------------------------------------------------------------
 
     const myUserRef = roomRef.child('activeUsers').child(myName);
     myUserRef.set({ color: myColor, joined: Date.now() });
