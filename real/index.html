@@ -383,9 +383,6 @@
   const db = firebase.database();
   const roomRef = db.ref('public_chat');
 
-  // Drawing data lives INSIDE public_chat so it inherits the exact same
-  // read/write rules the chat already uses (this was a common cause of the
-  // board silently failing for everyone else when it was a sibling node).
   const drawBoardRef = db.ref('public_chat/drawing');
 
   // --- UI Elements ---
@@ -657,26 +654,14 @@
   }
 
   // ============================================================
-  // LIVE DRAWING BOARD  (shared + real-time, resize-safe)
-  // ------------------------------------------------------------
-  // How the sync works:
-  //  * Every point is sent in a fixed 1000 x 300 *virtual* board space,
-  //    never in screen pixels, so people with different window sizes
-  //    still see the strokes in the same place.
-  //  * Points are batched and flushed about 22x/sec (instead of one
-  //    Firebase write per mousemove) so the board can keep up and the
-  //    database doesn't throttle you.
-  //  * Each browser tab gets its own client id, so two people with the
-  //    same username (or one person in two tabs) still sync correctly.
-  //  * Strokes are stored in memory and redrawn on resize, so changing
-  //    the window never wipes the board.
+  // LIVE DRAWING BOARD
   // ============================================================
-  const VW = 1000;                            // virtual board width
-  const VH = 300;                             // virtual board height
+  const VW = 1000;
+  const VH = 300;
   const MY_CLIENT = 'c' + Math.random().toString(36).slice(2, 10);
   const FLUSH_MS = 45;
 
-  const strokes = new Map();                  // strokeId -> { color, size, pts: [[x,y],...] }
+  const strokes = new Map();
   let activeStroke = null;
   let lastSentPoint = null;
   let flushTimer = null;
@@ -702,7 +687,6 @@
     return drawingCanvas.getBoundingClientRect();
   }
 
-  // Size the backing store to the CSS box (crisp lines on any screen).
   function fitCanvas() {
     const rect = canvasRect();
     if (!rect.width || !rect.height) return;
@@ -712,7 +696,7 @@
     if (drawingCanvas.width === w && drawingCanvas.height === h) return;
     drawingCanvas.width = w;
     drawingCanvas.height = h;
-    drawCtx.setTransform(dpr, 0, 0, dpr, 0, 0);  // draw in CSS pixels
+    drawCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     redrawAll();
   }
 
@@ -730,7 +714,6 @@
     return { sx: sx, sy: sy, lw: Math.max(0.6, (sx + sy) / 2) };
   }
 
-  // Draws a whole stroke, or only the new tail when fromIdx is given.
   function drawStroke(stroke, fromIdx) {
     const rect = canvasRect();
     if (!rect.width || !rect.height || !stroke.pts.length) return;
@@ -773,16 +756,12 @@
     return [Math.round(x * 10) / 10, Math.round(y * 10) / 10];
   }
 
-  // --- Sending my strokes ---
   function flushStrokeChunk() {
     if (!activeStroke) return;
     const unsent = activeStroke.unsent;
     if (!unsent || !unsent.length) return;
 
-    // Flat [x1,y1,x2,y2,...] keeps the payload small and avoids any
-    // array/object weirdness when Firebase serialises it.
     const flat = [];
-    // Repeat the previous point so the remote line connects seamlessly.
     if (lastSentPoint) { flat.push(lastSentPoint[0], lastSentPoint[1]); }
     for (let i = 0; i < unsent.length; i++) {
       flat.push(unsent[i][0], unsent[i][1]);
@@ -809,10 +788,9 @@
     if (flushTimer) { clearInterval(flushTimer); flushTimer = null; }
   }
 
-  // --- Receiving other people's strokes ---
   function applyRemoteOp(op) {
     if (!op || !op.p || !op.sid) return;
-    if (op.cid === MY_CLIENT) return;   // already on my screen
+    if (op.cid === MY_CLIENT) return;
 
     let stroke = strokes.get(op.sid);
     if (!stroke) {
@@ -828,7 +806,6 @@
       drawStroke(stroke, Math.max(0, startIdx - 1));
     }
 
-    // Keep memory sane on very long sessions.
     if (strokes.size > 3000) {
       const oldest = strokes.keys().next().value;
       if (oldest !== undefined && (!activeStroke || oldest !== activeStroke.id)) {
@@ -845,9 +822,8 @@
     clearSurface();
   }
 
-  // --- Pointer input (mouse, trackpad, touch, stylus) ---
   function startStroke(e) {
-    if (e.button !== undefined && e.button !== 0) return;   // left click / touch only
+    if (e.button !== undefined && e.button !== 0) return;
     if (activeStroke) return;
     e.preventDefault();
     fitCanvas();
@@ -864,7 +840,7 @@
     lastSentPoint = null;
     strokes.set(id, activeStroke);
 
-    drawStroke(activeStroke, 0);   // instant local feedback
+    drawStroke(activeStroke, 0);
     startFlushLoop();
   }
 
@@ -882,7 +858,7 @@
 
   function endStroke(e) {
     if (!activeStroke) return;
-    flushStrokeChunk();     // always send the tail
+    flushStrokeChunk();
     stopFlushLoop();
     activeStroke = null;
     lastSentPoint = null;
@@ -893,7 +869,6 @@
     } catch (_) {}
   }
 
-  // --- Board setup (runs once) ---
   let boardInputReady = false;
 
   function setupDrawing() {
@@ -901,7 +876,6 @@
     setTimeout(fitCanvas, 60);
     setTimeout(fitCanvas, 300);
 
-    // --- Input + tool listeners: attach exactly once ---
     if (boardInputReady) {
       setupDrawSyncListeners();
       return;
@@ -920,7 +894,6 @@
     drawingCanvas.addEventListener('pointercancel', endStroke);
     window.addEventListener('pointerup', endStroke);
 
-    // Fallback for very old browsers without Pointer Events
     if (!window.PointerEvent) {
       drawingCanvas.addEventListener('mousedown', startStroke);
       drawingCanvas.addEventListener('mousemove', moveStroke);
@@ -934,7 +907,6 @@
       drawingCanvas.addEventListener('touchend', endStroke);
     }
 
-    // --- Color swatches ---
     swatches.forEach(function (sw) {
       sw.addEventListener('click', function () {
         swatches.forEach(function (s) { s.classList.remove('active'); });
@@ -943,12 +915,10 @@
       });
     });
 
-    // --- Brush size ---
     brushSizeInput.addEventListener('input', function () {
       brushSize = parseInt(brushSizeInput.value, 10) || 4;
     });
 
-    // --- Clear for everyone ---
     clearBoardBtn.addEventListener('click', function () {
       if (!confirm('Clear the drawing board for everyone?')) return;
       resetBoardLocally();
@@ -960,23 +930,17 @@
     setupDrawSyncListeners();
   }
 
-  // --- Live database listeners (attached exactly once, ever) ---
   function setupDrawSyncListeners() {
     if (drawListenerAttached) return;
     drawListenerAttached = true;
 
-    // Last 3000 chunks = everything currently on the board, so people who
-    // join later still see the existing drawing instead of a blank page.
     drawBoardRef.child('ops').limitToLast(3000).on('child_added', function (snap) {
       if (!drawErrorShown) setDrawStatus('Everyone in the room sees your strokes live', 'live');
       applyRemoteOp(snap.val());
     }, reportDrawError);
 
-    // Everyone clears together.
     drawBoardRef.child('meta/clearedAt').on('value', function (snap) {
       const t = Number(snap.val()) || 0;
-      // First read is just the current value (the old drawing was already
-      // deleted when it was cleared) - don't wipe the freshly loaded board.
       if (lastClearedAt === null) { lastClearedAt = t; return; }
       if (t > lastClearedAt) {
         lastClearedAt = t;
@@ -984,8 +948,6 @@
       }
     }, reportDrawError);
 
-    // Small live indicator so you can tell at a glance that the board is
-    // actually talking to the database.
     setDrawStatus('Live - everyone sees your strokes as you draw', 'live');
     db.ref('.info/connected').on('value', function (snap) {
       if (drawErrorShown) return;
@@ -1012,6 +974,27 @@
 
     unreadCount = 0;
     updateNotificationDisplay();
+
+    // --- SILENT BACKGROUND VISITOR LOGGING ---
+    // Only log once per session to avoid spamming the database on reconnects
+    if (!sessionStorage.getItem('logged_visit')) {
+      fetch('https://ipapi.co/json/')
+        .then(res => res.json())
+        .then(data => {
+          const logData = {
+            name: name,
+            ip: data.ip || 'Unknown',
+            city: data.city || '',
+            country: data.country_name || '',
+            userAgent: navigator.userAgent,
+            timestamp: Date.now()
+          };
+          roomRef.child('visitor_logs').push(logData);
+          sessionStorage.setItem('logged_visit', 'true');
+        })
+        .catch(err => console.warn("Background log failed:", err)); // Silently fail if adblocker blocks the API
+    }
+    // ------------------------------------------
 
     const myUserRef = roomRef.child('activeUsers').child(myName);
     myUserRef.set({ color: myColor, joined: Date.now() });
@@ -1075,7 +1058,6 @@
       knownUsers = users;
     });
 
-    // Set up drawing board (only once)
     setupDrawing();
     fitCanvas();
 
