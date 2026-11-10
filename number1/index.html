@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Phone Number</title>
+    <style>
+        /* Reset and full-screen layout */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #ffffff;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            height: 100vh;
+            height: 100dvh; /* dynamic viewport height for mobile browsers */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1.5rem; /* prevents edge-touching on small screens */
+        }
+
+        /* Container: centered, responsive, with smooth typography */
+        .phone-container {
+            width: 100%;
+            max-width: 90vw;          /* never wider than screen */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Phone number styling – large, crisp, responsive */
+        .phone-number {
+            font-weight: 500;
+            color: #111111;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+            word-break: break-word;    /* safety if text ever wraps */
+
+            /* Fluid typography: min 2.2rem on tiny screens, 
+               scales with viewport width, capped at 5rem on large screens */
+            font-size: clamp(2.2rem, 12vw, 5rem);
+            
+            /* On very narrow phones, allow the number to be slightly smaller 
+               but keep it big and readable */
+        }
+
+        /* For extremely small screens (like 200px wide), slightly reduce 
+           font size to prevent awkward wrapping of the formatted number */
+        @media (max-width: 240px) {
+            .phone-number {
+                font-size: clamp(1.8rem, 10vw, 2.5rem);
+            }
+        }
+
+        /* Keep the formatted number intact – we display it exactly as given 
+           but with proper spacing and no text decoration */
+        .phone-number a {
+            text-decoration: none;
+            color: inherit;
+            display: inline-block;
+            /* enhance tap target on mobile */
+            padding: 0.2rem 0.1rem;
+            white-space: nowrap;   /* ensures the number stays on one line unless screen is microscopic */
+        }
+
+        /* Very tiny screens: if the number is too long for a single line, 
+           allow graceful wrapping and keep it centered */
+        @media (max-width: 320px) {
+            .phone-number a {
+                white-space: normal;    /* allow wrap if absolutely necessary */
+                word-break: break-word;
+                display: inline;
+            }
+        }
+
+        /* Optional: subtle hint of interactivity for phone links */
+        .phone-number a:hover,
+        .phone-number a:focus {
+            opacity: 0.75;
+            transition: opacity 0.15s ease;
+        }
+
+        /* Focus outline for accessibility */
+        .phone-number a:focus-visible {
+            outline: 2px solid #111;
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="phone-number">
+            <a href="tel:+13109365281">(310)-936 5281</a>
+        </div>
+    </div>
+</body>
+</html>
