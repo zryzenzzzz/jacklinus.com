@@ -66,20 +66,21 @@ def attr(attrs, name):
 firebase_scripts = []   # (attrs, text)
 pre_scripts = []        # (attrs, text) — will use placeholder mechanism
 
-script_counter = [0]
+match_counter = [0]
+total_matches = len(all_matches)
 def replace_with_placeholder(m):
-    # Page script: strip completely (handled separately)
-    if m is page_match:
+    current_idx = match_counter[0]
+    match_counter[0] += 1
+    # The last match is the page script - strip it (handled separately)
+    if current_idx == total_matches - 1:
         return ''
-    idx = script_counter[0]
-    script_counter[0] += 1
     attrs, text = m.group(1), m.group(2)
     src = attr(attrs, 'src')
     if src and 'firebasejs' in src:
         firebase_scripts.append((attrs, text))
         return ''  # strip from markup, load sequentially
     pre_scripts.append((attrs, text))
-    return '<div class="script-host" data-script-index="%d"></div>' % idx
+    return '<div class="script-host" data-script-index="%d"></div>' % (len(pre_scripts) - 1)
 
 markup = script_re.sub(replace_with_placeholder, body_region)
 
