@@ -98,28 +98,33 @@ for attrs, text in inline_scripts:
     js_lines.append('        document.body.appendChild(s);')
     js_lines.append('    })();')
 
-# --- external pre_scripts: load in parallel (like original HTML) -------------
-for attrs, text in external_scripts:
-    src = attr(attrs, 'src')
-    typ = attr(attrs, 'type')
-    js_lines.append('    (function () {')
-    js_lines.append('        var s=document.createElement(\'script\');')
-    js_lines.append('        s.src=' + json.dumps(src, ensure_ascii=False) + ';')
-    if re.search(r'\basync\b', attrs, re.IGNORECASE):
-        js_lines.append('        s.async=true;')
-    if re.search(r'\bdefer\b', attrs, re.IGNORECASE):
-        js_lines.append('        s.defer=true;')
-    if typ:
-        js_lines.append('        s.type=' + json.dumps(typ, ensure_ascii=False) + ';')
-    for extra in ('crossorigin', 'referrerpolicy', 'integrity', 'nonce'):
-        v = attr(attrs, extra)
-        if v:
-            js_lines.append('        s.' + extra + '=' + json.dumps(v, ensure_ascii=False) + ';')
+# --- external pre_scripts: load sequentially, then run page script -----------
+if external_scripts:
+    js_lines.append('    var _scripts = [')
+    for attrs, text in external_scripts:
+        src = attr(attrs, 'src')
+        js_lines.append('        ' + json.dumps(src, ensure_ascii=False) + ',')
+    js_lines.append('    ];')
+    js_lines.append('    var _i = 0;')
+    js_lines.append('    function _loadNext() {')
+    js_lines.append('        if (_i >= _scripts.length) {')
+    # Append page script indented inside the if block
+    for line in page_script.splitlines():
+        if line.strip():
+            js_lines.append('            ' + line)
+        else:
+            js_lines.append('')
+    js_lines.append('            return;')
+    js_lines.append('        }')
+    js_lines.append('        var s = document.createElement(\'script\');')
+    js_lines.append('        s.src = _scripts[_i++];')
+    js_lines.append('        s.onload = _loadNext;')
+    js_lines.append('        s.onerror = _loadNext;')
     js_lines.append('        document.body.appendChild(s);')
-    js_lines.append('    })();')
-
-# --- page script: runs immediately after DOM is ready (like original HTML) ---
-js_lines.append(page_script)
+    js_lines.append('    }')
+    js_lines.append('    _loadNext();')
+else:
+    js_lines.append(page_script)
 
 js_lines.append('})();')
 bundle = '\n'.join(js_lines) + '\n'
