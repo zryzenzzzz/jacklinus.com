@@ -132,6 +132,22 @@ js_lines.append('        host.parentElement.appendChild(s);')
 js_lines.append('        host.remove();')
 js_lines.append('    });')
 
+# --- Keep ads in sidebar: catch iframes injected into document.body by ad
+#     networks and move them into banner-container ---------------------------
+js_lines.append('    var _banner = document.querySelector(\'.banner-container\');')
+js_lines.append('    var _observer = new MutationObserver(function (mutations) {')
+js_lines.append('        mutations.forEach(function (m) {')
+js_lines.append('            m.addedNodes.forEach(function (node) {')
+js_lines.append('                if (node.nodeType === 1 && node.tagName === \'IFRAME\') {')
+js_lines.append('                    if (_banner && node.parentElement !== _banner) {')
+js_lines.append('                        _banner.appendChild(node);')
+js_lines.append('                    }')
+js_lines.append('                }')
+js_lines.append('            });')
+js_lines.append('        });')
+js_lines.append('    });')
+js_lines.append('    _observer.observe(document.body, { childList: true });')
+
 # --- Firebase scripts: load sequentially, then run page script --------------
 if firebase_scripts:
     js_lines.append('    var _scripts = [')
