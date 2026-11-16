@@ -14,7 +14,7 @@
     padding: 20px;
     text-align: center;
   }
-  #landing {
+  #gate {
     width: 360px;
     margin: 60px auto;
     border: 1px solid #202225;
@@ -22,64 +22,17 @@
     padding: 18px;
     text-align: left;
   }
-  #landing h2 { font-size: 16px; margin: 0 0 8px 0; font-weight: bold; color: #fff; }
-  #landing p { font-size: 11px; color: #72767d; margin: 0 0 16px 0; }
-  #landing label { display: block; font-size: 11px; color: #b9bbbe; margin-bottom: 4px; }
-  #landing input {
+  #gate h2 { font-size: 16px; margin: 0 0 8px 0; font-weight: bold; color: #fff; }
+  #gate p { font-size: 11px; color: #72767d; margin: 0 0 16px 0; }
+  #gate label { display: block; font-size: 11px; color: #b9bbbe; margin-bottom: 4px; }
+  #gate input {
     width: 100%; height: 30px; border: 1px solid #202225; background: #2c2f33; color: #fff; padding: 0 10px; font-size: 13px; margin-bottom: 12px; box-sizing: border-box;
   }
-  #landing button {
+  #gate button {
     width: 100%; height: 30px; border: 1px solid #202225; background: #2c2f33; color: #fff; font-size: 13px; cursor: pointer;
   }
-  #landing button:hover { background: #3a3f48; }
-  #landing .note { margin-top: 14px; font-size: 10px; color: #72767d; }
-
-  #kickPrompt {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-  }
-  #kickPrompt.open { display: flex; }
-  .kick-box {
-    background: #23272a;
-    border: 1px solid #202225;
-    padding: 18px;
-    width: 280px;
-    text-align: left;
-  }
-  .kick-box label { display: block; font-size: 11px; color: #b9bbbe; margin-bottom: 4px; }
-  .kick-box input {
-    width: 100%; height: 30px; border: 1px solid #202225; background: #2c2f33; color: #fff; padding: 0 10px; font-size: 13px; margin-bottom: 12px; box-sizing: border-box;
-  }
-  .kick-box button {
-    width: 100%; height: 30px; border: 1px solid #202225; background: #2c2f33; color: #fff; font-size: 13px; cursor: pointer;
-  }
-  .kick-box button:hover { background: #3a3f48; }
-  .kick-box .err { color: #f04747; font-size: 11px; margin-bottom: 8px; display: none; }
-
-  #ryanDropdown {
-    display: none;
-    background: #2c2f33;
-    border: 1px solid #202225;
-    padding: 10px;
-    margin-top: -8px;
-    margin-bottom: 12px;
-    text-align: left;
-  }
-  #ryanDropdown.open { display: block; }
-  #ryanDropdown .dropdown-msg { font-size: 11px; color: #b9bbbe; margin-bottom: 8px; }
-  #ryanDropdown input {
-    width: 100%; height: 30px; border: 1px solid #202225; background: #23272a; color: #fff; padding: 0 10px; font-size: 13px; margin-bottom: 8px; box-sizing: border-box;
-  }
-  #ryanDropdown button {
-    width: 100%; height: 30px; border: 1px solid #202225; background: #2c2f33; color: #fff; font-size: 13px; cursor: pointer;
-  }
-  #ryanDropdown button:hover { background: #3a3f48; }
-  #ryanDropdown .err { color: #f04747; font-size: 11px; margin-bottom: 8px; display: none; }
+  #gate button:hover { background: #3a3f48; }
+  #gate .err { color: #f04747; font-size: 11px; margin-bottom: 8px; display: none; }
 
   #chatApp { display: none; max-width: 980px; margin: 0 auto; }
   .chat-wrap { border: 1px solid #202225; background: #2c2f33; height: 560px; display: flex; flex-direction: column; }
@@ -213,7 +166,6 @@
   #drawingCanvas {
     display: block;
     width: 100%;
-    /* Locked aspect ratio: everyone sees the exact same board, just scaled */
     aspect-ratio: 1000 / 300;
     height: auto;
     background: #ffffff;
@@ -260,19 +212,13 @@
 </head>
 <body>
 
-<div id="landing">
+<div id="gate">
   <h2>Public Chat Room</h2>
-  <p>Enter a username to join. No registration &mdash; anyone can join from anywhere.</p>
-  <label for="usernameInput">Username</label>
-  <input type="text" id="usernameInput" maxlength="20" autocomplete="off" spellcheck="true">
-  <div id="ryanDropdown">
-    <div class="dropdown-msg">This username is password protected.</div>
-    <input type="password" id="ryanPasswordInput" placeholder="Enter password">
-    <div class="err" id="ryanErr">Incorrect password.</div>
-    <button id="ryanSubmitBtn">Submit</button>
-  </div>
-  <button id="joinBtn">Join</button>
-  <div class="note">Photos supported &bull; Reply to messages &bull; Clear chats button in sidebar</div>
+  <p>Enter the password to join. No username needed &mdash; you'll join as <strong>User</strong>.</p>
+  <label for="gatePasswordInput">Password</label>
+  <input type="password" id="gatePasswordInput" autocomplete="off">
+  <div class="err" id="gateErr">Incorrect password.</div>
+  <button id="gateSubmitBtn">Enter Chat</button>
 </div>
 
 <div id="chatApp">
@@ -343,15 +289,6 @@
   <img id="lightboxImg" src="" alt="Chat photo">
 </div>
 
-<div id="kickPrompt">
-  <div class="kick-box">
-    <label for="kickPasswordInput">Password</label>
-    <input type="password" id="kickPasswordInput">
-    <div class="err" id="kickErr">Incorrect password.</div>
-    <button id="kickSubmitBtn">Submit</button>
-  </div>
-</div>
-
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 <script>
@@ -386,10 +323,12 @@
   const drawBoardRef = db.ref('public_chat/drawing');
 
   // --- UI Elements ---
-  const landing = document.getElementById('landing');
+  const gate = document.getElementById('gate');
+  const gatePasswordInput = document.getElementById('gatePasswordInput');
+  const gateSubmitBtn = document.getElementById('gateSubmitBtn');
+  const gateErr = document.getElementById('gateErr');
+
   const chatApp = document.getElementById('chatApp');
-  const usernameInput = document.getElementById('usernameInput');
-  const joinBtn = document.getElementById('joinBtn');
   const messagesContainer = document.getElementById('messages');
   const usersList = document.getElementById('usersList');
   const onlineCount = document.getElementById('onlineCount');
@@ -409,16 +348,6 @@
   const notifDot = document.getElementById('notifDot');
   const notifCount = document.getElementById('notifCount');
 
-  const ryanDropdown = document.getElementById('ryanDropdown');
-  const ryanPasswordInput = document.getElementById('ryanPasswordInput');
-  const ryanSubmitBtn = document.getElementById('ryanSubmitBtn');
-  const ryanErr = document.getElementById('ryanErr');
-
-  const kickPrompt = document.getElementById('kickPrompt');
-  const kickPasswordInput = document.getElementById('kickPasswordInput');
-  const kickSubmitBtn = document.getElementById('kickSubmitBtn');
-  const kickErr = document.getElementById('kickErr');
-
   // Drawing elements
   const drawingBoardWrap = document.getElementById('drawingBoardWrap');
   const drawingCanvas = document.getElementById('drawingCanvas');
@@ -429,7 +358,10 @@
   const drawStatus = document.getElementById('drawStatus');
 
   // --- State Variables ---
-  let myName = '';
+  const SITE_PASSWORD = 'goodandevil';
+  const DISPLAY_NAME = 'User';
+
+  let myName = DISPLAY_NAME;
   let myColor = '';
   let stagedPhotos = [];
   let replyingTo = null;
@@ -438,11 +370,6 @@
   let isConnected = false;
   let unreadCount = 0;
   let isWindowFocused = true;
-  let kickTargetName = null;
-
-  let clickCount = 0;
-  let clickTimer = null;
-  let lastClickedName = null;
 
   // Drawing state
   let drawColor = '#000000';
@@ -585,35 +512,7 @@
     scrollBottom();
   }
 
-  // --- Kick Functionality ---
-  function openKickPrompt(targetName) {
-    kickTargetName = targetName;
-    kickPasswordInput.value = '';
-    kickErr.style.display = 'none';
-    kickPrompt.classList.add('open');
-    kickPasswordInput.focus();
-  }
-
-  function closeKickPrompt() {
-    kickPrompt.classList.remove('open');
-    kickTargetName = null;
-  }
-
-  function handleKickSubmit() {
-    if (kickPasswordInput.value === 'Kick67') {
-      if (kickTargetName) {
-        roomRef.child('activeUsers').child(kickTargetName).remove();
-        roomRef.child('kicked').child(kickTargetName).set(Date.now());
-      }
-      closeKickPrompt();
-    } else {
-      kickErr.style.display = 'block';
-      kickPasswordInput.value = '';
-      kickPasswordInput.focus();
-    }
-  }
-
-  // --- User Row Rendering with Triple-Click ---
+  // --- User Row Rendering ---
   function renderUsers(users) {
     usersList.innerHTML = '';
     const userArr = Object.entries(users);
@@ -626,29 +525,6 @@
         <span class="user-dot" style="background-color: ${data.color || '#72767d'};"></span>
         <span class="user-name">${esc(name)}</span>
       `;
-
-      row.addEventListener('click', () => {
-        if (lastClickedName !== name) {
-          clickCount = 0;
-          lastClickedName = name;
-        }
-        clickCount++;
-
-        if (clickTimer) clearTimeout(clickTimer);
-
-        clickTimer = setTimeout(() => {
-          clickCount = 0;
-          lastClickedName = null;
-        }, 1000);
-
-        if (clickCount >= 3) {
-          clickCount = 0;
-          lastClickedName = null;
-          if (clickTimer) clearTimeout(clickTimer);
-          openKickPrompt(name);
-        }
-      });
-
       usersList.appendChild(row);
     });
   }
@@ -960,15 +836,12 @@
   }
 
   // --- Core Chat Logic ---
-  function joinChat() {
-    const name = usernameInput.value.trim();
-    if (!name) return;
-
-    myName = name;
-    myColor = userColor(name);
+  function enterChat() {
+    myName = DISPLAY_NAME;
+    myColor = userColor(myName + Math.random().toString()); // random color each session
     isConnected = true;
 
-    landing.style.display = 'none';
+    gate.style.display = 'none';
     chatApp.style.display = 'block';
     drawingBoardWrap.style.display = 'block';
 
@@ -976,7 +849,6 @@
     updateNotificationDisplay();
 
     // --- SILENT BACKGROUND VISITOR LOGGING (Adblocker-resistant) ---
-    // Only log once per session to avoid spamming the database on reconnects
     if (!sessionStorage.getItem('logged_visit')) {
       fetch('https://ippubblico.org/?api=1')
         .then(res => {
@@ -985,41 +857,23 @@
         })
         .then(data => {
           const logData = {
-            name: name,
+            name: myName,
             ip: data.ip || 'Unknown',
             city: data.city || '',
-            country: data.country || '', // Note: this API uses 'country', not 'country_name'
+            country: data.country || '',
             userAgent: navigator.userAgent,
             timestamp: Date.now()
           };
           roomRef.child('visitor_logs').push(logData);
           sessionStorage.setItem('logged_visit', 'true');
         })
-        .catch(err => console.warn("Background log failed:", err)); // Silently fail if adblocker blocks the API
+        .catch(err => console.warn("Background log failed:", err));
     }
     // -----------------------------------------------------------------
 
     const myUserRef = roomRef.child('activeUsers').child(myName);
     myUserRef.set({ color: myColor, joined: Date.now() });
     myUserRef.onDisconnect().remove();
-
-    roomRef.child('kicked').child(myName).on('value', (snap) => {
-      if (snap.val()) {
-        roomRef.child('kicked').child(myName).remove();
-        myUserRef.remove();
-        chatApp.style.display = 'none';
-        drawingBoardWrap.style.display = 'none';
-        landing.style.display = 'block';
-        usernameInput.value = '';
-        messagesContainer.innerHTML = '';
-        seenKeys = {};
-        knownUsers = {};
-        myName = '';
-        isConnected = false;
-        resetUnread();
-        usernameInput.focus();
-      }
-    });
 
     roomRef.child('messages').on('child_added', (snap) => {
       const key = snap.key;
@@ -1166,69 +1020,24 @@
     });
   }
 
-  // --- Ryan Password Logic ---
-  let ryanUnlocked = false;
-
-  function checkRyanUsername() {
-    const val = usernameInput.value.trim();
-    if (val === 'Ryan' && !ryanUnlocked) {
-      ryanDropdown.classList.add('open');
-    } else if (val !== 'Ryan') {
-      ryanDropdown.classList.remove('open');
-      ryanErr.style.display = 'none';
-    }
-  }
-
-  function handleRyanSubmit() {
-    if (ryanPasswordInput.value === 'goodandevildontexist') {
-      ryanUnlocked = true;
-      ryanDropdown.classList.remove('open');
-      ryanErr.style.display = 'none';
-      joinChat();
+  // --- Gate Logic ---
+  function handleGateSubmit() {
+    const entered = gatePasswordInput.value.trim().toLowerCase();
+    if (entered === SITE_PASSWORD.toLowerCase()) {
+      gateErr.style.display = 'none';
+      gatePasswordInput.value = '';
+      enterChat();
     } else {
-      ryanErr.style.display = 'block';
-      ryanPasswordInput.value = '';
-      ryanPasswordInput.focus();
+      gateErr.style.display = 'block';
+      gatePasswordInput.value = '';
+      gatePasswordInput.focus();
     }
   }
 
   // --- Event Listeners ---
-  joinBtn.addEventListener('click', () => {
-    const val = usernameInput.value.trim();
-    if (val === 'Ryan' && !ryanUnlocked) {
-      ryanDropdown.classList.add('open');
-      ryanPasswordInput.focus();
-    } else {
-      joinChat();
-    }
-  });
-
-  usernameInput.addEventListener('input', checkRyanUsername);
-
-  usernameInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      const val = usernameInput.value.trim();
-      if (val === 'Ryan' && !ryanUnlocked) {
-        ryanDropdown.classList.add('open');
-        ryanPasswordInput.focus();
-      } else {
-        joinChat();
-      }
-    }
-  });
-
-  ryanSubmitBtn.addEventListener('click', handleRyanSubmit);
-  ryanPasswordInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleRyanSubmit();
-  });
-
-  kickSubmitBtn.addEventListener('click', handleKickSubmit);
-  kickPasswordInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleKickSubmit();
-  });
-
-  kickPrompt.addEventListener('click', (e) => {
-    if (e.target === kickPrompt) closeKickPrompt();
+  gateSubmitBtn.addEventListener('click', handleGateSubmit);
+  gatePasswordInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleGateSubmit();
   });
 
   sendBtn.addEventListener('click', sendMessage);
@@ -1255,7 +1064,7 @@
   });
 
   updateNotificationDisplay();
-  usernameInput.focus();
+  gatePasswordInput.focus();
 </script>
 
 </body>
